@@ -1,0 +1,71 @@
+// Design tokens as CSS custom properties. Colors live here only; Sass mixins just group the declarations
+// so the dark palette is written once and applied both by the system preference and by `data-theme`.
+
+@mixin light-palette {
+  color-scheme: light;
+
+  --color-bg: #ffffff;
+  --color-surface: #f6f6f8;
+  --color-border: #e4e4ea;
+  --color-text: #0b0b0f;
+  --color-text-muted: #5c5c6b;
+  --color-primary: #0b0b0f;
+  --color-on-primary: #ffffff;
+  --color-secondary: #f0f0f3;
+  --color-on-secondary: #0b0b0f;
+  --color-accent: #4fd8a4;
+  --color-on-accent: #0b0b0f;
+  --color-accent-ink: #08805a;
+}
+
+@mixin dark-palette {
+  color-scheme: dark;
+
+  --color-bg: #050507;
+  --color-surface: #0e0e12;
+  --color-border: #23232b;
+  --color-text: #f4f4f6;
+  --color-text-muted: #a0a0ad;
+  --color-primary: #f4f4f6;
+  --color-on-primary: #050507;
+  --color-secondary: #1a1a21;
+  --color-on-secondary: #f4f4f6;
+  --color-accent: #4fd8a4;
+  --color-on-accent: #050507;
+  --color-accent-ink: #4fd8a4;
+}
+
+:root {
+  @include light-palette;
+
+  --font-sans: var(--font-montserrat), system-ui, sans-serif;
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
+
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-section: clamp(4rem, 10vw, 8rem);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    @include dark-palette;
+  }
+}
+
+:root[data-theme="dark"] {
+  @include dark-palette;
+}

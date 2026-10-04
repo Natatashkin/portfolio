@@ -1,0 +1,12 @@
+{
+  "NotFound": {
+    "title": "Сторінку не знайдено",
+    "backHome": "На головну"
+  },
+  "ThemeSwitcher": {
+    "label": "Тема",
+    "system": "системна",
+    "light": "світла",
+    "dark": "темна"
+  }
+}

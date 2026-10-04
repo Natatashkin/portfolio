@@ -1,0 +1,12 @@
+{
+  "NotFound": {
+    "title": "Page not found",
+    "backHome": "Back to home"
+  },
+  "ThemeSwitcher": {
+    "label": "Theme",
+    "system": "system",
+    "light": "light",
+    "dark": "dark"
+  }
+}
