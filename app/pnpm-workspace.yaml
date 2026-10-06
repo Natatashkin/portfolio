@@ -3,3 +3,5 @@ allowBuilds:
   '@swc/core': false
   sharp: false
   unrs-resolver: false
+overrides:
+  '@swc/core': 1.16.2
