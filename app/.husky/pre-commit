@@ -1,0 +1,2 @@
+cd app && pnpm exec lint-staged
+cd ../sanity-cms && pnpm exec lint-staged

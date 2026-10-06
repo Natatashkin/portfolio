@@ -6,7 +6,13 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "type-check": "tsc --noEmit",
+    "circular-dependencies-check": "npx madge --extensions ts,tsx --ts-config tsconfig.json -c src",
+    "code-quality": "pnpm lint && pnpm format:check && pnpm type-check && pnpm circular-dependencies-check",
+    "prepare": "cd .. && husky app/.husky"
   },
   "dependencies": {
     "@portabletext/react": "^8.0.1",
@@ -23,8 +29,19 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.8",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.9",
     "sass": "^1.105.1",
     "typescript": "^5"
   },
-  "packageManager": "pnpm@12.6.0"
+  "packageManager": "pnpm@12.6.0",
+  "lint-staged": {
+    "*.{ts,tsx,mts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{scss,json,md}": "prettier --write"
+  }
 }

@@ -1,14 +1,13 @@
-import { hasLocale, type Locale } from "next-intl";
-import { getRequestConfig } from "next-intl/server";
-import { notFound } from "next/navigation";
-import * as rootParams from "next/root-params";
-
-import { routing } from "./routing";
+import { notFound } from 'next/navigation';
+import * as rootParams from 'next/root-params';
+import { hasLocale, type Locale } from 'next-intl';
+import { getRequestConfig } from 'next-intl/server';
+import { routing } from './routing';
 
 // Explicit loaders keep the message types intact (a template-string import would be untyped).
 const loadMessages = {
-  en: () => import("../../messages/en.json"),
-  uk: () => import("../../messages/uk.json"),
+  en: () => import('../../messages/en.json'),
+  uk: () => import('../../messages/uk.json')
 } satisfies Record<Locale, () => Promise<unknown>>;
 
 export default getRequestConfig(async ({ locale: requestedLocale }) => {
@@ -22,6 +21,6 @@ export default getRequestConfig(async ({ locale: requestedLocale }) => {
 
   return {
     locale,
-    messages: (await loadMessages[locale]()).default,
+    messages: (await loadMessages[locale]()).default
   };
 });

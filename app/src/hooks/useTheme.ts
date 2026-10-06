@@ -1,14 +1,13 @@
-"use client";
+'use client';
 
-import { useCallback, useSyncExternalStore } from "react";
-
+import { useCallback, useSyncExternalStore } from 'react';
 import {
-  THEME_STORAGE_KEY,
   applyTheme,
   readStoredTheme,
   storeTheme,
   type Theme,
-} from "@/lib/theme/theme";
+  THEME_STORAGE_KEY
+} from '@/lib/theme/theme';
 
 const listeners = new Set<() => void>();
 
@@ -21,22 +20,26 @@ function subscribe(onChange: () => void): () => void {
     applyTheme(readStoredTheme());
     onChange();
   };
-  window.addEventListener("storage", onStorage);
+  window.addEventListener('storage', onStorage);
 
   return () => {
     listeners.delete(onChange);
-    window.removeEventListener("storage", onStorage);
+    window.removeEventListener('storage', onStorage);
   };
 }
 
 // The server never knows the stored theme, so it always renders as "system".
 function getServerSnapshot(): Theme {
-  return "system";
+  return 'system';
 }
 
 export function useTheme(): { theme: Theme; setTheme: (theme: Theme) => void } {
   // Reading localStorage on every snapshot is safe: it returns a primitive string, so equal values never re-render.
-  const theme = useSyncExternalStore(subscribe, readStoredTheme, getServerSnapshot);
+  const theme = useSyncExternalStore(
+    subscribe,
+    readStoredTheme,
+    getServerSnapshot
+  );
 
   const setTheme = useCallback((next: Theme) => {
     storeTheme(next);
