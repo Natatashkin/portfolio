@@ -12,4 +12,12 @@ export default defineCliConfig({
      */
     autoUpdates: true,
   },
+  // Types for the Next app: schema extracted here, GROQ queries scanned in ../app, output committed there.
+  typegen: {
+    enabled: true,
+    path: '../app/src/**/*.{ts,tsx}',
+    schema: './schema.json',
+    generates: '../app/src/sanity.types.ts',
+    overloadClientMethods: true,
+  },
 })

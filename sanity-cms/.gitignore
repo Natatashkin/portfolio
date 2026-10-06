@@ -30,3 +30,6 @@
 .env
 .env.*
 !.env.example
+
+# Sanity TypeGen intermediate file (the generated types are committed in app/)
+schema.json

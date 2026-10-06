@@ -11,16 +11,20 @@
     "dev": "sanity dev",
     "start": "sanity start",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "typegen": "sanity schemas extract --force --enforce-required-fields && sanity typegen generate"
   },
   "keywords": [
     "sanity"
   ],
   "dependencies": {
+    "@sanity/icons": "^5.2.3",
+    "@sanity/language-filter": "^5.0.19",
     "@sanity/vision": "^6.17.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "sanity": "^6.17.0",
+    "sanity-plugin-internationalized-array": "^5.3.2",
     "styled-components": "^6.1.18"
   },
   "devDependencies": {
