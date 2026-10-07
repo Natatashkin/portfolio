@@ -1,6 +1,7 @@
 import { Montserrat } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
+import SmoothScrollProvider from '@/components/SmoothScrollProvider/SmoothScrollProvider';
 import { routing } from '@/i18n/routing';
 import { themeScript } from '@/lib/theme/theme';
 
@@ -31,7 +32,9 @@ export default async function LocaleLayout({
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className={montserrat.variable}>
-        <NextIntlClientProvider>{children}</NextIntlClientProvider>
+        <NextIntlClientProvider>
+          <SmoothScrollProvider>{children}</SmoothScrollProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

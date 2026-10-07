@@ -11,20 +11,20 @@ import {
 
 const listeners = new Set<() => void>();
 
-function subscribe(onChange: () => void): () => void {
-  listeners.add(onChange);
+function subscribeToTheme(handleChange: () => void): () => void {
+  listeners.add(handleChange);
 
   // Keeps other tabs in sync; `key === null` means the whole storage was cleared.
-  const onStorage = (event: StorageEvent) => {
+  const handleStorage = (event: StorageEvent) => {
     if (event.key !== THEME_STORAGE_KEY && event.key !== null) return;
     applyTheme(readStoredTheme());
-    onChange();
+    handleChange();
   };
-  window.addEventListener('storage', onStorage);
+  window.addEventListener('storage', handleStorage);
 
   return () => {
-    listeners.delete(onChange);
-    window.removeEventListener('storage', onStorage);
+    listeners.delete(handleChange);
+    window.removeEventListener('storage', handleStorage);
   };
 }
 
@@ -36,7 +36,7 @@ function getServerSnapshot(): Theme {
 export function useTheme(): { theme: Theme; setTheme: (theme: Theme) => void } {
   // Reading localStorage on every snapshot is safe: it returns a primitive string, so equal values never re-render.
   const theme = useSyncExternalStore(
-    subscribe,
+    subscribeToTheme,
     readStoredTheme,
     getServerSnapshot
   );
