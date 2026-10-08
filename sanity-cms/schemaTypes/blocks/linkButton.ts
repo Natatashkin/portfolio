@@ -4,13 +4,18 @@ import {createElement} from 'react'
 import {defineField, defineType} from 'sanity'
 import {baseText, requiredInAllLanguages} from '../lib/localized'
 
-// Sanity passes the parent object untyped; read it through one helper.
-const linkButtonOf = (parent: unknown) => parent as LinkButtonValue | undefined
-
 const LINK_TYPES = [
   {title: 'Internal', value: 'internal'},
   {title: 'External', value: 'external'},
-]
+] as const
+
+type LinkButtonValue = {
+  linkType?: (typeof LINK_TYPES)[number]['value']
+  hasAnchor?: boolean
+}
+
+// Sanity passes the parent object untyped; read it through one helper.
+const linkButtonOf = (parent: unknown) => parent as LinkButtonValue | undefined
 
 export const linkButtonType = defineType({
   name: 'linkButton',
@@ -35,7 +40,7 @@ export const linkButtonType = defineType({
       title: 'Link type',
       type: 'string',
       options: {
-        list: LINK_TYPES.map(({title, value}) => ({title, value})),
+        list: [...LINK_TYPES],
         layout: 'radio',
         direction: 'horizontal',
       },
@@ -50,14 +55,14 @@ export const linkButtonType = defineType({
             ...props,
             conditionField: 'linkType',
             descriptions: {
-              internal: 'Enter an internal path, e.g. /about or /projects',
+              internal: 'Enter an internal path, e.g. about or projects',
               external: 'Enter a full URL, e.g. https://example.com',
             },
           }),
       },
       validation: (rule) =>
         rule.custom((value, context) => {
-          const linkType = context.parent?.linkType
+          const linkType = linkButtonOf(context.parent)?.linkType
 
           if (!value) {
             return 'This field is required'
@@ -81,7 +86,7 @@ export const linkButtonType = defineType({
             case 'internal':
               return /^[a-z0-9]+(?:[-/][a-z0-9]+)*$/i.test(value)
                 ? true
-                : 'Enter a valid internal path, e.g. \"about\" or \"projects\"'
+                : 'Enter a valid internal path, e.g. "about" or "projects"'
 
             default:
               return true
@@ -98,10 +103,10 @@ export const linkButtonType = defineType({
       title: 'Anchor',
       type: 'string',
       description: 'Enter anchor without # and spaces',
-      hidden: ({parent}) => !parent?.hasAnchor,
+      hidden: ({parent}) => !linkButtonOf(parent)?.hasAnchor,
       validation: (rule) =>
         rule.custom((value, context) => {
-          if (!context.parent?.hasAnchor) {
+          if (!linkButtonOf(context.parent)?.hasAnchor) {
             return true
           }
 

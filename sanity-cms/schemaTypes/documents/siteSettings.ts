@@ -52,10 +52,6 @@ export const siteSettingsType = defineType({
       ],
     }),
     defineField({
-      name: 'headerButton',
-      type: 'linkButton',
-    }),
-    defineField({
       name: 'socialLinks',
       type: 'array',
       of: [

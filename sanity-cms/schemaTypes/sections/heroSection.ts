@@ -1,6 +1,7 @@
 import {RocketIcon} from '@sanity/icons/Rocket'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {sectionGroups, sectionPreview} from '../lib/sectionFields'
+import {requiredInAllLanguages} from '../lib/localized'
 
 export const heroSectionType = defineType({
   name: 'heroSection',
@@ -10,13 +11,19 @@ export const heroSectionType = defineType({
   groups: sectionGroups,
   fields: [
     defineField({
-      name: 'eyebrow',
-      type: 'internationalizedArrayString',
+      name: 'role',
+      type: 'string',
       group: 'content',
     }),
     defineField({
       name: 'headline',
       type: 'internationalizedArrayHeadline',
+      group: 'content',
+    }),
+    defineField({
+      name: 'fullname',
+      type: 'internationalizedArrayString',
+      validation: requiredInAllLanguages,
       group: 'content',
     }),
     defineField({
@@ -26,7 +33,7 @@ export const heroSectionType = defineType({
       of: [
         defineArrayMember({
           type: 'reference',
-          to: [{type: 'technology'}],
+          to: [{type: 'technology'}, {type: 'skill'}],
         }),
       ],
     }),
@@ -41,16 +48,6 @@ export const heroSectionType = defineType({
       group: 'media',
     }),
     defineField({
-      name: 'locationLabel',
-      type: 'internationalizedArrayString',
-      group: 'media',
-    }),
-    defineField({
-      name: 'location',
-      type: 'internationalizedArrayString',
-      group: 'media',
-    }),
-    defineField({
       name: 'quote',
       type: 'internationalizedArrayText',
       group: 'media',
@@ -61,12 +58,7 @@ export const heroSectionType = defineType({
       group: 'media',
     }),
     defineField({
-      name: 'primaryButton',
-      type: 'linkButton',
-      group: 'actions',
-    }),
-    defineField({
-      name: 'secondaryButton',
+      name: 'ctaButton',
       type: 'linkButton',
       group: 'actions',
     }),
