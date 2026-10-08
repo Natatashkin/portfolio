@@ -1,6 +1,6 @@
 import {TrendUpwardIcon} from '@sanity/icons/TrendUpward'
 import {defineField, defineType} from 'sanity'
-import {baseText, requiredInBaseLanguage} from '../lib/localized'
+import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 // One step of the career path shown in the career section.
 export const roadType = defineType({
@@ -16,7 +16,7 @@ export const roadType = defineType({
     defineField({
       name: 'title',
       type: 'internationalizedArrayString',
-      validation: requiredInBaseLanguage,
+      validation: requiredInAllLanguages,
     }),
     defineField({
       name: 'description',

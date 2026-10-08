@@ -1,6 +1,6 @@
 import {ImageIcon} from '@sanity/icons/Image'
 import {defineField, defineType} from 'sanity'
-import {baseText, requiredInBaseLanguage} from '../lib/localized'
+import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 export const responsiveImageType = defineType({
   name: 'responsiveImage',
@@ -24,7 +24,7 @@ export const responsiveImageType = defineType({
       name: 'alt',
       title: 'Alternative text',
       type: 'internationalizedArrayString',
-      validation: requiredInBaseLanguage,
+      validation: requiredInAllLanguages,
     }),
   ],
   preview: {

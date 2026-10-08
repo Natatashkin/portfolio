@@ -1,5 +1,5 @@
-// English is the base language: required fields are validated in `en` only and the
-// frontend falls back to `en` when a `uk` value is missing.
+// English is the base language, used for previews and as the frontend fallback.
+// Required fields must be filled in every language.
 export const BASE_LANGUAGE = 'en'
 
 export const LANGUAGES = [

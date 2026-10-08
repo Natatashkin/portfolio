@@ -1,6 +1,6 @@
 import {BulbOutlineIcon} from '@sanity/icons/BulbOutline'
 import {defineField, defineType} from 'sanity'
-import {baseText, requiredInBaseLanguage} from '../lib/localized'
+import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 export const skillType = defineType({
   name: 'skill',
@@ -11,7 +11,7 @@ export const skillType = defineType({
     defineField({
       name: 'title',
       type: 'internationalizedArrayString',
-      validation: requiredInBaseLanguage,
+      validation: requiredInAllLanguages,
     }),
     defineField({
       name: 'description',

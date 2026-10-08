@@ -1,6 +1,6 @@
 import {BarChartIcon} from '@sanity/icons/BarChart'
 import {defineField, defineType} from 'sanity'
-import {baseText, requiredInBaseLanguage} from '../lib/localized'
+import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 export const metricType = defineType({
   name: 'metric',
@@ -17,7 +17,7 @@ export const metricType = defineType({
     defineField({
       name: 'label',
       type: 'internationalizedArrayString',
-      validation: requiredInBaseLanguage,
+      validation: requiredInAllLanguages,
     }),
   ],
   preview: {

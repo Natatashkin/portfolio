@@ -3,7 +3,7 @@ import {structureTool} from 'sanity/structure'
 import {visionTool} from '@sanity/vision'
 import {internationalizedArray} from 'sanity-plugin-internationalized-array'
 import {schemaTypes, singletonTypes} from './schemaTypes'
-import {BASE_LANGUAGE, LANGUAGES} from './schemaTypes/lib/languages'
+import {LANGUAGES} from './schemaTypes/lib/languages'
 import {structure} from './structure'
 
 // Singletons can only be published, discarded or restored: no delete, duplicate or unpublish.
@@ -21,7 +21,7 @@ export default defineConfig({
     visionTool(),
     internationalizedArray({
       languages: LANGUAGES,
-      defaultLanguages: [BASE_LANGUAGE],
+      defaultLanguages: LANGUAGES.map(({id}) => id),
       fieldTypes: ['string', 'text', 'richText', 'headline'],
       // Uses @sanity/language-filter under the hood: it is a required peer dependency of this
       // plugin, so keep it in package.json even though nothing imports it directly.

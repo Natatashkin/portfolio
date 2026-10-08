@@ -1,6 +1,6 @@
 import {PlayIcon} from '@sanity/icons/Play'
 import {defineField, defineType} from 'sanity'
-import {baseText, requiredInBaseLanguage} from '../lib/localized'
+import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 // An interactive demo in the playground section; `componentKey` picks the client component in Next.
 export const pieceType = defineType({
@@ -12,7 +12,7 @@ export const pieceType = defineType({
     defineField({
       name: 'title',
       type: 'internationalizedArrayString',
-      validation: requiredInBaseLanguage,
+      validation: requiredInAllLanguages,
     }),
     defineField({
       name: 'hint',

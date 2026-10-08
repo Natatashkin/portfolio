@@ -1,6 +1,6 @@
 import {ProjectsIcon} from '@sanity/icons/Projects'
 import {defineArrayMember, defineField, defineType} from 'sanity'
-import {baseText, requiredInBaseLanguage} from '../lib/localized'
+import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 export const projectType = defineType({
   name: 'project',
@@ -11,7 +11,7 @@ export const projectType = defineType({
     defineField({
       name: 'title',
       type: 'internationalizedArrayString',
-      validation: requiredInBaseLanguage,
+      validation: requiredInAllLanguages,
     }),
     defineField({
       name: 'slug',

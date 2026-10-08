@@ -1,64 +1,117 @@
 import {LinkIcon} from '@sanity/icons/Link'
+import {ConditionalDescription} from '../../components/ConditionalDescription'
+import {createElement} from 'react'
 import {defineField, defineType} from 'sanity'
-import {LinkButtonInput, type LinkButtonValue} from '../../components/LinkButtonInput'
-import {baseText, requiredInBaseLanguage} from '../lib/localized'
+import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 // Sanity passes the parent object untyped; read it through one helper.
 const linkButtonOf = (parent: unknown) => parent as LinkButtonValue | undefined
-const isExternal = (parent: unknown) => Boolean(linkButtonOf(parent)?.isExternal)
+
+const LINK_TYPES = [
+  {title: 'Internal', value: 'internal'},
+  {title: 'External', value: 'external'},
+]
 
 export const linkButtonType = defineType({
   name: 'linkButton',
   title: 'Link button',
   type: 'object',
   icon: LinkIcon,
-  components: {input: LinkButtonInput},
   // Defaults for every new button, wherever it is created (document, section, array item).
   initialValue: {
-    isExternal: false,
+    linkType: 'internal',
     variant: 'primary',
     hasIcon: false,
+    hasAnchor: false,
   },
   fields: [
     defineField({
       name: 'label',
       type: 'internationalizedArrayString',
-      validation: requiredInBaseLanguage,
+      validation: requiredInAllLanguages,
     }),
     defineField({
-      name: 'isExternal',
-      title: 'External link',
-      type: 'boolean',
+      name: 'linkType',
+      title: 'Link type',
+      type: 'string',
+      options: {
+        list: LINK_TYPES.map(({title, value}) => ({title, value})),
+        layout: 'radio',
+        direction: 'horizontal',
+      },
     }),
     defineField({
       name: 'url',
       title: 'URL',
       type: 'url',
-      hidden: ({parent}) => !isExternal(parent),
+      components: {
+        field: (props) =>
+          createElement(ConditionalDescription, {
+            ...props,
+            conditionField: 'linkType',
+            descriptions: {
+              internal: 'Enter an internal path, e.g. /about or /projects',
+              external: 'Enter a full URL, e.g. https://example.com',
+            },
+          }),
+      },
       validation: (rule) =>
-        rule
-          .uri({scheme: ['https', 'mailto', 'tel']})
-          .custom((value, context) =>
-            isExternal(context.parent) && !value ? 'Required for an external link' : true,
-          ),
+        rule.custom((value, context) => {
+          const linkType = context.parent?.linkType
+
+          if (!value) {
+            return 'This field is required'
+          }
+
+          switch (linkType) {
+            case 'external': {
+              try {
+                const url = new URL(value)
+
+                if (!['https:', 'mailto:', 'tel:'].includes(url.protocol)) {
+                  return 'URL must use https, mailto, or tel protocol'
+                }
+
+                return true
+              } catch {
+                return 'Enter a valid URL'
+              }
+            }
+
+            case 'internal':
+              return /^[a-z0-9]+(?:[-/][a-z0-9]+)*$/i.test(value)
+                ? true
+                : 'Enter a valid internal path, e.g. \"about\" or \"projects\"'
+
+            default:
+              return true
+          }
+        }),
     }),
     defineField({
-      name: 'page',
-      type: 'reference',
-      to: [{type: 'page'}],
-      hidden: ({parent}) => isExternal(parent),
+      name: 'hasAnchor',
+      title: 'Has anchor?',
+      type: 'boolean',
     }),
     defineField({
       name: 'anchor',
+      title: 'Anchor',
       type: 'string',
-      description: 'Section anchor ID without "#", for example: projects',
-      hidden: ({parent}) => isExternal(parent),
+      description: 'Enter anchor without # and spaces',
+      hidden: ({parent}) => !parent?.hasAnchor,
       validation: (rule) =>
-        rule.regex(/^[a-z0-9-]+$/, {name: 'anchor ID'}).custom((value, context) => {
-          const parent = linkButtonOf(context.parent)
-          return !parent?.isExternal && !value && !parent?.page
-            ? 'Choose a page, an anchor, or both'
-            : true
+        rule.custom((value, context) => {
+          if (!context.parent?.hasAnchor) {
+            return true
+          }
+
+          if (!value) {
+            return 'Anchor is required'
+          }
+
+          return /^[a-z]+(?:-[a-z]+)*$/i.test(value)
+            ? true
+            : 'Use letters and hyphens only, e.g. "about" or "my-project"'
         }),
     }),
     defineField({
@@ -93,11 +146,11 @@ export const linkButtonType = defineType({
     select: {
       label: 'label',
       variant: 'variant',
-      isExternal: 'isExternal',
+      linkType: 'linkType',
     },
-    prepare: ({label, variant, isExternal: external}) => ({
+    prepare: ({label, variant, linkType}) => ({
       title: baseText(label) ?? 'Link button',
-      subtitle: [variant, external ? 'external' : 'internal'].filter(Boolean).join(' · '),
+      subtitle: [variant, linkType].filter(Boolean).join(' · '),
     }),
   },
 })

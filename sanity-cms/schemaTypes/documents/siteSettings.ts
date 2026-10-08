@@ -1,6 +1,6 @@
 import {CogIcon} from '@sanity/icons/Cog'
 import {defineArrayMember, defineField, defineType} from 'sanity'
-import {baseText, requiredInBaseLanguage} from '../lib/localized'
+import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 // Singleton: the structure exposes a single document with the fixed ID `siteSettings`.
 export const siteSettingsType = defineType({
@@ -11,12 +11,12 @@ export const siteSettingsType = defineType({
   fields: [
     defineField({
       name: 'name',
-      type: 'string',
-      validation: (rule) => rule.required(),
+      type: 'internationalizedArrayString',
+      validation: requiredInAllLanguages,
     }),
     defineField({
       name: 'role',
-      type: 'internationalizedArrayString',
+      type: 'string',
     }),
     defineField({
       name: 'navigation',
@@ -29,7 +29,7 @@ export const siteSettingsType = defineType({
             defineField({
               name: 'label',
               type: 'internationalizedArrayString',
-              validation: requiredInBaseLanguage,
+              validation: requiredInAllLanguages,
             }),
             defineField({
               name: 'anchor',
@@ -96,6 +96,7 @@ export const siteSettingsType = defineType({
       name: 'backToTopLabel',
       title: 'Back-to-top label',
       type: 'internationalizedArrayString',
+      validation: requiredInAllLanguages,
     }),
   ],
   preview: {prepare: () => ({title: 'Site settings'})},
