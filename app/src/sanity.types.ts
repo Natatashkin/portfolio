@@ -14,6 +14,12 @@
 
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
+type ArrayOf<T> = Array<
+  T & {
+    _key: string;
+  }
+>;
+
 // Source: schema.json
 export type CtaSection = {
   _type: 'ctaSection';
@@ -173,21 +179,15 @@ export type MetricsSection = {
 
 export type HeroSection = {
   _type: 'heroSection';
-  eyebrow?: InternationalizedArrayString;
+  role?: string;
   headline?: InternationalizedArrayHeadline;
-  stack?: Array<
-    {
-      _key: string;
-    } & TechnologyReference
-  >;
+  fullname?: InternationalizedArrayString;
+  stack?: ArrayOf<TechnologyReference | SkillReference>;
   description?: InternationalizedArrayRichText;
   image?: ResponsiveImage;
-  locationLabel?: InternationalizedArrayString;
-  location?: InternationalizedArrayString;
   quote?: InternationalizedArrayText;
   tagline?: InternationalizedArrayString;
-  primaryButton?: LinkButton;
-  secondaryButton?: LinkButton;
+  ctaButton?: LinkButton;
   anchorId?: string;
 };
 
@@ -301,19 +301,12 @@ export type Project = {
   link?: LinkButton;
 };
 
-export type PageReference = {
-  _ref: string;
-  _type: 'reference';
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: 'page';
-};
-
 export type LinkButton = {
   _type: 'linkButton';
   label?: InternationalizedArrayString;
-  isExternal?: boolean;
+  linkType?: 'internal' | 'external';
   url?: string;
-  page?: PageReference;
+  hasAnchor?: boolean;
   anchor?: string;
   variant?: 'primary' | 'secondary' | 'accent';
   hasIcon?: boolean;
@@ -349,32 +342,6 @@ export type Slug = {
   _type: 'slug';
   current: string;
   source?: string;
-};
-
-export type SiteSettings = {
-  _id: string;
-  _type: 'siteSettings';
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  name: string;
-  role?: InternationalizedArrayString;
-  navigation?: Array<{
-    label?: InternationalizedArrayString;
-    anchor: string;
-    _type: 'navigationItem';
-    _key: string;
-  }>;
-  headerButton?: LinkButton;
-  socialLinks?: Array<{
-    label: string;
-    url: string;
-    _type: 'socialLink';
-    _key: string;
-  }>;
-  location?: InternationalizedArrayString;
-  copyright?: InternationalizedArrayString;
-  backToTopLabel?: InternationalizedArrayString;
 };
 
 export type Page = {
@@ -448,6 +415,32 @@ export type InternationalizedArrayHeadline = Array<
     _key: string;
   } & InternationalizedArrayHeadlineValue
 >;
+
+export type SiteSettings = {
+  _id: string;
+  _type: 'siteSettings';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  siteName?: string;
+  name?: InternationalizedArrayString;
+  role?: string;
+  navigation?: Array<{
+    label?: InternationalizedArrayString;
+    anchor: string;
+    _type: 'navigationItem';
+    _key: string;
+  }>;
+  socialLinks?: Array<{
+    label: string;
+    url: string;
+    _type: 'socialLink';
+    _key: string;
+  }>;
+  location?: InternationalizedArrayString;
+  copyright?: InternationalizedArrayString;
+  backToTopLabel?: InternationalizedArrayString;
+};
 
 export type Headline = Array<{
   children?: Array<{
@@ -631,16 +624,15 @@ export type AllSanitySchemaTypes =
   | Experience
   | InternationalizedArrayRichText
   | Project
-  | PageReference
   | LinkButton
   | SanityImageAssetReference
   | ResponsiveImage
   | Slug
-  | SiteSettings
   | Page
   | SanityImageCrop
   | SanityImageHotspot
   | InternationalizedArrayHeadline
+  | SiteSettings
   | Headline
   | RichText
   | InternationalizedArrayHeadlineValue
@@ -655,3 +647,93 @@ export type AllSanitySchemaTypes =
   | SanityAssetSourceData
   | SanityImageAsset
   | Geopoint;
+
+// Source: ../app/src/lib/sanity/queries.ts
+// Variable: PAGE_QUERY
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    sections[]{      _key,      _type,      anchorId,      _type == "heroSection" => {        role,        "fullname": select(          defined(fullname[language == $locale][0].value) &&            fullname[language == $locale][0].value != "" =>            fullname[language == $locale][0].value,          fullname[language == "en"][0].value        ),        "tagline": select(          defined(tagline[language == $locale][0].value) &&            tagline[language == $locale][0].value != "" =>            tagline[language == $locale][0].value,          tagline[language == "en"][0].value        )      }    }  }
+export type PAGE_QUERY_RESULT = {
+  _id: string;
+  sections: Array<
+    | {
+        _key: string;
+        _type: 'careerSection';
+        anchorId: string | null;
+      }
+    | {
+        _key: string;
+        _type: 'ctaSection';
+        anchorId: string | null;
+      }
+    | {
+        _key: string;
+        _type: 'experienceSection';
+        anchorId: string | null;
+      }
+    | {
+        _key: string;
+        _type: 'heroSection';
+        anchorId: string | null;
+        role: string | null;
+        fullname: string | null;
+        tagline: string | null;
+      }
+    | {
+        _key: string;
+        _type: 'metricsSection';
+        anchorId: string | null;
+      }
+    | {
+        _key: string;
+        _type: 'playgroundSection';
+        anchorId: string | null;
+      }
+    | {
+        _key: string;
+        _type: 'projectsSection';
+        anchorId: string | null;
+      }
+    | {
+        _key: string;
+        _type: 'techStackSection';
+        anchorId: string | null;
+      }
+    | {
+        _key: string;
+        _type: 'whatIDoSection';
+        anchorId: string | null;
+      }
+  > | null;
+} | null;
+
+// Source: ../app/src/lib/sanity/queries.ts
+// Variable: SITE_SETTINGS_QUERY
+// Query: *[_type == "siteSettings"][0] {    siteName,    "name": select(      defined(name[language == $locale][0].value) &&         name[language == $locale][0].value != "" =>         name[language == $locale][0].value,         name[language == "en"][0].value      ),    "navigation": navigation[] {      _key,      "label": select(        defined(label[language == $locale][0].value) &&          label[language == $locale][0].value != "" =>           label[language == $locale][0].value,          label[language == "en"][0].value        ),      anchor    },    "socialLinks": socialLinks[] {      _key, label, url    },    "copyright": select(      defined(copyright[language == $locale][0].value) &&         copyright[language == $locale][0].value != "" =>         copyright[language == $locale][0].value,         copyright[language == "en"][0].value      ),    "backToTopLabel": select(      defined(backToTopLabel[language == $locale][0].value) &&         backToTopLabel[language == $locale][0].value != "" =>         backToTopLabel[language == $locale][0].value,         backToTopLabel[language == "en"][0].value      ),    "location": select(      defined(location[language == $locale][0].value) &&         location[language == $locale][0].value != "" =>         location[language == $locale][0].value,         location[language == "en"][0].value      ),  }
+export type SITE_SETTINGS_QUERY_RESULT = {
+  siteName: string | null;
+  name: string | null;
+  navigation: Array<{
+    _key: string;
+    label: string | null;
+    anchor: string;
+  }> | null;
+  socialLinks: Array<{
+    _key: string;
+    label: string;
+    url: string;
+  }> | null;
+  copyright: string | null;
+  backToTopLabel: string | null;
+  location: string | null;
+} | null;
+
+// Query TypeMap
+declare global {
+  interface SanityQueries {
+    '\n  *[_type == "page" && slug.current == $slug][0]{\n    _id,\n    sections[]{\n      _key,\n      _type,\n      anchorId,\n      _type == "heroSection" => {\n        role,\n        "fullname": select(\n          defined(fullname[language == $locale][0].value) &&\n            fullname[language == $locale][0].value != "" =>\n            fullname[language == $locale][0].value,\n          fullname[language == "en"][0].value\n        ),\n        "tagline": select(\n          defined(tagline[language == $locale][0].value) &&\n            tagline[language == $locale][0].value != "" =>\n            tagline[language == $locale][0].value,\n          tagline[language == "en"][0].value\n        )\n      }\n    }\n  }\n': PAGE_QUERY_RESULT;
+    '\n  *[_type == "siteSettings"][0] {\n    siteName,\n    "name": select(\n      defined(name[language == $locale][0].value) && \n        name[language == $locale][0].value != "" => \n        name[language == $locale][0].value, \n        name[language == "en"][0].value\n      ),\n    "navigation": navigation[] {\n      _key,\n      "label": select(\n        defined(label[language == $locale][0].value) &&\n          label[language == $locale][0].value != "" => \n          label[language == $locale][0].value,\n          label[language == "en"][0].value\n        ),\n      anchor\n    },\n    "socialLinks": socialLinks[] {\n      _key, label, url\n    },\n    "copyright": select(\n      defined(copyright[language == $locale][0].value) && \n        copyright[language == $locale][0].value != "" => \n        copyright[language == $locale][0].value, \n        copyright[language == "en"][0].value\n      ),\n    "backToTopLabel": select(\n      defined(backToTopLabel[language == $locale][0].value) && \n        backToTopLabel[language == $locale][0].value != "" => \n        backToTopLabel[language == $locale][0].value, \n        backToTopLabel[language == "en"][0].value\n      ),\n    "location": select(\n      defined(location[language == $locale][0].value) && \n        location[language == $locale][0].value != "" => \n        location[language == $locale][0].value, \n        location[language == "en"][0].value\n      ),\n  }\n': SITE_SETTINGS_QUERY_RESULT;
+  }
+}
+// Lets @sanity/client releases that predate the global registry read it too
+declare module '@sanity/client' {
+  interface SanityQueries extends globalThis.SanityQueries {}
+}

@@ -175,6 +175,9 @@ importers:
       '@portabletext/react':
         specifier: ^8.0.1
         version: 8.0.1(react@19.2.8)
+      '@sanity/client':
+        specifier: ^8.9.0
+        version: 8.9.0
       '@sanity/image-url':
         specifier: ^2.1.1
         version: 2.1.1
