@@ -10,8 +10,14 @@
 .link {
   color: var(--color-text-muted);
   text-decoration: none;
+  font-weight: 400;
+  transition: color 250ms ease-in-out;
 
   &:hover {
     color: var(--color-text);
+  }
+
+  &[aria-current='page'] {
+    color: var(--color-accent-ink);
   }
 }
