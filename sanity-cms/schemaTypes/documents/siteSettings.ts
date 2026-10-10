@@ -10,6 +10,10 @@ export const siteSettingsType = defineType({
   icon: CogIcon,
   fields: [
     defineField({
+      name: 'siteName',
+      type: 'string',
+    }),
+    defineField({
       name: 'name',
       type: 'internationalizedArrayString',
       validation: requiredInAllLanguages,
@@ -25,6 +29,9 @@ export const siteSettingsType = defineType({
         defineArrayMember({
           name: 'navigationItem',
           type: 'object',
+          initialValue: {
+            isAnchor: false,
+          },
           fields: [
             defineField({
               name: 'label',
@@ -32,20 +39,26 @@ export const siteSettingsType = defineType({
               validation: requiredInAllLanguages,
             }),
             defineField({
-              name: 'anchor',
+              name: 'isAnchor',
+              type: 'boolean',
+            }),
+            defineField({
+              name: 'url',
+              title: 'URL',
               type: 'string',
-              description: 'Section anchor ID without "#"',
-              validation: (rule) => rule.required().regex(/^[a-z0-9-]+$/, {name: 'anchor ID'}),
+              description: 'Use letters and hyphens only, e.g. "about" or "my-project"',
+              validation: (rule) => rule.required().regex(/^[a-z]+$/, {name: 'project link'}),
             }),
           ],
           preview: {
             select: {
               label: 'label',
-              anchor: 'anchor',
+              isAnchor: 'isAnchor',
+              url: 'url',
             },
-            prepare: ({label, anchor}) => ({
-              title: baseText(label) ?? anchor,
-              subtitle: `#${anchor}`,
+            prepare: ({label, isAnchor, url}) => ({
+              title: baseText(label) ?? url,
+              subtitle: isAnchor ? `#${url}` : `url: ${url}`,
             }),
           },
         }),

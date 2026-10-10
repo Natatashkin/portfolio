@@ -427,7 +427,8 @@ export type SiteSettings = {
   role?: string;
   navigation?: Array<{
     label?: InternationalizedArrayString;
-    anchor: string;
+    isAnchor?: boolean;
+    url: string;
     _type: 'navigationItem';
     _key: string;
   }>;
@@ -707,14 +708,15 @@ export type PAGE_QUERY_RESULT = {
 
 // Source: ../app/src/lib/sanity/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_type == "siteSettings"][0] {    siteName,    "name": select(      defined(name[language == $locale][0].value) &&         name[language == $locale][0].value != "" =>         name[language == $locale][0].value,         name[language == "en"][0].value      ),    "navigation": navigation[] {      _key,      "label": select(        defined(label[language == $locale][0].value) &&          label[language == $locale][0].value != "" =>           label[language == $locale][0].value,          label[language == "en"][0].value        ),      anchor    },    "socialLinks": socialLinks[] {      _key, label, url    },    "copyright": select(      defined(copyright[language == $locale][0].value) &&         copyright[language == $locale][0].value != "" =>         copyright[language == $locale][0].value,         copyright[language == "en"][0].value      ),    "backToTopLabel": select(      defined(backToTopLabel[language == $locale][0].value) &&         backToTopLabel[language == $locale][0].value != "" =>         backToTopLabel[language == $locale][0].value,         backToTopLabel[language == "en"][0].value      ),    "location": select(      defined(location[language == $locale][0].value) &&         location[language == $locale][0].value != "" =>         location[language == $locale][0].value,         location[language == "en"][0].value      ),  }
+// Query: *[_type == "siteSettings"][0] {    siteName,    "name": select(      defined(name[language == $locale][0].value) &&         name[language == $locale][0].value != "" =>         name[language == $locale][0].value,         name[language == "en"][0].value      ),    "navigation": navigation[] {      _key,      "label": select(        defined(label[language == $locale][0].value) &&          label[language == $locale][0].value != "" =>           label[language == $locale][0].value,          label[language == "en"][0].value        ),      url,      anchor    },    "socialLinks": socialLinks[] {      _key, label, url    },    "copyright": select(      defined(copyright[language == $locale][0].value) &&         copyright[language == $locale][0].value != "" =>         copyright[language == $locale][0].value,         copyright[language == "en"][0].value      ),    "backToTopLabel": select(      defined(backToTopLabel[language == $locale][0].value) &&         backToTopLabel[language == $locale][0].value != "" =>         backToTopLabel[language == $locale][0].value,         backToTopLabel[language == "en"][0].value      ),    "location": select(      defined(location[language == $locale][0].value) &&         location[language == $locale][0].value != "" =>         location[language == $locale][0].value,         location[language == "en"][0].value      ),  }
 export type SITE_SETTINGS_QUERY_RESULT = {
   siteName: string | null;
   name: string | null;
   navigation: Array<{
     _key: string;
     label: string | null;
-    anchor: string;
+    url: string;
+    anchor: null;
   }> | null;
   socialLinks: Array<{
     _key: string;
@@ -730,7 +732,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
 declare global {
   interface SanityQueries {
     '\n  *[_type == "page" && slug.current == $slug][0]{\n    _id,\n    sections[]{\n      _key,\n      _type,\n      anchorId,\n      _type == "heroSection" => {\n        role,\n        "fullname": select(\n          defined(fullname[language == $locale][0].value) &&\n            fullname[language == $locale][0].value != "" =>\n            fullname[language == $locale][0].value,\n          fullname[language == "en"][0].value\n        ),\n        "tagline": select(\n          defined(tagline[language == $locale][0].value) &&\n            tagline[language == $locale][0].value != "" =>\n            tagline[language == $locale][0].value,\n          tagline[language == "en"][0].value\n        )\n      }\n    }\n  }\n': PAGE_QUERY_RESULT;
-    '\n  *[_type == "siteSettings"][0] {\n    siteName,\n    "name": select(\n      defined(name[language == $locale][0].value) && \n        name[language == $locale][0].value != "" => \n        name[language == $locale][0].value, \n        name[language == "en"][0].value\n      ),\n    "navigation": navigation[] {\n      _key,\n      "label": select(\n        defined(label[language == $locale][0].value) &&\n          label[language == $locale][0].value != "" => \n          label[language == $locale][0].value,\n          label[language == "en"][0].value\n        ),\n      anchor\n    },\n    "socialLinks": socialLinks[] {\n      _key, label, url\n    },\n    "copyright": select(\n      defined(copyright[language == $locale][0].value) && \n        copyright[language == $locale][0].value != "" => \n        copyright[language == $locale][0].value, \n        copyright[language == "en"][0].value\n      ),\n    "backToTopLabel": select(\n      defined(backToTopLabel[language == $locale][0].value) && \n        backToTopLabel[language == $locale][0].value != "" => \n        backToTopLabel[language == $locale][0].value, \n        backToTopLabel[language == "en"][0].value\n      ),\n    "location": select(\n      defined(location[language == $locale][0].value) && \n        location[language == $locale][0].value != "" => \n        location[language == $locale][0].value, \n        location[language == "en"][0].value\n      ),\n  }\n': SITE_SETTINGS_QUERY_RESULT;
+    '\n  *[_type == "siteSettings"][0] {\n    siteName,\n    "name": select(\n      defined(name[language == $locale][0].value) && \n        name[language == $locale][0].value != "" => \n        name[language == $locale][0].value, \n        name[language == "en"][0].value\n      ),\n    "navigation": navigation[] {\n      _key,\n      "label": select(\n        defined(label[language == $locale][0].value) &&\n          label[language == $locale][0].value != "" => \n          label[language == $locale][0].value,\n          label[language == "en"][0].value\n        ),\n      url,\n      anchor\n    },\n    "socialLinks": socialLinks[] {\n      _key, label, url\n    },\n    "copyright": select(\n      defined(copyright[language == $locale][0].value) && \n        copyright[language == $locale][0].value != "" => \n        copyright[language == $locale][0].value, \n        copyright[language == "en"][0].value\n      ),\n    "backToTopLabel": select(\n      defined(backToTopLabel[language == $locale][0].value) && \n        backToTopLabel[language == $locale][0].value != "" => \n        backToTopLabel[language == $locale][0].value, \n        backToTopLabel[language == "en"][0].value\n      ),\n    "location": select(\n      defined(location[language == $locale][0].value) && \n        location[language == $locale][0].value != "" => \n        location[language == $locale][0].value, \n        location[language == "en"][0].value\n      ),\n  }\n': SITE_SETTINGS_QUERY_RESULT;
   }
 }
 // Lets @sanity/client releases that predate the global registry read it too
