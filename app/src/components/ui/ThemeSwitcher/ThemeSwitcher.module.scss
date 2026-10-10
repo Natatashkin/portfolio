@@ -2,6 +2,7 @@
 .placeholder {
   display: inline-flex;
   align-items: center;
+  vertical-align: top;
   min-inline-size: 10rem;
   min-block-size: 2.5rem;
   padding-inline: var(--space-4);

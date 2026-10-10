@@ -4,6 +4,7 @@ import { defineQuery } from 'next-sanity';
 // fetch, so editing any of them revalidates the page. Extend it together with
 // the query when a section starts dereferencing another document type.
 export const PAGE_QUERY_TAGS = ['page'] as const;
+export const SITE_SETTING_QUERY_TAGS = ['site-settings'] as const;
 
 // Localized fields are written out literally: TypeGen reads queries
 // statically and cannot infer types through interpolated strings.
@@ -52,7 +53,8 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
           label[language == $locale][0].value,
           label[language == "en"][0].value
         ),
-      anchor
+      url,
+      isAnchor
     },
     "socialLinks": socialLinks[] {
       _key, label, url

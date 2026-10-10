@@ -3,6 +3,14 @@
     "title": "Page not found",
     "backHome": "Back to home"
   },
+  "Header": {
+    "navigation": "Main navigation",
+    "skipToContent": "Skip to content"
+  },
+  "Footer": {
+    "socialLinks": "Social links",
+    "opensInNewTab": "opens in a new tab"
+  },
   "ThemeSwitcher": {
     "label": "Theme",
     "system": "system",

@@ -3,6 +3,14 @@
     "title": "Сторінку не знайдено",
     "backHome": "На головну"
   },
+  "Header": {
+    "navigation": "Головна навігація",
+    "skipToContent": "Перейти до вмісту"
+  },
+  "Footer": {
+    "socialLinks": "Соціальні мережі",
+    "opensInNewTab": "відкривається в новій вкладці"
+  },
   "ThemeSwitcher": {
     "label": "Тема",
     "system": "системна",

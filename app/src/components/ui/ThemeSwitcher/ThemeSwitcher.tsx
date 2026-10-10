@@ -13,10 +13,12 @@ const NEXT_THEME: Record<Theme, Theme> = {
 };
 
 // Placeholder UI: final behavior and design are not decided yet.
-export function ThemeSwitcher() {
+const ThemeSwitcher = () => {
   const t = useTranslations('ThemeSwitcher');
   const { theme, setTheme } = useTheme();
   const isMounted = useIsMounted();
+
+  const handleClick = () => setTheme(NEXT_THEME[theme]);
 
   // The stored theme is unknown until mount, so render a same-size neutral box instead of a guess.
   if (!isMounted) {
@@ -24,12 +26,10 @@ export function ThemeSwitcher() {
   }
 
   return (
-    <button
-      type="button"
-      className={styles.button}
-      onClick={() => setTheme(NEXT_THEME[theme])}
-    >
+    <button type="button" className={styles.button} onClick={handleClick}>
       {t('label')}: {t(theme)}
     </button>
   );
-}
+};
+
+export default ThemeSwitcher;
