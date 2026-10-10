@@ -13,7 +13,7 @@ import '@/styles/globals.scss';
 
 const montserrat = Montserrat({
   subsets: ['latin', 'cyrillic'],
-  style: ['normal', 'italic'],
+  style: ['normal'],
   variable: '--font-montserrat',
   display: 'swap'
 });
