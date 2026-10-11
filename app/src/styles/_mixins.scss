@@ -5,7 +5,9 @@ $breakpoints: (
   sm: 640px,
   md: 768px,
   lg: 1024px,
-  xl: 1280px
+  xl: 1280px,
+  xxl: 1440px,
+  2xl: 1920px
 );
 
 @mixin media-up($name) {
@@ -14,6 +16,16 @@ $breakpoints: (
   }
 
   @media (min-width: map.get($breakpoints, $name)) {
+    @content;
+  }
+}
+
+@mixin media-down($name) {
+  @if not map.has-key($breakpoints, $name) {
+    @error "Unknown breakpoint `#{$name}`. Use one of: #{map.keys($breakpoints)}.";
+  }
+
+  @media (max-width: calc(map.get($breakpoints, $name) - 0.02px)) {
     @content;
   }
 }

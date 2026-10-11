@@ -39,6 +39,14 @@
   @include light-palette;
 
   --font-sans: var(--font-montserrat), system-ui, sans-serif;
+  --font-base: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+
+  --font-sm: calc(var(--font-base) * 0.875);
+  --font-lg: calc(var(--font-base) * 1.25);
+  --font-h3: calc(var(--font-base) * 1.5);
+  --font-h2: calc(var(--font-base) * 2);
+  --font-h1: calc(var(--font-base) * 3);
+  --font-max: calc(var(--font-base) * 4);
 
   --radius-sm: 6px;
   --radius-md: 12px;
