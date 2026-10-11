@@ -1,0 +1,16 @@
+@use '@/styles/mixins' as *;
+
+.container {
+  width: 100%;
+  padding-inline: 16px;
+  margin-inline: auto;
+
+  @include media-up(md) {
+    padding-inline: 40px;
+  }
+
+  @include media-up(xl) {
+    max-width: 1920px;
+    padding-inline: 80px;
+  }
+}
