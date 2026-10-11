@@ -8,7 +8,7 @@ import { fetchPage } from '@/lib/sanity/api/fetchPage';
 // Edits in Studio are reflected immediately through tag revalidation.
 export const revalidate = 3600;
 
-export default async function HomePage({ params }: PageProps<'/[locale]'>) {
+const HomePage = async ({ params }: PageProps<'/[locale]'>) => {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
 
@@ -20,4 +20,6 @@ export default async function HomePage({ params }: PageProps<'/[locale]'>) {
       <SectionRenderer sections={page.sections ?? []} />
     </main>
   );
-}
+};
+
+export default HomePage;

@@ -11,7 +11,7 @@ import {
 
 const listeners = new Set<() => void>();
 
-function subscribeToTheme(handleChange: () => void): () => void {
+const subscribeToTheme = (handleChange: () => void): (() => void) => {
   listeners.add(handleChange);
 
   // Keeps other tabs in sync; `key === null` means the whole storage was cleared.
@@ -26,14 +26,15 @@ function subscribeToTheme(handleChange: () => void): () => void {
     listeners.delete(handleChange);
     window.removeEventListener('storage', handleStorage);
   };
-}
+};
 
 // The server never knows the stored theme, so it always renders as "system".
-function getServerSnapshot(): Theme {
-  return 'system';
-}
+const getServerSnapshot = (): Theme => 'system';
 
-export function useTheme(): { theme: Theme; setTheme: (theme: Theme) => void } {
+export const useTheme = (): {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+} => {
   // Reading localStorage on every snapshot is safe: it returns a primitive string, so equal values never re-render.
   const theme = useSyncExternalStore(
     subscribeToTheme,
@@ -48,4 +49,4 @@ export function useTheme(): { theme: Theme; setTheme: (theme: Theme) => void } {
   }, []);
 
   return { theme, setTheme };
-}
+};

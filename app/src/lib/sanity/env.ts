@@ -1,11 +1,11 @@
 import { DEFAULT_API_VERSION } from './apiVersion';
 
-function assertValue<T>(value: T | undefined, name: string): T {
+const assertValue = <T>(value: T | undefined, name: string): T => {
   if (value === undefined || value === '') {
     throw new Error(`Missing environment variable: ${name}`);
   }
   return value;
-}
+};
 
 // NEXT_PUBLIC_* values are inlined at build time, so each one must be read by its literal name.
 export const projectId = assertValue(

@@ -12,11 +12,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
-function subscribeToReducedMotion(handleChange: () => void) {
+const subscribeToReducedMotion = (handleChange: () => void) => {
   const query = window.matchMedia(REDUCED_MOTION_QUERY);
   query.addEventListener('change', handleChange);
   return () => query.removeEventListener('change', handleChange);
-}
+};
 
 const getSnapshot = () => window.matchMedia(REDUCED_MOTION_QUERY).matches;
 const getServerSnapshot = () => false;
@@ -27,9 +27,7 @@ type SmoothScrollProviderProps = {
 
 // One Lenis instance for the whole app, driven by the GSAP ticker so Lenis and
 // ScrollTrigger share a single animation loop. Skipped with reduced motion.
-export default function SmoothScrollProvider({
-  children
-}: SmoothScrollProviderProps) {
+const SmoothScrollProvider = ({ children }: SmoothScrollProviderProps) => {
   const lenisRef = useRef<LenisRef>(null);
   const reducedMotion = useSyncExternalStore(
     subscribeToReducedMotion,
@@ -59,4 +57,6 @@ export default function SmoothScrollProvider({
       {children}
     </ReactLenis>
   );
-}
+};
+
+export default SmoothScrollProvider;

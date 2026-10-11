@@ -2,15 +2,12 @@
 
 import { useSyncExternalStore } from 'react';
 
-function subscribeNoop(): () => void {
-  return () => {};
-}
+const subscribeNoop = (): (() => void) => () => {};
 
 // False during server rendering and hydration, true afterwards, without a hydration mismatch.
-export function useIsMounted(): boolean {
-  return useSyncExternalStore(
+export const useIsMounted = (): boolean =>
+  useSyncExternalStore(
     subscribeNoop,
     () => true,
     () => false
   );
-}

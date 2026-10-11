@@ -7,10 +7,9 @@ import {
 
 type Locale = (typeof routing.locales)[number];
 
-export function fetchSiteSettings(locale: Locale) {
-  return client.fetch(
+export const fetchSiteSettings = (locale: Locale) =>
+  client.fetch(
     SITE_SETTINGS_QUERY,
     { locale },
     { next: { tags: [...SITE_SETTING_QUERY_TAGS] } }
   );
-}

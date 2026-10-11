@@ -18,14 +18,10 @@ const montserrat = Montserrat({
   display: 'swap'
 });
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+export const generateStaticParams = () =>
+  routing.locales.map((locale) => ({ locale }));
 
-export default async function LocaleLayout({
-  children,
-  params
-}: LayoutProps<'/[locale]'>) {
+const LocaleLayout = async ({ children, params }: LayoutProps<'/[locale]'>) => {
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
 
@@ -60,4 +56,6 @@ export default async function LocaleLayout({
       </body>
     </html>
   );
-}
+};
+
+export default LocaleLayout;

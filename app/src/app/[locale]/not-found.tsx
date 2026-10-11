@@ -1,7 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
-export default function NotFound() {
+const NotFound = () => {
   const t = useTranslations('NotFound');
 
   return (
@@ -10,4 +10,6 @@ export default function NotFound() {
       <Link href="/">{t('backHome')}</Link>
     </main>
   );
-}
+};
+
+export default NotFound;

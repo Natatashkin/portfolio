@@ -3,30 +3,29 @@ export const THEME_STORAGE_KEY = 'theme';
 export type StoredTheme = 'light' | 'dark';
 export type Theme = StoredTheme | 'system';
 
-function isStoredTheme(value: unknown): value is StoredTheme {
-  return value === 'light' || value === 'dark';
-}
+const isStoredTheme = (value: unknown): value is StoredTheme =>
+  value === 'light' || value === 'dark';
 
 // Storage access can throw (private mode, blocked site data); every failure falls back to "system".
-export function readStoredTheme(): Theme {
+export const readStoredTheme = (): Theme => {
   try {
     const value = localStorage.getItem(THEME_STORAGE_KEY);
     return isStoredTheme(value) ? value : 'system';
   } catch {
     return 'system';
   }
-}
+};
 
-export function storeTheme(theme: Theme): void {
+export const storeTheme = (theme: Theme): void => {
   try {
     if (theme === 'system') localStorage.removeItem(THEME_STORAGE_KEY);
     else localStorage.setItem(THEME_STORAGE_KEY, theme);
   } catch {
     // Not persisted; the choice still applies to the current page.
   }
-}
+};
 
-export function applyTheme(theme: Theme): void {
+export const applyTheme = (theme: Theme): void => {
   const root = document.documentElement;
   if (theme === 'system') {
     root.removeAttribute('data-theme');
@@ -35,7 +34,7 @@ export function applyTheme(theme: Theme): void {
     root.setAttribute('data-theme', theme);
     root.style.colorScheme = theme;
   }
-}
+};
 
 // Runs synchronously in <head> before the first paint. It mirrors readStoredTheme + applyTheme because
 // it cannot import modules, then enables theme transitions only after the first frame.
