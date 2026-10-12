@@ -1,6 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { DotIcon } from '@/components/icons';
+import Button from '@/components/ui/Button';
 import { useIsMounted } from '@/hooks/useIsMounted';
 import { useTheme } from '@/hooks/useTheme';
 import type { Theme } from '@/lib/theme/theme';
@@ -22,13 +24,20 @@ const ThemeSwitcher = () => {
 
   // The stored theme is unknown until mount, so render a same-size neutral box instead of a guess.
   if (!isMounted) {
-    return <span className={styles.placeholder} aria-hidden="true" />;
+    return (
+      <span className={styles.themeSwitcher__placeholder} aria-hidden="true" />
+    );
   }
 
   return (
-    <button type="button" className={styles.button} onClick={handleClick}>
-      {t('label')}: {t(theme)}
-    </button>
+    <Button
+      label={t(theme)}
+      variant="transparent"
+      className={styles.themeSwitcher__button}
+      onClick={handleClick}
+    >
+      <DotIcon />
+    </Button>
   );
 };
 

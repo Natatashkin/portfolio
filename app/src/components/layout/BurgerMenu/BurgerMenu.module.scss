@@ -1,0 +1,57 @@
+@use '@/styles/mixins' as *;
+
+.headerMenu {
+  @include media-up(lg) {
+    display: none;
+  }
+
+  &__toggle {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-2);
+    border: 0;
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-text);
+    font-size: var(--font-h3);
+    cursor: pointer;
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+  }
+
+  // Full-screen panel under the header row.
+  &__panel {
+    position: absolute;
+    inset: 100% 0 auto 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4);
+    height: calc(100dvh - 100%);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: var(--space-4) var(--container-padding) var(--space-8);
+    background: var(--color-bg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.5rem);
+    transition:
+      opacity var(--transition-base),
+      transform var(--transition-base),
+      visibility 0s linear 250ms;
+
+    &[data-open='true'] {
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      transition-delay: 0s;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+}

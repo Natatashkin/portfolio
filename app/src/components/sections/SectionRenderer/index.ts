@@ -1,2 +1,2 @@
-export { SectionRenderer } from './SectionRenderer';
-export type { Section, SectionOf } from './SectionRenderer.types';
+export { default } from './SectionRenderer';
+export type { Section, SectionOf } from './types';
