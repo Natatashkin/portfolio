@@ -11,6 +11,14 @@ export const heroSectionType = defineType({
   groups: sectionGroups,
   fields: [
     defineField({
+      name: 'anchorId',
+      title: 'Anchor ID',
+      type: 'string',
+      group: 'settings',
+      description: 'Used by navigation links and in-page anchors, for example: projects',
+      validation: (rule) => rule.regex(/^[a-z0-9-]+$/, {name: 'anchor ID'}),
+    }),
+    defineField({
       name: 'role',
       type: 'string',
       group: 'content',
@@ -53,22 +61,20 @@ export const heroSectionType = defineType({
       group: 'media',
     }),
     defineField({
-      name: 'tagline',
-      type: 'internationalizedArrayString',
-      group: 'media',
+      name: 'metrics',
+      type: 'array',
+      group: 'content',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: [{type: 'metric'}],
+        }),
+      ],
     }),
     defineField({
       name: 'ctaButton',
       type: 'linkButton',
       group: 'actions',
-    }),
-    defineField({
-      name: 'anchorId',
-      title: 'Anchor ID',
-      type: 'string',
-      group: 'settings',
-      description: 'Used by navigation links and in-page anchors, for example: projects',
-      validation: (rule) => rule.regex(/^[a-z0-9-]+$/, {name: 'anchor ID'}),
     }),
   ],
   preview: sectionPreview('Hero'),

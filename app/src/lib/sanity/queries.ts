@@ -25,12 +25,75 @@ export const PAGE_QUERY = defineQuery(`
             fullname[language == $locale][0].value,
           fullname[language == "en"][0].value
         ),
-        "tagline": select(
-          defined(tagline[language == $locale][0].value) &&
-            tagline[language == $locale][0].value != "" =>
-            tagline[language == $locale][0].value,
-          tagline[language == "en"][0].value
-        )
+        "headline": select(
+          defined(headline[language == $locale][0].value) &&
+            count(headline[language == $locale][0].value) > 0 =>
+            headline[language == $locale][0].value,
+          headline[language == "en"][0].value
+        ),
+        "description": select(
+          defined(description[language == $locale][0].value) &&
+            count(description[language == $locale][0].value) > 0 =>
+            description[language == $locale][0].value,
+          description[language == "en"][0].value
+        ),
+        "quote": select(
+          defined(quote[language == $locale][0].value) &&
+            quote[language == $locale][0].value != "" =>
+            quote[language == $locale][0].value,
+          quote[language == "en"][0].value
+        ),
+        "stack": stack[defined(@->_id)]->{
+          _id,
+          _type,
+          _type == "technology" => {
+            name,
+            iconKey
+          },
+          _type == "skill" => {
+            iconKey,
+            "title": select(
+              defined(title[language == $locale][0].value) &&
+                title[language == $locale][0].value != "" =>
+                title[language == $locale][0].value,
+              title[language == "en"][0].value
+            )
+          }
+        },
+        "image": image{
+          desktop,
+          mobile,
+          "alt": select(
+            defined(alt[language == $locale][0].value) &&
+              alt[language == $locale][0].value != "" =>
+              alt[language == $locale][0].value,
+            alt[language == "en"][0].value
+          )
+        },
+        "ctaButton": ctaButton{
+          linkType,
+          url,
+          hasAnchor,
+          anchor,
+          variant,
+          hasIcon,
+          "label": select(
+            defined(label[language == $locale][0].value) &&
+              label[language == $locale][0].value != "" =>
+              label[language == $locale][0].value,
+            label[language == "en"][0].value
+          )
+        },
+        "metrics": metrics[defined(@->_id)]->{
+          _id,
+          value,
+          "label": select(
+            defined(label[language == $locale][0].value) &&
+              label[language == $locale][0].value != "" =>
+              label[language == $locale][0].value,
+            label[language == "en"][0].value
+          )
+        }
       }
     }
   }

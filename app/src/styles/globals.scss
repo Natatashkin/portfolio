@@ -10,6 +10,12 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  // Scrollbar is hidden so locking the scroll (mobile menu) doesn't shift the layout by its width.
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 body {
@@ -18,7 +24,8 @@ body {
   background-color: var(--color-bg);
   color: var(--color-text);
   font-family: var(--font-sans);
-  font-weight: 300;
+  font-size: var(--font-base);
+  font-weight: 400;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -49,4 +56,22 @@ input,
 select,
 textarea {
   font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+p,
+ul {
+  margin: 0;
+}
+
+h1 {
+  font-size: var(--font-h1);
+}
+
+p {
+  font-size: var(--font-base);
 }

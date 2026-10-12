@@ -16,6 +16,7 @@
   --color-accent: #4fd8a4;
   --color-on-accent: #0b0b0f;
   --color-accent-ink: #08805a;
+  --color-accent-shine: #4fd8a4;
 }
 
 @mixin dark-palette {
@@ -33,39 +34,52 @@
   --color-accent: #4fd8a4;
   --color-on-accent: #050507;
   --color-accent-ink: #4fd8a4;
+  --color-accent-shine: #eafff6;
 }
 
 :root {
   @include light-palette;
 
   --font-sans: var(--font-montserrat), system-ui, sans-serif;
-  --font-base: clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
 
-  --font-sm: calc(var(--font-base) * 0.875);
-  --font-lg: calc(var(--font-base) * 1.25);
-  --font-h3: calc(var(--font-base) * 1.5);
-  --font-h2: calc(var(--font-base) * 2);
-  --font-h1: calc(var(--font-base) * 3);
-  --font-max: calc(var(--font-base) * 4);
+  // Small text
+  --font-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
+  --font-sm: clamp(0.8125rem, 0.75rem + 0.25vw, 0.875rem);
+
+  // Body
+  --font-base: clamp(1rem, 0.9rem + 0.3vw, 1.125rem);
+
+  // Headings
+  --font-h3: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --font-h2: clamp(1.625rem, 1.3rem + 1.2vw, 2.5rem);
+  --font-h1: clamp(1.75rem, 1.4rem + 1.4vw, 3rem);
+
+  // Hero display — larger than H1
+  --font-display: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+
+  // Statistics
+  --font-metric: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);
+
+  --transition-base: 250ms ease-in-out;
 
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-pill: 999px;
 
-  --space-1: 0.25rem;
-  --space-2: 0.5rem;
-  --space-3: 0.75rem;
+  --space-1: clamp(0.25rem, 0.25vw, 0.5rem);
+  --space-2: clamp(0.5rem, 1vw, 0.75rem);
+  --space-3: clamp(0.75rem, 1.1vw, 1rem);
   --space-4: 1rem;
   --space-5: 1.25rem;
-  --space-6: 1.5rem;
-  --space-8: 2rem;
-  --space-10: 2.5rem;
+  --space-6: clamp(1rem, 2vw, 1.5rem);
+  --space-8: clamp(1.5rem, 2vw, 2rem);
+  --space-10: clamp(2rem, 2.5vw, 2.5rem);
   --space-12: 3rem;
   --space-16: 4rem;
   --space-20: 5rem;
   --space-24: 6rem;
-  --space-section: clamp(4rem, 10vw, 8rem);
+  --space-section: clamp(2rem, 12vw, 4rem);
 }
 
 @media (prefers-color-scheme: dark) {
