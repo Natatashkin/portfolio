@@ -1,0 +1,40 @@
+.heroGrid {
+  --grid-cell: 28px;
+  --grid-dot-mix: 18%;
+  --spot-radius: 260px;
+  --spot-core-radius: 120px;
+  --spot-x: 50%;
+  --spot-y: 40%;
+
+  position: relative;
+  pointer-events: none;
+  background-image: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--color-text) var(--grid-dot-mix), transparent) 1px,
+    transparent 1.5px
+  );
+  background-size: var(--grid-cell) var(--grid-cell);
+  mask-image: radial-gradient(
+    circle var(--spot-radius) at var(--spot-x) var(--spot-y),
+    #000,
+    transparent
+  );
+
+  // Accent dots, visible only in the middle of the spot
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(
+      circle,
+      var(--color-accent) 1.2px,
+      transparent 1.8px
+    );
+    background-size: var(--grid-cell) var(--grid-cell);
+    mask-image: radial-gradient(
+      circle var(--spot-core-radius) at var(--spot-x) var(--spot-y),
+      #000,
+      transparent
+    );
+  }
+}

@@ -1,5 +1,3 @@
-@use 'mixins' as *;
-
 .footer {
   display: flex;
   flex-wrap: wrap;
@@ -8,31 +6,9 @@
   gap: var(--space-4);
   padding: var(--space-8) var(--space-6);
   border-top: 1px solid var(--color-border);
-}
 
-.copyright {
-  margin: 0;
-  color: var(--color-text-muted);
-}
-
-.links {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-2) var(--space-6);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.link {
-  color: var(--color-text-muted);
-  text-decoration: none;
-
-  &:hover {
-    color: var(--color-text);
+  &__copyright {
+    margin: 0;
+    color: var(--color-text-muted);
   }
-}
-
-.hidden {
-  @include visually-hidden;
 }

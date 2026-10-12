@@ -1,17 +1,193 @@
+@use '@/styles/mixins' as *;
+
 .hero {
-  padding-block: var(--space-section);
-  height: 100dvh;
-}
+  display: grid;
+  box-sizing: border-box;
+  min-height: 100dvh;
+  --hero-padding-top: 8rem;
 
-.role {
-  color: var(--color-text-muted);
-}
+  padding: var(--hero-padding-top) 0 var(--space-section);
+  overflow-x: clip;
 
-.fullname {
-  margin: 0;
-}
+  &__container {
+    position: relative;
+    isolation: isolate;
+    display: grid;
+    grid-template-areas:
+      'heading'
+      'technologies'
+      'media'
+      'cta'
+      'metrics'
+      'descriptions';
+    min-height: 100%;
+    gap: var(--space-10);
 
-.tagline {
-  color: var(--color-text-muted);
-  font-style: italic;
+    @include media-up(lg) {
+      grid-template-areas:
+        'heading media'
+        'descriptions media'
+        'cta media'
+        'technologies media'
+        'metrics metrics';
+      grid-template-columns: 7fr 5fr;
+      grid-template-rows: auto 1fr auto auto auto;
+      align-content: stretch;
+      column-gap: var(--space-8);
+    }
+  }
+
+  // Full-bleed dot grid behind everything above the metrics row (row 5 in both layouts).
+  // Negative margins grow the item past its grid area: up over the section padding (under the
+  // header) and down over the row gap, so it ends exactly at the metrics border.
+  &__grid {
+    display: none;
+    grid-column: 1 / -1;
+    grid-row: 1 / 5;
+    z-index: -1;
+    width: 100vw;
+    margin-top: calc(var(--hero-padding-top) * -1);
+    margin-bottom: calc(var(--space-10) * -1);
+    margin-inline: calc(50% - 50vw);
+
+    // Not shown on mobile layouts
+    @include media-up(lg) {
+      display: block;
+    }
+  }
+
+  &__heading {
+    grid-area: heading;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__role {
+    margin-bottom: var(--space-3);
+    font-size: var(--font-base);
+    color: var(--color-text-muted);
+  }
+
+  &__fullname {
+    font-size: var(--font-h3);
+  }
+
+  &__headline {
+    margin-bottom: 2rem;
+    font-size: var(--font-display);
+  }
+
+  &__descriptions {
+    grid-area: descriptions;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  &__actions {
+    grid-area: cta;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+
+    @include media-up(lg) {
+      justify-content: flex-start;
+    }
+  }
+
+  &__stack {
+    grid-area: technologies;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    align-items: flex-end;
+  }
+
+  &__stackItem {
+    width: fit-content;
+    height: fit-content;
+    padding: var(--space-1) var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
+  }
+
+  &__image {
+    grid-area: media;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+
+  &__picture {
+    display: block;
+    width: 50vw;
+    object-fit: cover;
+    border-radius: 50%;
+    overflow: hidden;
+    max-width: 400px;
+    aspect-ratio: 1;
+
+    @include media-up(md) {
+      width: 44vw;
+    }
+
+    @include media-up(lg) {
+      width: 33vw;
+    }
+  }
+
+  &__quote {
+    margin-block-start: var(--space-4);
+    color: var(--color-text-muted);
+    text-align: center;
+    font-size: var(--font-base);
+
+    @include media-up(lg) {
+      text-align: right;
+    }
+  }
+
+  &__metrics {
+    grid-area: metrics;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--space-6);
+    margin: 0;
+    padding: var(--space-8) 0;
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
+
+    @include media-up(lg) {
+      grid-column: 1 / -1;
+      border-bottom: none;
+    }
+  }
+
+  &__metric {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: var(--space-1);
+  }
+
+  &__metricValue {
+    margin: 0;
+    font-size: var(--font-h2);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+
+  &__metricLabel {
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+  }
 }
