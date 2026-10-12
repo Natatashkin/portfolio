@@ -5,16 +5,16 @@
   },
   "Header": {
     "navigation": "Main navigation",
-    "skipToContent": "Skip to content"
-  },
-  "Footer": {
-    "socialLinks": "Social links",
-    "opensInNewTab": "opens in a new tab"
+    "skipToContent": "Skip to content",
+    "menu": "Menu"
   },
   "ThemeSwitcher": {
-    "label": "Theme",
-    "system": "system",
-    "light": "light",
-    "dark": "dark"
+    "system": "System",
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "SocialLinks": {
+    "label": "Social links",
+    "opensInNewTab": "opens in a new tab"
   }
 }

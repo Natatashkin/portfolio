@@ -5,16 +5,16 @@
   },
   "Header": {
     "navigation": "Головна навігація",
-    "skipToContent": "Перейти до вмісту"
-  },
-  "Footer": {
-    "socialLinks": "Соціальні мережі",
-    "opensInNewTab": "відкривається в новій вкладці"
+    "skipToContent": "Перейти до вмісту",
+    "menu": "Меню"
   },
   "ThemeSwitcher": {
-    "label": "Тема",
-    "system": "системна",
-    "light": "світла",
-    "dark": "темна"
+    "system": "Системна",
+    "light": "Світла",
+    "dark": "Темна"
+  },
+  "SocialLinks": {
+    "label": "Соціальні мережі",
+    "opensInNewTab": "відкривається в новій вкладці"
   }
 }
