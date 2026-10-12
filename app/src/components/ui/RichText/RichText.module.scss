@@ -1,0 +1,23 @@
+.richText {
+  color: var(--color-text-muted);
+  font-size: var(--font-lg);
+  line-height: 1.5;
+
+  &__paragraph {
+    margin: 0;
+
+    & + & {
+      margin-block-start: var(--space-4);
+    }
+  }
+
+  &__list {
+    margin: var(--space-4) 0 0;
+    padding-inline-start: var(--space-6);
+  }
+
+  &__link {
+    color: var(--color-accent-ink);
+    text-underline-offset: 0.2em;
+  }
+}

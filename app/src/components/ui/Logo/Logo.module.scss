@@ -1,0 +1,9 @@
+.logo {
+  display: inline-flex;
+  width: fit-content;
+  color: var(--color-text);
+  font-weight: 600;
+  text-decoration: none;
+  padding: var(--space-2) 0;
+  border-radius: var(--radius-pill);
+}

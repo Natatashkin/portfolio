@@ -1,0 +1,46 @@
+.headline {
+  margin: 0;
+  font-size: var(--font-h1);
+  line-height: 1.1;
+
+  &__accent {
+    color: var(--color-accent-ink);
+  }
+
+  // The light band is part of the gradient, so the sweep animates `background-position` of the text.
+  &--shine &__accent {
+    background-image: linear-gradient(
+      105deg,
+      var(--color-accent-ink) 0 42%,
+      var(--color-accent-shine) 50%,
+      var(--color-accent-ink) 58% 100%
+    );
+    background-size: 300% 100%;
+    background-position: 100% 0;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    // Forced colors ignore gradients; keep the text visible.
+    @media (forced-colors: active) {
+      background: none;
+      -webkit-text-fill-color: currentcolor;
+    }
+  }
+
+  // Starts when `InView` marks the headline as scrolled into view.
+  &--shine[data-in-view='true'] &__accent {
+    @media (prefers-reduced-motion: no-preference) and (forced-colors: none) {
+      animation: headlineShine 1.6s ease-in-out 0.2s both;
+    }
+  }
+}
+
+@keyframes headlineShine {
+  from {
+    background-position: 100% 0;
+  }
+
+  to {
+    background-position: 0% 0;
+  }
+}
