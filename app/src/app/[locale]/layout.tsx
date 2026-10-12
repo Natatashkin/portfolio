@@ -1,6 +1,5 @@
 import { Montserrat } from 'next/font/google';
 import { notFound } from 'next/navigation';
-import Script from 'next/script';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
@@ -34,17 +33,16 @@ const LocaleLayout = async ({ children, params }: LayoutProps<'/[locale]'>) => {
       className={montserrat.variable}
       suppressHydrationWarning
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
       <body>
-        <Script
-          id="theme-script"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: themeScript }}
-        />
         <NextIntlClientProvider>
           <SmoothScrollProvider>
             <Header
               navigation={siteSettings?.navigation ?? []}
               siteName={siteSettings?.siteName ?? null}
+              socialLinks={siteSettings?.socialLinks ?? []}
             />
             {children}
             <Footer
