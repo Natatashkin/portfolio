@@ -179,6 +179,7 @@ export type MetricsSection = {
 
 export type HeroSection = {
   _type: 'heroSection';
+  anchorId?: string;
   role?: string;
   headline?: InternationalizedArrayHeadline;
   fullname?: InternationalizedArrayString;
@@ -186,9 +187,12 @@ export type HeroSection = {
   description?: InternationalizedArrayRichText;
   image?: ResponsiveImage;
   quote?: InternationalizedArrayText;
-  tagline?: InternationalizedArrayString;
+  metrics?: Array<
+    {
+      _key: string;
+    } & MetricReference
+  >;
   ctaButton?: LinkButton;
-  anchorId?: string;
 };
 
 export type Technology = {
@@ -651,7 +655,7 @@ export type AllSanitySchemaTypes =
 
 // Source: ../app/src/lib/sanity/queries.ts
 // Variable: PAGE_QUERY
-// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    sections[]{      _key,      _type,      anchorId,      _type == "heroSection" => {        role,        "fullname": select(          defined(fullname[language == $locale][0].value) &&            fullname[language == $locale][0].value != "" =>            fullname[language == $locale][0].value,          fullname[language == "en"][0].value        ),        "tagline": select(          defined(tagline[language == $locale][0].value) &&            tagline[language == $locale][0].value != "" =>            tagline[language == $locale][0].value,          tagline[language == "en"][0].value        )      }    }  }
+// Query: *[_type == "page" && slug.current == $slug][0]{    _id,    sections[]{      _key,      _type,      anchorId,      _type == "heroSection" => {        role,        "fullname": select(          defined(fullname[language == $locale][0].value) &&            fullname[language == $locale][0].value != "" =>            fullname[language == $locale][0].value,          fullname[language == "en"][0].value        ),        "headline": select(          defined(headline[language == $locale][0].value) &&            count(headline[language == $locale][0].value) > 0 =>            headline[language == $locale][0].value,          headline[language == "en"][0].value        ),        "description": select(          defined(description[language == $locale][0].value) &&            count(description[language == $locale][0].value) > 0 =>            description[language == $locale][0].value,          description[language == "en"][0].value        ),        "quote": select(          defined(quote[language == $locale][0].value) &&            quote[language == $locale][0].value != "" =>            quote[language == $locale][0].value,          quote[language == "en"][0].value        ),        "stack": stack[defined(@->_id)]->{          _id,          _type,          _type == "technology" => {            name,            iconKey          },          _type == "skill" => {            iconKey,            "title": select(              defined(title[language == $locale][0].value) &&                title[language == $locale][0].value != "" =>                title[language == $locale][0].value,              title[language == "en"][0].value            )          }        },        "image": image{          desktop,          mobile,          "alt": select(            defined(alt[language == $locale][0].value) &&              alt[language == $locale][0].value != "" =>              alt[language == $locale][0].value,            alt[language == "en"][0].value          )        },        "ctaButton": ctaButton{          linkType,          url,          hasAnchor,          anchor,          variant,          hasIcon,          "label": select(            defined(label[language == $locale][0].value) &&              label[language == $locale][0].value != "" =>              label[language == $locale][0].value,            label[language == "en"][0].value          )        },        "metrics": metrics[defined(@->_id)]->{          _id,          value,          "label": select(            defined(label[language == $locale][0].value) &&              label[language == $locale][0].value != "" =>              label[language == $locale][0].value,            label[language == "en"][0].value          )        }      }    }  }
 export type PAGE_QUERY_RESULT = {
   _id: string;
   sections: Array<
@@ -676,7 +680,54 @@ export type PAGE_QUERY_RESULT = {
         anchorId: string | null;
         role: string | null;
         fullname: string | null;
-        tagline: string | null;
+        headline: Headline | null;
+        description: RichText | null;
+        quote: string | null;
+        stack: Array<
+          | {
+              _id: string;
+              _type: 'skill';
+              iconKey: string | null;
+              title: string | null;
+            }
+          | {
+              _id: string;
+              _type: 'technology';
+              name: string;
+              iconKey: string | null;
+            }
+        > | null;
+        image: {
+          desktop: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: 'image';
+          };
+          mobile: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: 'image';
+          } | null;
+          alt: string | null;
+        } | null;
+        ctaButton: {
+          linkType: 'external' | 'internal' | null;
+          url: string | null;
+          hasAnchor: boolean | null;
+          anchor: string | null;
+          variant: 'accent' | 'primary' | 'secondary' | null;
+          hasIcon: boolean | null;
+          label: string | null;
+        } | null;
+        metrics: Array<{
+          _id: string;
+          value: string;
+          label: string | null;
+        }> | null;
       }
     | {
         _key: string;
@@ -731,7 +782,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
 // Query TypeMap
 declare global {
   interface SanityQueries {
-    '\n  *[_type == "page" && slug.current == $slug][0]{\n    _id,\n    sections[]{\n      _key,\n      _type,\n      anchorId,\n      _type == "heroSection" => {\n        role,\n        "fullname": select(\n          defined(fullname[language == $locale][0].value) &&\n            fullname[language == $locale][0].value != "" =>\n            fullname[language == $locale][0].value,\n          fullname[language == "en"][0].value\n        ),\n        "tagline": select(\n          defined(tagline[language == $locale][0].value) &&\n            tagline[language == $locale][0].value != "" =>\n            tagline[language == $locale][0].value,\n          tagline[language == "en"][0].value\n        )\n      }\n    }\n  }\n': PAGE_QUERY_RESULT;
+    '\n  *[_type == "page" && slug.current == $slug][0]{\n    _id,\n    sections[]{\n      _key,\n      _type,\n      anchorId,\n      _type == "heroSection" => {\n        role,\n        "fullname": select(\n          defined(fullname[language == $locale][0].value) &&\n            fullname[language == $locale][0].value != "" =>\n            fullname[language == $locale][0].value,\n          fullname[language == "en"][0].value\n        ),\n        "headline": select(\n          defined(headline[language == $locale][0].value) &&\n            count(headline[language == $locale][0].value) > 0 =>\n            headline[language == $locale][0].value,\n          headline[language == "en"][0].value\n        ),\n        "description": select(\n          defined(description[language == $locale][0].value) &&\n            count(description[language == $locale][0].value) > 0 =>\n            description[language == $locale][0].value,\n          description[language == "en"][0].value\n        ),\n        "quote": select(\n          defined(quote[language == $locale][0].value) &&\n            quote[language == $locale][0].value != "" =>\n            quote[language == $locale][0].value,\n          quote[language == "en"][0].value\n        ),\n        "stack": stack[defined(@->_id)]->{\n          _id,\n          _type,\n          _type == "technology" => {\n            name,\n            iconKey\n          },\n          _type == "skill" => {\n            iconKey,\n            "title": select(\n              defined(title[language == $locale][0].value) &&\n                title[language == $locale][0].value != "" =>\n                title[language == $locale][0].value,\n              title[language == "en"][0].value\n            )\n          }\n        },\n        "image": image{\n          desktop,\n          mobile,\n          "alt": select(\n            defined(alt[language == $locale][0].value) &&\n              alt[language == $locale][0].value != "" =>\n              alt[language == $locale][0].value,\n            alt[language == "en"][0].value\n          )\n        },\n        "ctaButton": ctaButton{\n          linkType,\n          url,\n          hasAnchor,\n          anchor,\n          variant,\n          hasIcon,\n          "label": select(\n            defined(label[language == $locale][0].value) &&\n              label[language == $locale][0].value != "" =>\n              label[language == $locale][0].value,\n            label[language == "en"][0].value\n          )\n        },\n        "metrics": metrics[defined(@->_id)]->{\n          _id,\n          value,\n          "label": select(\n            defined(label[language == $locale][0].value) &&\n              label[language == $locale][0].value != "" =>\n              label[language == $locale][0].value,\n            label[language == "en"][0].value\n          )\n        }\n      }\n    }\n  }\n': PAGE_QUERY_RESULT;
     '\n  *[_type == "siteSettings"][0] {\n    siteName,\n    "name": select(\n      defined(name[language == $locale][0].value) && \n        name[language == $locale][0].value != "" => \n        name[language == $locale][0].value, \n        name[language == "en"][0].value\n      ),\n    "navigation": navigation[] {\n      _key,\n      "label": select(\n        defined(label[language == $locale][0].value) &&\n          label[language == $locale][0].value != "" => \n          label[language == $locale][0].value,\n          label[language == "en"][0].value\n        ),\n      url,\n      isAnchor\n    },\n    "socialLinks": socialLinks[] {\n      _key, label, url\n    },\n    "copyright": select(\n      defined(copyright[language == $locale][0].value) && \n        copyright[language == $locale][0].value != "" => \n        copyright[language == $locale][0].value, \n        copyright[language == "en"][0].value\n      ),\n    "backToTopLabel": select(\n      defined(backToTopLabel[language == $locale][0].value) && \n        backToTopLabel[language == $locale][0].value != "" => \n        backToTopLabel[language == $locale][0].value, \n        backToTopLabel[language == "en"][0].value\n      ),\n    "location": select(\n      defined(location[language == $locale][0].value) && \n        location[language == $locale][0].value != "" => \n        location[language == $locale][0].value, \n        location[language == "en"][0].value\n      ),\n  }\n': SITE_SETTINGS_QUERY_RESULT;
   }
 }
