@@ -64,7 +64,7 @@ they cannot express.
 ## SCSS
 
 - Colors, spacing and radii are CSS custom properties from `_tokens.scss`; never hard-code them.
-- Mixins stay minimal (breakpoints, focus ring, visually-hidden). Breakpoints are SCSS variables.
+- Mixins stay minimal (breakpoints, focus ring, visually-hidden, `muted-control` shared by the theme and language switchers). Breakpoints are SCSS variables.
 - BEM in camelCase: `.hero`, `.hero__stackItem`, `.linkButton--accent`; nest with `&__` / `&--`; no
   element-of-element chains.
 

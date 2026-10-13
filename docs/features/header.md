@@ -54,4 +54,5 @@ switcher and social links move into a full-screen burger menu.
 
 ## Open questions
 
-- The language switcher belongs in the header but is not built yet (see [README.md](README.md), Planned).
+- The language switcher and the theme switcher changes are done: see [language-switcher.md](language-switcher.md) and
+  [theme-switcher.md](theme-switcher.md) (caveats are listed in their specs).

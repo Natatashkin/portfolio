@@ -39,7 +39,11 @@ Outside `src/`: `messages/{en,uk}.json`, `scripts/check-sanity.mts` (connection 
 ## Routing and locales
 
 - English at `/` (no prefix; `/en` redirects to `/`), Ukrainian at `/uk`. Route segment `[locale]`.
-- Hreflang: en → `/`, uk → `/uk`, x-default → `/`.
+- Implemented: routing (`as-needed`), the proxy, and next-intl's alternate-links `Link` response header from the proxy
+  (includes an `x-default` entry for non-domain routing).
+- **Not implemented yet, required before launch:** hreflang HTML `<head>` tags (en → `/`, uk → `/uk`, x-default → `/`)
+  via Page `alternates` in the Page metadata and SEO feature. No `alternates`/hreflang code exists in `app/src` yet.
+  It is on the Launch checklist in [../roadmap.md](../roadmap.md).
 - `proxy.ts` matcher excludes `api`, `trpc`, `_next`, `_vercel` and paths with a file extension.
 - Unknown paths hit `[locale]/[...rest]` and call `notFound()`, rendering the localized `[locale]/not-found.tsx`.
 

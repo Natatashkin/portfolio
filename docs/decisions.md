@@ -9,8 +9,10 @@ deploy without touching the site; the schema is shared through TypeGen.
 
 ## D2. Locale routing: `as-needed`
 
-English at `/` (no prefix, `/en` redirects), Ukrainian at `/uk`. Hreflang: en → `/`, uk → `/uk`, x-default → `/`.
-Keeps the primary URL clean.
+English at `/` (no prefix, `/en` redirects), Ukrainian at `/uk`. Keeps the primary URL clean. The proxy also sends
+next-intl's alternate-links `Link` header (with `x-default`). Not implemented yet, required before launch (for SEO,
+on the Launch checklist): hreflang `<head>` tags (en → `/`, uk → `/uk`, x-default → `/`), built in the Page metadata
+and SEO feature.
 
 ## D3. Field-level localization
 
@@ -30,7 +32,10 @@ the webhook map each document type to its tag.
 ## D5. Theme in `localStorage`, not a cookie
 
 `theme` = `light` | `dark`, no value = system. The server never reads it, so pages stay static; a no-flash inline
-script applies it before paint. All storage access is in try/catch. The switcher UI is a placeholder.
+script applies it before paint. All storage access is in try/catch. The switcher UI is a placeholder. The script runs only
+on a document load, and a soft locale switch makes React remove `data-theme`, `color-scheme` and `theme-ready` from
+`<html>`. Resolved: `ThemeScript` (one mount point in the root layout) calls `restoreTheme()` in a `useLayoutEffect` on
+mount and renders the inline script only on the server and during hydration (details in [features/theme-switcher.md](features/theme-switcher.md)).
 
 ## D6. Link safety in two layers
 
@@ -76,3 +81,15 @@ Candidate: static headers in `next.config.ts` (CSP without script restriction: `
 `base-uri 'self'`, `frame-ancestors`, `form-action 'self'`; `nosniff`, `Referrer-Policy`, `Permissions-Policy`),
 introduced as `Content-Security-Policy-Report-Only` first. Draft preview needs `frame-ancestors` to allow the Studio
 origin. Ask before changing `next.config.ts`.
+
+## D14. State across a locale switch: `sessionStorage` and a live region outside React
+
+A locale switch is a soft navigation, but the whole `[locale]` layout subtree is remounted (the segment key changes),
+verified in Chrome. React state and React-owned DOM (a live region, for example) are lost. What must survive goes
+through one short-lived `sessionStorage` entry `{hash, at}` that the new layout reads and clears
+(`lib/helpers/localeSwitch.ts`), remembered only for a plain left click, and the language-change live region is
+created in `document.body` outside React. After a 150 ms timer `LanguageAnnouncer` restores the hash with
+`history.replaceState`, returns keyboard focus to the visible switcher (the remount drops it to `<body>`) and
+announces; focus uses `preventScroll` because the scroll position is already settled, and the effect cleanup clears
+both timers. An entry older than 10 s is discarded (stale: no announcement, no focus move). Details:
+[features/language-switcher.md](features/language-switcher.md).

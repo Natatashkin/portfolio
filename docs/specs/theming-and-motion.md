@@ -4,7 +4,7 @@
 
 - SCSS Modules (`sass`). Design tokens are CSS custom properties in `styles/_tokens.scss`: bg, surface, border, text,
   text-muted, primary, secondary, accent (+ on-colors, accent-ink), radius, spacing. SCSS holds no color values.
-- `styles/_mixins.scss` is a Sass partial kept minimal (breakpoints, focus ring, visually-hidden). Breakpoints are SCSS
+- `styles/_mixins.scss` is a Sass partial kept minimal (breakpoints, focus ring, visually-hidden, `muted-control` for the switchers). Breakpoints are SCSS
   variables because custom properties do not work in media queries. Modules load it with `@use 'mixins' as *;`
   (`sassOptions.loadPaths` points at `src/styles`).
 - BEM per module in camelCase: block `.hero`, element `.hero__stackItem`, modifier `.linkButton--accent`; no
@@ -18,7 +18,14 @@
   (`light` | `dark`; no value = system). No cookie, so pages stay static.
 - A constant inline script (`themeScript`) in `<head>` applies the stored theme before first paint; `<html>` carries
   `suppressHydrationWarning`. Storage access is wrapped in try/catch and falls back to system.
-- `useTheme` and `ThemeSwitcher` exist; the switcher is a minimal placeholder, its final design is undecided.
+- Soft locale switch (resolved): React remounts the root layout subtree and removes the attributes it does not own from
+  `<html>` (`data-theme`, `color-scheme`, `theme-ready`), and the script only runs on a document load.
+  `ThemeScript` (root layout, a single mount point) calls `restoreTheme()` in a `useLayoutEffect` on mount to put them
+  back before paint, and renders the script only on the server and during hydration, so React logs no
+  client-rendered script error. Details:
+  [features/theme-switcher.md](../features/theme-switcher.md).
+- `useTheme`, `useSystemTheme` and `ThemeSwitcher` exist; the switcher is a two-way toggle on the effective theme with
+  the label of the target theme. Its final design is undecided.
 
 ## Motion (Lenis + GSAP)
 

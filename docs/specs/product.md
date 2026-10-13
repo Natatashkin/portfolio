@@ -12,7 +12,7 @@ Hiring managers and engineers who read both the live site and the source.
 ## Scope
 
 - One page (`home`) assembled from reusable section blocks managed in Sanity.
-- Two languages: English (default, `/`) and Ukrainian (`/uk`), with a language switcher and hreflang alternates.
+- Two languages: English (default, `/`) and Ukrainian (`/uk`), with a language switcher; hreflang alternates are required before launch (Page metadata and SEO).
 - Light and dark themes; default follows the system, manual override is remembered.
 - Smooth scrolling and scroll-driven animation that respects reduced-motion.
 - Header navigation, footer, 404 page.
