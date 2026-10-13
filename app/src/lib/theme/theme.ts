@@ -25,6 +25,7 @@ export const storeTheme = (theme: Theme): void => {
   }
 };
 
+// `themeScript` below repeats this logic as a string (it cannot import modules): change both together.
 export const applyTheme = (theme: Theme): void => {
   const root = document.documentElement;
   if (theme === 'system') {
@@ -34,6 +35,23 @@ export const applyTheme = (theme: Theme): void => {
     root.setAttribute('data-theme', theme);
     root.style.colorScheme = theme;
   }
+};
+
+// Theme transitions stay off until after the first frame, so the initial paint does not animate.
+export const enableThemeTransitions = (): void => {
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      document.documentElement.classList.add('theme-ready');
+    });
+  });
+};
+
+// Puts the stored theme back on <html>. React clears attributes it does not own (data-theme, style,
+// the theme-ready class) when it remounts <html> on a locale switch, and the inline script only
+// runs on a document load.
+export const restoreTheme = (): void => {
+  applyTheme(readStoredTheme());
+  enableThemeTransitions();
 };
 
 // Runs synchronously in <head> before the first paint. It mirrors readStoredTheme + applyTheme because

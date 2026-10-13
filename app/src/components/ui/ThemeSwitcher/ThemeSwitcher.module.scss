@@ -4,16 +4,7 @@
 .themeSwitcher {
   &__button,
   &__placeholder {
-    display: inline-flex;
-    width: fit-content;
-    font-size: var(--font-base);
-    color: var(--color-text-muted);
-    transition: color 250ms ease-in-out;
-    padding: var(--space-1) 0;
-    &:hover,
-    &:focus {
-      color: var(--color-text);
-    }
+    @include muted-control;
   }
 
   // Same 1px outline as the transparent Button, so the placeholder matches it on mount.

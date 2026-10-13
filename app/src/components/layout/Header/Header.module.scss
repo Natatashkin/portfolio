@@ -36,6 +36,13 @@
     }
   }
 
+  // Theme and language switchers stay together on the right of the desktop row.
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
   // Pushed to the bottom of the full-screen mobile menu.
   &__social {
     margin-block-start: auto;

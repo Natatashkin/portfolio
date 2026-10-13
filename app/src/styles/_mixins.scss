@@ -36,6 +36,26 @@ $breakpoints: (
   outline-offset: 2px;
 }
 
+// Muted text that turns full strength on hover and keyboard focus: the look shared by the theme and
+// language switchers. The focus ring stays with the element (`focus-ring`).
+@mixin muted-control {
+  display: inline-flex;
+  width: fit-content;
+  padding: var(--space-1) 0;
+  font-size: var(--font-base);
+  color: var(--color-text-muted);
+  transition: color var(--transition-base);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--color-text);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
 @mixin visually-hidden {
   position: absolute;
   width: 1px;

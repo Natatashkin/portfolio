@@ -9,9 +9,17 @@
     "menu": "Меню"
   },
   "ThemeSwitcher": {
-    "system": "Системна",
+    "switchTo": "Перемкнути тему: {theme}",
     "light": "Світла",
     "dark": "Темна"
+  },
+  "LanguageSwitcher": {
+    "label": "{code}. Перемкнути мову: {language}",
+    "announcement": "Мову змінено: {language}",
+    "languages": {
+      "en": "англійська",
+      "uk": "українська"
+    }
   },
   "SocialLinks": {
     "label": "Соціальні мережі",

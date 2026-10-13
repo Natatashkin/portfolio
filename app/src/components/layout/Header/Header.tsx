@@ -1,6 +1,7 @@
 import { useTranslations } from 'next-intl';
 import BurgerMenu from '@/components/layout/BurgerMenu';
 import Container from '@/components/ui/Container';
+import LanguageSwitcher from '@/components/ui/LanguageSwitcher';
 import Logo from '@/components/ui/Logo';
 import Navigation, { type NavigationItem } from '@/components/ui/Navigation';
 import SocialLinks, { type SocialLink } from '@/components/ui/SocialLinks';
@@ -27,11 +28,15 @@ const Header = ({ navigation, siteName, socialLinks }: Props) => {
             {siteName && <Logo name={siteName} />}
             <div className={styles.header__desktop}>
               <Navigation items={navigation} label={t('navigation')} />
-              <ThemeSwitcher />
+              <div className={styles.header__controls}>
+                <ThemeSwitcher />
+                <LanguageSwitcher />
+              </div>
             </div>
             <BurgerMenu>
               <Navigation items={navigation} label={t('navigation')} />
               <ThemeSwitcher />
+              <LanguageSwitcher />
               <div className={styles.header__social}>
                 <SocialLinks items={socialLinks} />
               </div>

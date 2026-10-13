@@ -4,10 +4,11 @@ import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import Footer from '@/components/layout/Footer';
 import Header from '@/components/layout/Header';
+import ThemeScript from '@/components/layout/ThemeScript';
 import SmoothScrollProvider from '@/components/SmoothScrollProvider';
+import LanguageAnnouncer from '@/components/ui/LanguageAnnouncer';
 import { routing } from '@/i18n/routing';
 import { fetchSiteSettings } from '@/lib/sanity/api/fetchSiteSettings';
-import { themeScript } from '@/lib/theme/theme';
 
 import '@/styles/globals.scss';
 
@@ -40,7 +41,7 @@ const LocaleLayout = async ({ children, params }: LayoutProps<'/[locale]'>) => {
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <ThemeScript />
       </head>
       <body>
         <NextIntlClientProvider>
@@ -51,6 +52,7 @@ const LocaleLayout = async ({ children, params }: LayoutProps<'/[locale]'>) => {
               socialLinks={siteSettings?.socialLinks ?? []}
             />
             {children}
+            <LanguageAnnouncer />
             <Footer
               copyright={siteSettings?.copyright ?? null}
               socialLinks={siteSettings?.socialLinks ?? []}

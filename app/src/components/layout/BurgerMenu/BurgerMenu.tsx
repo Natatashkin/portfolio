@@ -78,6 +78,7 @@ const BurgerMenu = ({ children }: Props) => {
       <button
         ref={toggleRef}
         type="button"
+        data-menu-toggle=""
         className={styles.headerMenu__toggle}
         aria-label={t('menu')}
         aria-expanded={isOpen}

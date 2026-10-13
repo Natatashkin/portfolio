@@ -9,9 +9,17 @@
     "menu": "Menu"
   },
   "ThemeSwitcher": {
-    "system": "System",
+    "switchTo": "Switch theme to: {theme}",
     "light": "Light",
     "dark": "Dark"
+  },
+  "LanguageSwitcher": {
+    "label": "{code}. Switch language to: {language}",
+    "announcement": "Language changed to: {language}",
+    "languages": {
+      "en": "English",
+      "uk": "Ukrainian"
+    }
   },
   "SocialLinks": {
     "label": "Social links",

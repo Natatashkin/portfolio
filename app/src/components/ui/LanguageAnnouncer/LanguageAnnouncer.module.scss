@@ -1,0 +1,5 @@
+@use 'mixins' as *;
+
+.languageAnnouncer {
+  @include visually-hidden;
+}
