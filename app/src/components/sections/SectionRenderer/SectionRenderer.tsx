@@ -1,5 +1,5 @@
 import HeroSection from '@/components/sections/HeroSection';
-import type { Section } from './types';
+import type { Section } from '@/lib/sanity/types';
 
 type Props = { sections: Section[] };
 

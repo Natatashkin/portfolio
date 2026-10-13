@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { safeHref } from '@/lib/helpers/safeHref';
+import { safeHref } from '@/lib/helpers';
 import styles from './SocialLinks.module.scss';
 import type { SocialLink } from './types';
 

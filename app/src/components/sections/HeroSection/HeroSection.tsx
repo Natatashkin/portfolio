@@ -1,9 +1,9 @@
-import type { SectionOf } from '@/components/sections/SectionRenderer';
 import Container from '@/components/ui/Container';
 import Headline from '@/components/ui/Headline';
 import LinkButton from '@/components/ui/LinkButton';
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import RichText from '@/components/ui/RichText';
+import type { SectionOf } from '@/lib/sanity/types';
 import HeroGrid from './HeroGrid';
 import HeroMetricNumber from './HeroMetricNumber';
 import styles from './HeroSection.module.scss';

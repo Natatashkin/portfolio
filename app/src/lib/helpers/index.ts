@@ -1,1 +1,1 @@
-import { splitString } from './splitString';
+export { safeHref } from './safeHref';

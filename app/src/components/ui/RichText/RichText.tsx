@@ -1,5 +1,5 @@
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
-import { safeHref } from '@/lib/helpers/safeHref';
+import { safeHref } from '@/lib/helpers';
 import type { RichText as RichTextValue } from '@/sanity.types';
 import styles from './RichText.module.scss';
 

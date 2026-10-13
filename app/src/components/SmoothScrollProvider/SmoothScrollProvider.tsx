@@ -5,6 +5,7 @@ import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { type LenisRef, ReactLenis } from 'lenis/react';
+import ScrollTriggerSync from './ScrollTriggerSync';
 
 import 'lenis/dist/lenis.css';
 
@@ -54,6 +55,7 @@ const SmoothScrollProvider = ({ children }: SmoothScrollProviderProps) => {
 
   return (
     <ReactLenis root options={{ autoRaf: false }} ref={lenisRef}>
+      <ScrollTriggerSync />
       {children}
     </ReactLenis>
   );

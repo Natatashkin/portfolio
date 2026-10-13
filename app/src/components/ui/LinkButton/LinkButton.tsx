@@ -1,6 +1,6 @@
 import { ArrowIcon } from '@/components/icons';
 import { Link } from '@/i18n/navigation';
-import { safeHref } from '@/lib/helpers/safeHref';
+import { safeHref } from '@/lib/helpers';
 import styles from './LinkButton.module.scss';
 import type { LinkButtonProps } from './types';
 
