@@ -11,7 +11,7 @@
     "format:check": "prettier --check .",
     "type-check": "tsc --noEmit",
     "typegen": "pnpm --dir ../sanity-cms typegen",
-    "circular-dependencies-check": "npx madge --extensions ts,tsx --ts-config tsconfig.json -c src",
+    "circular-dependencies-check": "madge --extensions ts,tsx --ts-config tsconfig.json -c src",
     "code-quality": "pnpm lint && pnpm format:check && pnpm type-check && pnpm circular-dependencies-check",
     "prepare": "cd .. && husky app/.husky || true"
   },
@@ -38,6 +38,7 @@
     "eslint-config-prettier": "^10.1.8",
     "husky": "^9.1.7",
     "lint-staged": "^17.6.0",
+    "madge": "^8.0.0",
     "prettier": "^3.9.9",
     "sass": "^1.105.1",
     "typescript": "^5"

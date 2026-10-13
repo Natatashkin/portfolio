@@ -1,6 +1,6 @@
 import { ArrowIcon } from '@/components/icons';
 import { Link } from '@/i18n/navigation';
-import { safeHref } from '@/lib/helpers';
+import { safeHref, safePath } from '@/lib/helpers';
 import styles from './LinkButton.module.scss';
 import type { LinkButtonProps } from './types';
 
@@ -38,13 +38,14 @@ const LinkButton = ({
     ) : null;
   }
 
+  const path = safePath(url);
   const hash = hasAnchor && anchor ? `#${anchor}` : '';
 
-  return (
-    <Link className={className} href={`/${url}${hash}`}>
+  return path ? (
+    <Link className={className} href={`${path}${hash}`}>
       {content}
     </Link>
-  );
+  ) : null;
 };
 
 export default LinkButton;

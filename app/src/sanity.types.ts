@@ -167,16 +167,6 @@ export type MetricReference = {
   [internalGroqTypeReferenceTo]?: 'metric';
 };
 
-export type MetricsSection = {
-  _type: 'metricsSection';
-  metrics?: Array<
-    {
-      _key: string;
-    } & MetricReference
-  >;
-  anchorId?: string;
-};
-
 export type HeroSection = {
   _type: 'heroSection';
   anchorId?: string;
@@ -362,9 +352,6 @@ export type Page = {
       } & HeroSection)
     | ({
         _key: string;
-      } & MetricsSection)
-    | ({
-        _key: string;
       } & CareerSection)
     | ({
         _key: string;
@@ -428,7 +415,6 @@ export type SiteSettings = {
   _rev: string;
   siteName?: string;
   name?: InternationalizedArrayString;
-  role?: string;
   navigation?: Array<{
     label?: InternationalizedArrayString;
     isAnchor?: boolean;
@@ -617,7 +603,6 @@ export type AllSanitySchemaTypes =
   | RoadReference
   | CareerSection
   | MetricReference
-  | MetricsSection
   | HeroSection
   | Technology
   | Metric
@@ -728,11 +713,6 @@ export type PAGE_QUERY_RESULT = {
           value: string;
           label: string | null;
         }> | null;
-      }
-    | {
-        _key: string;
-        _type: 'metricsSection';
-        anchorId: string | null;
       }
     | {
         _key: string;

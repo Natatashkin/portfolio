@@ -83,7 +83,7 @@ const HeroSection = ({
                   index={index}
                   className={styles.hero__metricValue}
                 />
-                <p className={styles.hero__metricLabel}>{label}</p>
+                {label && <p className={styles.hero__metricLabel}>{label}</p>}
               </li>
             ))}
           </ul>

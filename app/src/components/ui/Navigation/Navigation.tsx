@@ -1,6 +1,7 @@
 'use client';
 
 import { Link, usePathname } from '@/i18n/navigation';
+import { safePath } from '@/lib/helpers';
 import styles from './Navigation.module.scss';
 import type { NavigationItem } from './types';
 
@@ -15,25 +16,34 @@ const Navigation = ({ items, label }: Props) => {
   return (
     <nav aria-label={label}>
       <ul className={styles.navigation__list}>
-        {items.map(({ _key, label: itemLabel, isAnchor, url }) =>
-          itemLabel ? (
-            <li key={_key}>
-              {isAnchor ? (
+        {items.map(({ _key, label: itemLabel, isAnchor, url }) => {
+          if (!itemLabel) return null;
+
+          if (isAnchor) {
+            return (
+              <li key={_key}>
                 <a className={styles.navigation__link} href={`#${url}`}>
                   {itemLabel}
                 </a>
-              ) : (
-                <Link
-                  className={styles.navigation__link}
-                  href={`/${url}`}
-                  aria-current={pathname === `/${url}` ? 'page' : undefined}
-                >
-                  {itemLabel}
-                </Link>
-              )}
+              </li>
+            );
+          }
+
+          const path = safePath(url);
+          if (!path) return null;
+
+          return (
+            <li key={_key}>
+              <Link
+                className={styles.navigation__link}
+                href={path}
+                aria-current={pathname === path ? 'page' : undefined}
+              >
+                {itemLabel}
+              </Link>
             </li>
-          ) : null
-        )}
+          );
+        })}
       </ul>
     </nav>
   );

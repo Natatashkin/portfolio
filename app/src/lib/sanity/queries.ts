@@ -3,7 +3,12 @@ import { defineQuery } from 'next-sanity';
 // Document types the page query reads. Each one becomes a cache tag on the
 // fetch, so editing any of them revalidates the page. Extend it together with
 // the query when a section starts dereferencing another document type.
-export const PAGE_QUERY_TAGS = ['page'] as const;
+export const PAGE_QUERY_TAGS = [
+  'page',
+  'technology',
+  'skill',
+  'metric'
+] as const;
 export const SITE_SETTING_QUERY_TAGS = ['site-settings'] as const;
 
 // Localized fields are written out literally: TypeGen reads queries

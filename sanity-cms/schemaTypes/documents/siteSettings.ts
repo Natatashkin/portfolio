@@ -19,10 +19,6 @@ export const siteSettingsType = defineType({
       validation: requiredInAllLanguages,
     }),
     defineField({
-      name: 'role',
-      type: 'string',
-    }),
-    defineField({
       name: 'navigation',
       type: 'array',
       of: [
