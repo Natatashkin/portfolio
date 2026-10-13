@@ -13,7 +13,7 @@
     "typegen": "pnpm --dir ../sanity-cms typegen",
     "circular-dependencies-check": "npx madge --extensions ts,tsx --ts-config tsconfig.json -c src",
     "code-quality": "pnpm lint && pnpm format:check && pnpm type-check && pnpm circular-dependencies-check",
-    "prepare": "cd .. && husky app/.husky"
+    "prepare": "cd .. && husky app/.husky || true"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

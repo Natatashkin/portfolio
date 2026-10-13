@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Montserrat } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
@@ -16,6 +17,11 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
   display: 'swap'
 });
+
+// Pre-launch: keep the site out of search engines. Remove when going live.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false }
+};
 
 export const generateStaticParams = () =>
   routing.locales.map((locale) => ({ locale }));
