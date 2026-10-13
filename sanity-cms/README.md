@@ -1,9 +1,38 @@
-# Sanity Clean Content Studio
+# Portfolio: Sanity Studio
 
-Congratulations, you have now installed the Sanity Content Studio, an open-source real-time content editing environment connected to the Sanity backend.
+Content studio (Sanity Studio v6) for the portfolio landing. Content is localized per field (`en`, `uk`) with
+`sanity-plugin-internationalized-array`.
 
-Now you can do the following things:
+## Getting started
 
-- [Read “getting started” in the docs](https://www.sanity.io/docs/introduction/getting-started?utm_source=readme)
-- [Join the Sanity community](https://www.sanity.io/community/join?utm_source=readme)
-- [Extend and build plugins](https://www.sanity.io/docs/content-studio/extending?utm_source=readme)
+```bash
+pnpm install
+pnpm dev        # http://localhost:3333
+pnpm build      # output in dist/
+```
+
+## Scripts
+
+| Command             | What it does                                                |
+| ------------------- | ----------------------------------------------------------- |
+| `pnpm dev`          | Run the Studio locally                                      |
+| `pnpm build`        | Build the Studio                                            |
+| `pnpm start`        | Serve the built Studio                                      |
+| `pnpm deploy`       | Deploy the Studio with the Sanity CLI                       |
+| `pnpm format`       | Prettier (write)                                            |
+| `pnpm format:check` | Prettier (check only)                                       |
+| `pnpm typegen`      | Extract the schema and generate types (consumed by the app) |
+
+## Structure
+
+```
+schemaTypes/blocks/      linkButton, responsiveImage, richText, headline
+schemaTypes/documents/   page, siteSettings, project, experience, skill, piece, road, metric, technology
+schemaTypes/sections/    one object type per landing section
+schemaTypes/lib/         languages, localized-field helpers, shared section groups
+structure.ts             desk structure (siteSettings singleton)
+static/sections/         insert-menu tile images
+```
+
+The content model is described in [`../docs/specs/content-model.md`](../docs/specs/content-model.md). Changing a
+schema means updating that spec and running `pnpm typegen` in `../app`.
