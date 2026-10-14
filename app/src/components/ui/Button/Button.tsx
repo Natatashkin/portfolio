@@ -2,7 +2,8 @@ import clsx from 'clsx';
 import styles from './Button.module.scss';
 import type { ButtonProps } from './types';
 
-// Children are rendered after the label, so they are meant for an icon.
+// The label is text or rich content (e.g. several spans). Children are rendered after it, so they are
+// meant for an icon.
 const Button = ({
   label,
   variant = 'primary',

@@ -7,7 +7,7 @@
   tiles; `siteSettings` singleton; Studio deployed on Vercel.
 - Env-based Sanity client, `check-sanity` script, TypeGen wiring, `fetchPage` / `fetchSiteSettings`.
 - next-intl routing (`en` at `/`, `uk` at `/uk`), localized 404, `messages/`.
-- Tokens, themes with no-flash script, `useTheme`, placeholder `ThemeSwitcher`.
+- Tokens, themes with no-flash script, `useTheme`, temporary `ThemeSwitcher`.
 - UI blocks: Button, LinkButton, Headline, RichText, ResponsiveImage, Logo, Navigation, SocialLinks, Container, InView.
 - Layout: Header, BurgerMenu, Footer. Lenis + GSAP `SmoothScrollProvider`.
 - `HeroSection` (with `HeroGrid`, `HeroMetricNumber`).

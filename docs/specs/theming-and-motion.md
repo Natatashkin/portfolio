@@ -25,7 +25,8 @@
   client-rendered script error. Details:
   [features/theme-switcher.md](../features/theme-switcher.md).
 - `useTheme`, `useSystemTheme` and `ThemeSwitcher` exist; the switcher is a two-way toggle on the effective theme with
-  the label of the target theme. Its final design is undecided.
+  the label of the target theme, chosen by CSS from `data-theme` / `prefers-color-scheme` (both labels are in the server
+  HTML). Its final design is undecided.
 
 ## Motion (Lenis + GSAP)
 

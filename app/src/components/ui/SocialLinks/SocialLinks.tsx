@@ -26,7 +26,6 @@ const SocialLinks = ({ items }: Props) => {
             >
               {label}
               <span className={styles.socialLinks__hidden}>
-                {' '}
                 ({t('opensInNewTab')})
               </span>
             </a>

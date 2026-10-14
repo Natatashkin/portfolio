@@ -32,7 +32,8 @@ the webhook map each document type to its tag.
 ## D5. Theme in `localStorage`, not a cookie
 
 `theme` = `light` | `dark`, no value = system. The server never reads it, so pages stay static; a no-flash inline
-script applies it before paint. All storage access is in try/catch. The switcher UI is a placeholder. The script runs only
+script applies it before paint. All storage access is in try/catch. The switcher UI is temporary: it renders both labels in the server HTML and CSS
+picks one from `data-theme` (set by the script before paint), so the button is there from the first paint. The script runs only
 on a document load, and a soft locale switch makes React remove `data-theme`, `color-scheme` and `theme-ready` from
 `<html>`. Resolved: `ThemeScript` (one mount point in the root layout) calls `restoreTheme()` in a `useLayoutEffect` on
 mount and renders the inline script only on the server and during hydration (details in [features/theme-switcher.md](features/theme-switcher.md)).

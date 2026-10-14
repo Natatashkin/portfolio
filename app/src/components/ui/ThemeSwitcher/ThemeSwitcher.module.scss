@@ -1,19 +1,40 @@
 @use 'mixins' as *;
 
+// The label names the theme a click leads to, so it is the opposite of the page's current theme.
+// Both labels are in the server HTML; <html data-theme> (set before first paint) picks one. Without
+// it the page follows the system theme. The light page shows "Dark" (the default), the dark page "Light".
+@mixin show-light-label {
+  .themeSwitcher__toLight {
+    display: inline;
+  }
+
+  .themeSwitcher__toDark {
+    display: none;
+  }
+}
+
 // Look comes from Button (variant "transparent"); this file only keeps the switcher's size.
 .themeSwitcher {
-  &__button,
-  &__placeholder {
+  &__button {
     @include muted-control;
   }
 
-  // Same 1px outline as the transparent Button, so the placeholder matches it on mount.
-  &__placeholder {
-    min-inline-size: 7rem;
-    min-block-size: 2.5rem;
+  &__toLight {
+    display: none;
+  }
 
-    @include media-up(md) {
-      min-inline-size: 10rem;
-    }
+  &__toDark {
+    display: inline;
+  }
+}
+
+:global(html[data-theme='dark']) {
+  @include show-light-label;
+}
+
+// An explicit data-theme wins over the system preference, so this applies only without one.
+@media (prefers-color-scheme: dark) {
+  :global(html:not([data-theme])) {
+    @include show-light-label;
   }
 }

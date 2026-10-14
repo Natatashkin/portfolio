@@ -13,18 +13,31 @@ Requirements are the author's decisions; implementation choices agreed with the 
 means seen in the code and checked in Chrome (dev server, system theme dark in one session and light in another;
 mobile layout of about 844 px, the burger-menu copy of the switcher); unticked items give the reason.
 
+The label is chosen by CSS and the `aria-label` is set only after mount (see Design, "Label chosen by CSS"). The
+author re-checked the label-dependent items in the browser after that change (see Acceptance criteria).
+
 ### Theme switcher label
 
 - [x] **Author's decision:** the label shows the theme the next click switches to. While the theme is `system`, it
-      shows the opposite of the system's effective theme (system dark -> `Light`; system light -> `Dark`).
-      (`ThemeSwitcher.tsx:19-20,35`.) Checked in Chrome for both: system dark gives `Light`/`Світла`, system light gives
-      `Dark`/`Темна`.
+      shows the opposite of the system's effective theme (system dark -> `Light`; system light -> `Dark`). Built: CSS
+      shows `Light` under `html[data-theme='dark']` and, without `data-theme`, under `prefers-color-scheme: dark`
+      (`ThemeSwitcher.module.scss:6-14,31-40`); otherwise `Dark`. Checked in the browser by the author after the CSS-label change.
 - [x] Themes stay `light`, `dark` and `system` (`Theme` in `lib/theme/theme.ts:4`).
-- [x] Labels come from `messages/` in both locales (`ThemeSwitcher.light`/`dark`).
+- [x] Labels come from `messages/` in both locales (`ThemeSwitcher.light`/`dark`; both rendered in the server HTML,
+      `ThemeSwitcher.tsx:33-38`).
+- [x] **Decision:** the button is in the server HTML with a label from the first paint: both labels are rendered
+      and CSS shows one, so there is no empty or `aria-hidden` placeholder before hydration. Built
+      (`ThemeSwitcher.tsx:28-38`, `ThemeSwitcher.module.scss`); the first paint is in the acceptance criteria below.
+- [x] **Decision:** the label shown by CSS and the click target chosen by JS always agree. Both read the same
+      sources: `<html data-theme>` (set by the inline script before first paint, from the stored theme) and the system
+      preference (`useTheme` + `useSystemTheme`, `ThemeSwitcher.tsx:17-22`). An explicit `data-theme` wins over the
+      system preference (`:not([data-theme])` in the media query, `ThemeSwitcher.module.scss:35-40`). Checked by the author in the
+      browser per theme/system combination and after an OS theme change.
 - [x] **Decision:** the accessible name follows the pattern "Switch theme to: Light": the visible target theme word
       is part of the name (WCAG 2.5.3 label in name). The pattern is localized in `messages/{en,uk}.json` with a
-      `{theme}` placeholder (`ThemeSwitcher.tsx:36`, `en.json:12`, `uk.json:12`). The accessible name was seen in
-      Chrome in both locales ("Перемкнути тему: Темна", "Switch theme to: Light").
+      `{theme}` placeholder (`ThemeSwitcher.tsx:39-41`, `en.json:12`, `uk.json:12`). The `aria-label` is set only
+      after mount (`useIsMounted`); before mount it is `undefined` and the name is the visible label text. Checked by the
+      author in the browser in both locales ("Перемкнути тему: Темна", "Switch theme to: Light").
 - [ ] The name is announced correctly by a real screen reader. Deferred (author's decision): none was used; to be done in a separate stage.
 - [x] **Decision:** the message key `ThemeSwitcher.system` is removed from `messages/en.json` and `uk.json`; the label
       never shows "system", to avoid confusing users.
@@ -54,18 +67,37 @@ opposite of the system's effective theme.
 **Agreed implementation variant** (design choice agreed with the author): a two-way toggle on the **effective** theme.
 Built in `ThemeSwitcher.tsx`:
 
-- effective theme = `theme` if `light`/`dark`, otherwise `useSystemTheme()` (`ThemeSwitcher.tsx:19`).
-- Target = the opposite of the effective theme; label = `t(target)`; `aria-label` = `t('switchTo', { theme: t(target) })`
-  (`ThemeSwitcher.tsx:20,35-36`).
-- Click: `setTheme(target === systemTheme ? 'system' : target)` (`ThemeSwitcher.tsx:23-24`). If the target equals the
+- effective theme = `theme` if `light`/`dark`, otherwise `useSystemTheme()` (`ThemeSwitcher.tsx:21`).
+- Target = the opposite of the effective theme (`ThemeSwitcher.tsx:22`); `aria-label` =
+  `t('switchTo', { theme: t(target) })` once mounted (`ThemeSwitcher.tsx:39-41`). The visible label is no longer
+  computed from the target in JS; see "Label chosen by CSS".
+- Click: `setTheme(target === systemTheme ? 'system' : target)` (`ThemeSwitcher.tsx:25-26`). If the target equals the
   system's theme the key is removed (`theme.ts:19-22`), so `system` stays a real third state in storage and in
   `useTheme`. Checked in Chrome: the `system` -> light -> `system` toggle stores `system` (removes the key) when the
   target equals the system theme.
 - `useSystemTheme` (`hooks/useSystemTheme.ts`): `useSyncExternalStore` over `matchMedia('(prefers-color-scheme: dark)')`
   with a `change` listener (`subscribeToSystemTheme`); the server snapshot is `light`. `canMatchMedia`
   (`useSystemTheme.ts:9`) guards `window.matchMedia`: without it the hook returns `light` and subscribes to nothing.
-- Before mount a same-size `aria-hidden` placeholder renders (`ThemeSwitcher.tsx:27-31`), because the stored theme is
-  unknown on the server (`useTheme.ts:32`).
+
+### Label chosen by CSS
+
+Reason: the earlier version rendered a same-size `aria-hidden` placeholder until hydration, because the stored theme is
+unknown on the server (`useTheme.ts:32`), so the button appeared only after hydration. Replaced by:
+
+- Both labels render in the server HTML as two spans, `themeSwitcher__toLight` (`t('light')`) and
+  `themeSwitcher__toDark` (`t('dark')`), passed as `label` to `Button` (`ThemeSwitcher.tsx:33-38`). `Button`'s `label`
+  type is widened from `string` to `ReactNode` (`Button/types.ts:6`); `Button.tsx` changed by a comment only.
+- CSS shows one span. By default the `Dark` span is shown (`ThemeSwitcher.module.scss:22-28`). The `Light` span is shown
+  under `html[data-theme='dark']` (`:31-33`) and under `html:not([data-theme])` inside
+  `@media (prefers-color-scheme: dark)` (`:36-40`), both through the mixin `show-light-label` (`:6-14`). An explicit
+  `data-theme` wins over the system preference, because the media rule applies only without one.
+- Decision: the label is chosen by CSS from `data-theme`, which the inline script sets before first paint
+  (`theme.ts:59-61`; for `system` it sets nothing), so there is no flash. Not measured in a browser yet.
+- Click target stays in JS (`useTheme` + `useSystemTheme`). Label (CSS) and click (JS) read the same sources and must
+  always agree. This coupling is a risk: a change to one side must change the other.
+- Accessible name: `aria-label` is set only after mount (`useIsMounted`). Before mount it is `undefined` and the name is
+  the visible label text. Because the hidden span is `display: none`, it is left out of the name; this is expected from
+  CSS behavior, not checked with an accessibility tree.
 
 Alternative not chosen: keep the three-step cycle `system -> light -> dark` and only change the label to the next
 step. From `system` the next step is always `light`, so with a light system theme the label would read `Light` for a
@@ -128,7 +160,11 @@ theme switcher design stays undecided (see [../roadmap.md](../roadmap.md), "Fina
 
 ## Files
 
-- `app/src/components/ui/ThemeSwitcher/ThemeSwitcher.tsx`: label and click target from the effective theme.
+- `app/src/components/ui/ThemeSwitcher/ThemeSwitcher.tsx`: click target and post-mount `aria-label` from the effective
+  theme; both labels as spans.
+- `app/src/components/ui/ThemeSwitcher/ThemeSwitcher.module.scss`: shows one of the two label spans by `data-theme` and
+  `prefers-color-scheme`.
+- `app/src/components/ui/Button/types.ts`: `label` widened to `ReactNode`. `Button.tsx`: comment only.
 - `app/src/hooks/useSystemTheme.ts` (new): system theme subscription, guarded by `canMatchMedia`.
 - `app/src/lib/theme/theme.ts`: `enableThemeTransitions`, `restoreTheme` added; `themeScript` unchanged; comment on
   `applyTheme` that `themeScript` repeats it.
@@ -144,27 +180,26 @@ theme switcher design stays undecided (see [../roadmap.md](../roadmap.md), "Fina
       (same `<html>` node, `data-theme` and `color-scheme` light, `theme-ready` present, no script error in the
       console); `en` -> `uk` with `system` (stays system, `theme-ready` present); `uk` -> `en` and `en` -> `uk` with
       stored `dark` (still `dark`/`dark`, `theme-ready` present, hash `#hero` kept, `window` marker alive).
-- [x] Theme switcher accessible name is "Switch theme to: <visible word>" in the page language, from messages. The
-      `ThemeSwitcher.system` key is gone from both message files. Checked: the attribute in `uk` ("Перемкнути тему:
-      Світла", "Перемкнути тему: Темна") and `en` ("Switch theme to: Dark", "Switch theme to: Light"), keys in the
-      files. A real screen reader is a separate unticked requirement above.
+- [x] Theme switcher accessible name is "Switch theme to: <visible word>" in the page language, from messages, after
+      mount; before mount it is the visible label text. The `ThemeSwitcher.system` key is gone from both message files
+      (keys checked in the files). Checked by the author in the browser. A real screen reader is a separate unticked
+      requirement above.
 - [x] Theme `system`, system dark: label `Light`; click sets light. System light: label `Dark`; click sets dark.
-      Checked for both: system dark (label `Світла`, click stores `light`) and system light (name "Перемкнути тему:
-      Темна"; click stored `dark`, `data-theme` and `color-scheme` `dark`, label then "Світла").
+      Checked by the author in the browser with the CSS label, for both system themes.
 - [x] Theme `light`: label `Dark`; `dark`: label `Light`. With the agreed toggle variant, switching to the system's
-      own theme stores `system`. Checked: `light` (system dark) -> label `Темна`; click to the system's dark removed
-      the stored key and `data-theme`; the next click gave `light` again; stored `dark` (system light) -> label
-      `Світла`/`Light`.
+      own theme stores `system`. Checked by the author in the browser with the CSS
+      label: stored `light` and `dark` on a light and a dark system, and the click to the system's own theme.
 - [x] With the agreed toggle variant, changing the OS theme while the theme is `system` updates the label without
-      reload. Checked manually by the author.
-- [x] No hydration warning from the switcher; the placeholder keeps the layout stable. Checked manually by the author;
-      no hydration warning was seen in the dev console either. The Next dev overlay showed a console error from the
-      React DevTools extension on the first theme change (see Open questions); it is not a hydration warning.
-- [x] Renders in `en` and `uk`, light and dark, mobile and desktop. Checked manually by the author; I also checked
-      `en` and `uk` on the desktop (earlier session) and the mobile layout (about 844 px) in `uk` and `en`, including
-      the burger-menu copy.
-- [x] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`. (`code-quality`
-      and `build` were run and pass; `pnpm format` is run by the main session at hand-off.)
+      reload. Checked by the author in the browser: the label changes through the media
+      query, the click target through `useSystemTheme`.
+- [x] No empty button before hydration, no flash of the wrong label at first paint, and no hydration warning from the
+      switcher. Checked by the author in the browser after the CSS-label change: the label is there from the
+      first frame, and no hydration warning in the dev console. The Next dev overlay showed a console error from the React DevTools
+      extension on the first theme change (see [header.md](header.md), Open questions); it is not a hydration warning.
+- [x] Renders in `en` and `uk`, light and dark, mobile and desktop. Checked by the author in the browser, including the button width on a theme change and
+      the burger-menu copy. Earlier I also checked `en` and `uk` on the desktop and the mobile layout (about 844 px).
+- [x] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`. Re-run after the CSS-label change:
+      all pass.
 
 ## Tasks
 
@@ -173,7 +208,11 @@ theme switcher design stays undecided (see [../roadmap.md](../roadmap.md), "Fina
    Chrome (see Acceptance criteria).
 2. Block 2: system theme subscription and the effective-theme toggle in `ThemeSwitcher`; new labels, the
    "Switch theme to: {theme}" aria-label and messages; `ThemeSwitcher.system` removed. Built and checked in Chrome.
-3. Block 3: the manual checks were done by the author (OS theme change while the page is open, no hydration warning with a
+3. Block 3b: replace the `aria-hidden` placeholder with two CSS-chosen labels (`ThemeSwitcher.module.scss`,
+   `Button` `label` as `ReactNode`; `aria-label` only after mount). Built, `pnpm format`, `pnpm code-quality` and `pnpm build` pass,
+   and the author checked it in the browser (label per theme and system preference, accessible name, first paint with
+   no empty button, button width, OS theme change).
+4. Block 3 (done before block 4, checked against the placeholder version): the manual checks were done by the author (OS theme change while the page is open, no hydration warning with a
    stable placeholder, the desktop and mobile layouts in both locales and themes; the author also saw no flash on
    the theme remount). Remaining, deferred to a separate stage by the author: a real screen reader. Then set the
    status to `done`.
@@ -184,15 +223,5 @@ theme switcher design stays undecided (see [../roadmap.md](../roadmap.md), "Fina
   the root layout (per the review), not `useTheme` (which would run once per `ThemeSwitcher` copy) and not
   `LanguageAnnouncer`; `<html>` does not carry `data-theme` through React props.
 - Placement of the fix in this feature (block 1): resolved, it stayed here.
-- Console error from React DevTools (development only, not fixed in code). Observed in the mobile layout with the
-  burger menu open: the first theme change after a page load made the Next dev overlay show "1 Issue: Console Error:
-  The children should not have changed if we pass in the same set." with a call stack of about 50 frames, all in
-  `chrome-extension://<React DevTools id>/build/installHook.js` (`updateFiberRecursively`,
-  `updateVirtualChildrenRecursively`, `updateChildrenRecursively`). Wrapping
-  `__REACT_DEVTOOLS_GLOBAL_HOOK__.onCommitFiberRoot` and catching the throw showed every frame inside the extension;
-  React only logs it ("React instrumentation encountered an error") in development. The theme change still applied
-  (stored `dark`, `data-theme` `dark`). Reproduced twice with the menu open and the first change after load; not
-  reproduced with the menu closed (burger copy clicked by script) and not on later changes. So the exception is
-  thrown by the DevTools extension's commit hook while it walks the fiber tree, not by the app code, and production
-  React does not log it. Why the extension throws is not known. Proposed check for the author: disable the extension
-  and repeat.
+- Console error from React DevTools (development only): moved to [header.md](header.md), Open questions. The cause is
+  duplicated `SocialLinks` in the burger panel and the footer, not the theme switcher.

@@ -1,8 +1,8 @@
-import type { ComponentPropsWithoutRef } from 'react';
+import type { ComponentPropsWithoutRef, ReactNode } from 'react';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'accent' | 'transparent';
 
 export type ButtonProps = ComponentPropsWithoutRef<'button'> & {
-  label: string;
+  label: ReactNode;
   variant?: ButtonVariant;
 };

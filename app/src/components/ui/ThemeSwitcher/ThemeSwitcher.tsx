@@ -8,8 +8,10 @@ import { useSystemTheme } from '@/hooks/useSystemTheme';
 import { useTheme } from '@/hooks/useTheme';
 import styles from './ThemeSwitcher.module.scss';
 
-// Placeholder UI: final behavior and design are not decided yet.
+// Temporary design: final behavior and design are not decided yet.
 // A two-way toggle on the effective theme: the label and the click both lead to the opposite one.
+// The label is chosen by CSS and the click target by JS; both read the same sources (the stored theme
+// and the system preference), so they must always agree.
 const ThemeSwitcher = () => {
   const t = useTranslations('ThemeSwitcher');
   const { theme, setTheme } = useTheme();
@@ -23,17 +25,20 @@ const ThemeSwitcher = () => {
   const handleClick = () =>
     setTheme(targetTheme === systemTheme ? 'system' : targetTheme);
 
-  // The stored theme is unknown until mount, so render a same-size neutral box instead of a guess.
-  if (!isMounted) {
-    return (
-      <span className={styles.themeSwitcher__placeholder} aria-hidden="true" />
-    );
-  }
-
+  // The stored theme is unknown on the server, so both labels are in the HTML and CSS shows the one
+  // matching <html data-theme> (set before first paint), which avoids an empty button until hydration.
+  // Until mount the name comes from the visible label; the aria-label is added once the target is known.
   return (
     <Button
-      label={t(targetTheme)}
-      aria-label={t('switchTo', { theme: t(targetTheme) })}
+      label={
+        <>
+          <span className={styles.themeSwitcher__toLight}>{t('light')}</span>
+          <span className={styles.themeSwitcher__toDark}>{t('dark')}</span>
+        </>
+      }
+      aria-label={
+        isMounted ? t('switchTo', { theme: t(targetTheme) }) : undefined
+      }
       variant="transparent"
       className={styles.themeSwitcher__button}
       onClick={handleClick}
