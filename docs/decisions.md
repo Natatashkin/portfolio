@@ -60,10 +60,15 @@ It needs the experimental `globalNotFound` flag. Localized 404s come from `[loca
 Modules `@use 'mixins' as *;` through `sassOptions.loadPaths` (`src/styles`), the current Sass option
 (`includePaths` is legacy).
 
-## D10. One Lenis instance bound to the GSAP ticker
+## D10. One Lenis instance on its own loop, GSAP loaded after idle
 
-`SmoothScrollProvider` is the only place Lenis is created; `gsap.ticker` drives `lenis.raf` so ScrollTrigger and
-Lenis share one loop. Skipped when `prefers-reduced-motion` is set.
+`SmoothScrollProvider` is the only place Lenis is created; it runs its own `requestAnimationFrame` loop and stays in
+the first bundle. GSAP and ScrollTrigger are loaded dynamically (`loadGsap`) when the browser is idle, to keep them out
+of the first bundle (Lighthouse showed one chunk with GSAP, Lenis and `next-intl` of about 54 KB gzip). Once loaded,
+`ScrollTrigger.update` listens to Lenis's `scroll` event. Reason for not driving Lenis from `gsap.ticker` (the
+earlier design): the clock would change between the two loops and `lenis.raf` would get a negative delta. Trade-off:
+a scrubbed animation may trail Lenis by a frame; revisit when real scroll animations exist. Skipped when
+`prefers-reduced-motion` is set.
 
 ## D11. `linkButton` reading rules
 

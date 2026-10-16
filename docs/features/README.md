@@ -13,7 +13,7 @@ starts; features built before the spec-driven workflow are marked "done (documen
 | UI blocks         | LinkButton, Button, Headline, RichText, ResponsiveImage, Container, InView                                 | done                | pending                                      |
 | Theming           | Light/dark themes, no-flash script, `useTheme`, ThemeSwitcher                                              | done                | pending                                      |
 | i18n and routing  | Locales, proxy, localized 404, `messages/`                                                                 | done                | pending                                      |
-| Smooth scroll     | Lenis + GSAP ticker, ScrollTrigger sync, reduced motion                                                    | done                | pending                                      |
+| Smooth scroll     | Lenis, GSAP loaded after idle, ScrollTrigger sync, reduced motion                                                  | done                | pending                                      |
 | Language switcher | `EN`/`UK` link in the desktop header and the burger menu; hash, focus and announcement kept after a switch | done, with caveats  | [language-switcher.md](language-switcher.md) |
 | Theme switcher    | Label shows the theme a click leads to; the chosen theme survives a language switch                        | done, with a caveat | [theme-switcher.md](theme-switcher.md)       |
 
