@@ -1,9 +1,8 @@
 'use client';
 
 import { useSyncExternalStore } from 'react';
+import { DARK_QUERY } from '@/lib/constants';
 import type { StoredTheme } from '@/lib/theme/theme';
-
-const DARK_QUERY = '(prefers-color-scheme: dark)';
 
 // Light matches the default styles, so it is also the answer when the preference cannot be read.
 const canMatchMedia = (): boolean => typeof window.matchMedia === 'function';

@@ -1,7 +1,7 @@
 @use 'sass:map';
 
 // Sass variables, not custom properties: custom properties don't work inside media queries.
-// `lg` is mirrored in HeaderMenu.tsx (DESKTOP_QUERY): keep both in sync.
+// `lg` is mirrored in lib/constants.ts (DESKTOP_QUERY): keep both in sync.
 $breakpoints: (
   sm: 640px,
   md: 768px,

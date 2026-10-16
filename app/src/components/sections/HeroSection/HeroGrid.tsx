@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import { POINTER_QUERY } from '@/lib/constants';
 import styles from './HeroGrid.module.scss';
 
 const SMOOTHING = 0.12;
 const SETTLE_DISTANCE = 0.5;
 const START_X = 0.5;
 const START_Y = 0.4;
-const POINTER_QUERY =
-  '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)';
 
 type Props = {
   className?: string;

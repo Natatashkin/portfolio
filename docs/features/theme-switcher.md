@@ -75,9 +75,9 @@ Built in `ThemeSwitcher.tsx`:
   system's theme the key is removed (`theme.ts:19-22`), so `system` stays a real third state in storage and in
   `useTheme`. Checked in Chrome: the `system` -> light -> `system` toggle stores `system` (removes the key) when the
   target equals the system theme.
-- `useSystemTheme` (`hooks/useSystemTheme.ts`): `useSyncExternalStore` over `matchMedia('(prefers-color-scheme: dark)')`
-  with a `change` listener (`subscribeToSystemTheme`); the server snapshot is `light`. `canMatchMedia`
-  (`useSystemTheme.ts:9`) guards `window.matchMedia`: without it the hook returns `light` and subscribes to nothing.
+- `useSystemTheme` (`hooks/useSystemTheme.ts`): `useSyncExternalStore` over `matchMedia(DARK_QUERY)` (the
+  query string lives in `lib/constants.ts`) with a `change` listener (`subscribeToSystemTheme`); the server snapshot
+  is `light`. `canMatchMedia` guards `window.matchMedia`: without it the hook returns `light` and subscribes to nothing.
 
 ### Label chosen by CSS
 
@@ -151,7 +151,7 @@ language switcher does not re-apply the theme.
 
 - `ThemeSwitcher` is a client component; `ThemeScript` is a client component that renders in the server HTML.
 - **Edge cases:** storage failure falls back to `system` (`theme.ts:10-17`); on the server, and in a browser without
-  `matchMedia`, the system theme is `light` (`useSystemTheme.ts:9,20,23`).
+  `matchMedia`, the system theme is `light` (`canMatchMedia`, `getSnapshot` and `getServerSnapshot` in `useSystemTheme.ts`).
 
 ### Ownership
 

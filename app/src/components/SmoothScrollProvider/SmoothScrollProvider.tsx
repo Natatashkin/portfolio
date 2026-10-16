@@ -3,11 +3,11 @@
 import type { ReactNode } from 'react';
 import { useEffect, useRef, useSyncExternalStore } from 'react';
 import { type LenisRef, ReactLenis } from 'lenis/react';
+import { REDUCED_MOTION_QUERY } from '@/lib/constants';
 import { loadGsap } from '@/lib/motion/loadGsap';
 
 import 'lenis/dist/lenis.css';
 
-const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 const IDLE_TIMEOUT_MS = 2000;
 const IDLE_FALLBACK_DELAY_MS = 200;
 const LENIS_WAIT_FRAMES = 60;

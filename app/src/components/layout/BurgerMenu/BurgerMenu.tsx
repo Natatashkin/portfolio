@@ -11,14 +11,12 @@ import {
 import { useLenis } from 'lenis/react';
 import { useTranslations } from 'next-intl';
 import { BurgerIcon, CloseIcon } from '@/components/icons';
+import { DESKTOP_QUERY } from '@/lib/constants';
 import styles from './BurgerMenu.module.scss';
 
 type Props = {
   children: ReactNode;
 };
-
-// Matches the `lg` breakpoint in styles/_mixins.scss: from here the mobile menu is not shown.
-const DESKTOP_QUERY = '(min-width: 1024px)';
 
 // Mobile menu: burger toggle plus a full-screen panel. Hidden from `lg`, where the header shows the desktop navigation.
 const BurgerMenu = ({ children }: Props) => {
