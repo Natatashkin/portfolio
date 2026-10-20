@@ -16,6 +16,26 @@ against a source.
 - `docs/specs/content-model.md`: Sanity fields; link to it instead of copying field lists.
 - `docs/conventions.md`: rules that apply to every component; link, don't repeat.
 
+## Keep the spec lean
+
+A spec says what is, not how it was built or checked. Specs that carry a work log grow past what anyone reads, and
+their line numbers go stale at the next edit.
+
+- **No line numbers or `file:line` in the spec.** Name the file, component or function. Evidence with `file:line`
+  belongs in the agent's report, not in the document.
+- **No verification log.** Do not write "verified in Chrome", dates, viewport sizes or what the dev server showed. A
+  ticked criterion means it was seen; add at most one clause for a limit a reader must know ("not tested with a real
+  screen reader"). How to check a UI change is the `ui-verify` skill.
+- **No history of the work.** No block-by-block narrative, "the earlier version…" or "before the fix". Why a choice
+  was made is one line plus the reason in Decisions, or in `docs/decisions.md` when it affects other features.
+- **Say each thing once.** A deferred or unverified check is listed once, in Open questions, not repeated in every
+  requirement and criterion that touches it.
+- **Unverified claims are not ticked.** What you cannot back goes to Open questions, not into the spec as a checked
+  item. Command criteria (`pnpm format`, `code-quality`, `build`) are ticked by the main session after it runs them;
+  `docs-writer` has no shell, so it leaves them unticked and adds no comment.
+- **Tasks after the feature is done** are replaced by one line ("Done in the code"), as in `smooth-scroll.md`.
+- A spec over about 150 lines is probably carrying a log: cut before adding.
+
 ## New feature (before code)
 
 Status `draft`. Write Goal, Requirements (unchecked `- [ ]`, each testable on its own), Design (schema, query and
@@ -31,7 +51,8 @@ the changed files and the decisions made while building.
 1. Read the changed files and compare them with the spec, section by section.
 2. Requirements: tick `- [x]` what the code does; rewrite requirements that changed by decision; move dropped ones to
    Decisions with the reason. Never leave a requirement that the code contradicts.
-3. Design and Files: describe what was built, not what was planned.
+3. Design and Files: describe what was built, not what was planned. Replace the Tasks list with "Done in the code"
+   and delete the template comment under it; do not copy the block reports or the checks run into the spec.
 4. Decisions: one line per change of plan, with the reason. A choice that affects other features also goes to
    `docs/decisions.md`.
 5. Update what the feature touched: `docs/features/README.md` (status, Covers), `docs/specs/content-model.md`
@@ -53,7 +74,8 @@ Status `done (documented after implementation)`. Be honest about this: the spec 
 
 ## Before finishing
 
-- Re-read each claim and point to the line that backs it; drop or reword anything you cannot point to.
+- Re-read each claim and find the line that backs it; drop or reword anything you cannot back. Keep the line
+  references for your report, not for the spec.
 - Check links resolve (`docs/features/` → `../specs/...`, `../conventions.md#...`).
 - The main session hands off through the `work-block` skill (Prettier, review, report, stop). The `docs-writer` agent
   returns its report and stops.

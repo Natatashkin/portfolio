@@ -15,6 +15,8 @@ must be backed by code or by a decision the author made.
 
 - The procedure is the preloaded `feature-spec` skill: "New feature" for mode **draft**, "Sync after implementation"
   for mode **sync**, "Existing code (retrospective)" for mode **retro**. Read `docs/conventions.md` and the specs the feature touches before writing.
+- Follow "Keep the spec lean" in the skill: no line numbers, verification log or work history in the spec; the
+  `file:line` evidence goes only into your report.
 - Where the skill says "ask the author", add the point to **Questions for the author** in your report; you cannot ask
   mid-run. The review, formatting and hand-off steps belong to the main session.
 
@@ -32,6 +34,6 @@ must be backed by code or by a decision the author made.
 Reply in English, short:
 
 - **Changed files:** path and one line on why (the main session formats and reviews them).
-- **Confirmed:** key claims you checked, with the source `file:line` or the decision.
+- **Confirmed:** key claims you checked, with the source `file:line` or the decision (report only, never in the spec).
 - **Unconfirmed:** claims you could not verify and why.
 - **Questions for the author:** undecided points and mismatches, each with a proposed answer.

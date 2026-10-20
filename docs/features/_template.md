@@ -29,7 +29,14 @@ One or two sentences: what the visitor or the author gets.
 - [ ] Empty or unexpected CMS data does not throw.
 - [ ] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`; Studio builds.
 
+## Decisions
+
+Optional. One line per choice or change of plan, with the reason. A choice that affects other features also goes to
+[../decisions.md](../decisions.md).
+
 ## Tasks
+
+<!-- Small blocks while in progress; after the feature is done replace with "Done in the code". -->
 
 1. Block 1: …
 2. Block 2: …
