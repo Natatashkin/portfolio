@@ -37,17 +37,17 @@
   dynamically once, registers the plugin and returns the same promise to every caller. `SmoothScrollProvider` calls
   it when the browser is idle after load (`requestIdleCallback`, `setTimeout` fallback); a section that animates
   awaits the same promise.
-- When GSAP is ready, `SmoothScrollProvider` subscribes `ScrollTrigger.update` to `lenis.on('scroll', ...)` (required
-  by the Lenis docs for ScrollTrigger) and unsubscribes on cleanup. Lenis keeps its own loop and is not moved to
-  `gsap.ticker`: a switch of clock would give `lenis.raf` a negative delta, which shows as a jump. The cost is that
-  a `scrub` or `pin` animation may trail Lenis by a frame.
+- When GSAP is ready, `SmoothScrollProvider` calls `ScrollTrigger.update` on every Lenis scroll (required by the Lenis
+  docs for ScrollTrigger) through `useLenis`, which follows the root instance across rebuilds. Lenis keeps its own
+  loop and is not moved to `gsap.ticker`: a switch of clock would give `lenis.raf` a negative delta, which shows as a
+  jump. The cost is that a `scrub` or `pin` animation may trail Lenis by a frame.
 - Content is visible without JS: never hide an element in CSS (`opacity: 0`) to reveal it with GSAP. Initial states
   are applied after GSAP is ready, and first-screen motion is CSS.
 - Use `useGSAP` (or `gsap.context`) so tweens and ScrollTriggers clean up.
 - Animate `transform` and `opacity` only; never layout properties.
 - `prefers-reduced-motion`: no Lenis smoothing and no non-essential motion (`gsap.matchMedia` for GSAP code).
-  `SmoothScrollProvider` loads nothing under reduced motion, so a section that awaits `loadGsap` itself must check
-  the preference.
+  `SmoothScrollProvider` keeps `ReactLenis` mounted (changing the tree shape would remount the page) and sets
+  `smoothWheel: false`; it loads no GSAP, so a section that awaits `loadGsap` itself must check the preference.
 - Call `ScrollTrigger.refresh()` after async content changes page height.
 - A custom cursor, if ever added, is disabled for `(pointer: coarse)` and reduced motion.
 

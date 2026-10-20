@@ -1,8 +1,8 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { useEffect, useRef, useSyncExternalStore } from 'react';
-import { type LenisRef, ReactLenis } from 'lenis/react';
+import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
+import { ReactLenis, useLenis } from 'lenis/react';
 import { REDUCED_MOTION_QUERY } from '@/lib/constants';
 import { loadGsap } from '@/lib/motion/loadGsap';
 
@@ -10,7 +10,6 @@ import 'lenis/dist/lenis.css';
 
 const IDLE_TIMEOUT_MS = 2000;
 const IDLE_FALLBACK_DELAY_MS = 200;
-const LENIS_WAIT_FRAMES = 60;
 
 const subscribeToReducedMotion = (handleChange: () => void) => {
   const query = window.matchMedia(REDUCED_MOTION_QUERY);
@@ -57,38 +56,36 @@ type SmoothScrollProviderProps = {
 
 // One Lenis instance for the whole app, on its own animation loop and in the
 // first bundle. GSAP is loaded when the browser is idle; once it is there,
-// ScrollTrigger follows Lenis's scroll. Skipped with reduced motion.
+// ScrollTrigger follows Lenis's scroll. With reduced motion Lenis stays mounted
+// but does not smooth the wheel, and GSAP is not loaded.
 const SmoothScrollProvider = ({ children }: SmoothScrollProviderProps) => {
-  const lenisRef = useRef<LenisRef>(null);
+  // Set once GSAP is loaded; until then (and under reduced motion) it is null.
+  const updateScrollTriggerRef = useRef<(() => void) | null>(null);
   const reducedMotion = useSyncExternalStore(
     subscribeToReducedMotion,
     getSnapshot,
     getServerSnapshot
   );
 
+  // useLenis follows the root instance, so the subscription survives a rebuild
+  // of Lenis and is removed with it.
+  const handleScroll = useCallback(
+    () => updateScrollTriggerRef.current?.(),
+    []
+  );
+  useLenis(handleScroll);
+
   useEffect(() => {
     if (reducedMotion) return;
 
     let isCancelled = false;
-    let unsubscribe = () => {};
-
-    // ReactLenis creates the instance in its own effect, so wait a few frames
-    // for it if it is not there yet.
-    const waitForLenis = async () => {
-      for (let frame = 0; frame < LENIS_WAIT_FRAMES; frame += 1) {
-        const lenis = lenisRef.current?.lenis;
-        if (lenis || isCancelled) return lenis;
-        await new Promise((resolve) => requestAnimationFrame(resolve));
-      }
-    };
 
     const connectScrollTrigger = async () => {
       try {
         const { ScrollTrigger } = await loadGsap();
-        const lenis = await waitForLenis();
-        if (isCancelled || !lenis) return;
+        if (isCancelled) return;
 
-        unsubscribe = lenis.on('scroll', () => ScrollTrigger.update());
+        updateScrollTriggerRef.current = () => ScrollTrigger.update();
       } catch {
         // Smooth scroll works without ScrollTrigger, so a failed GSAP import is
         // not fatal.
@@ -100,14 +97,13 @@ const SmoothScrollProvider = ({ children }: SmoothScrollProviderProps) => {
     return () => {
       isCancelled = true;
       cancelIdle();
-      unsubscribe();
+      updateScrollTriggerRef.current = null;
     };
   }, [reducedMotion]);
 
-  if (reducedMotion) return children;
-
+  // Same tree with and without reduced motion, so a preference change never remounts the page.
   return (
-    <ReactLenis root options={{ autoRaf: true }} ref={lenisRef}>
+    <ReactLenis root options={{ autoRaf: true, smoothWheel: !reducedMotion }}>
       {children}
     </ReactLenis>
   );

@@ -65,10 +65,15 @@ Modules `@use 'mixins' as *;` through `sassOptions.loadPaths` (`src/styles`), th
 `SmoothScrollProvider` is the only place Lenis is created; it runs its own `requestAnimationFrame` loop and stays in
 the first bundle. GSAP and ScrollTrigger are loaded dynamically (`loadGsap`) when the browser is idle, to keep them out
 of the first bundle (Lighthouse showed one chunk with GSAP, Lenis and `next-intl` of about 54 KB gzip). Once loaded,
-`ScrollTrigger.update` listens to Lenis's `scroll` event. Reason for not driving Lenis from `gsap.ticker` (the
+`SmoothScrollProvider` calls `ScrollTrigger.update` from a `useLenis` callback (root instance, survives instance
+rebuilds); the callback does nothing until GSAP is loaded. Reason for not driving Lenis from `gsap.ticker` (the
 earlier design): the clock would change between the two loops and `lenis.raf` would get a negative delta. Trade-off:
-a scrubbed animation may trail Lenis by a frame; revisit when real scroll animations exist. Skipped when
-`prefers-reduced-motion` is set.
+a scrubbed animation may trail Lenis by a frame; revisit when real scroll animations exist. With
+`prefers-reduced-motion` Lenis stays mounted but gets `smoothWheel: false` and GSAP is not loaded. The tree must not
+change shape with the preference: the server snapshot is `false`, so rendering bare `children` for reduced motion
+remounted the header, page and footer on every load (checked: the mount count of `ThemeSwitcher` doubled). Lenis
+1.3.26 only makes programmatic scrolls instant under reduced motion (`respectReducedMotion`), so the wheel needs
+`smoothWheel: false` explicitly.
 
 ## D11. `linkButton` reading rules
 
