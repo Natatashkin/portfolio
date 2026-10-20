@@ -21,6 +21,9 @@
       "uk": "Ukrainian"
     }
   },
+  "LinkButton": {
+    "opensInNewTab": "opens in a new tab"
+  },
   "SocialLinks": {
     "label": "Social links",
     "opensInNewTab": "opens in a new tab"

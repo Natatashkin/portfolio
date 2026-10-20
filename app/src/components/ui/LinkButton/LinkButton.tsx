@@ -1,8 +1,12 @@
+import { useTranslations } from 'next-intl';
 import { ArrowIcon } from '@/components/icons';
 import { Link } from '@/i18n/navigation';
 import { safeHref, safePath } from '@/lib/helpers';
 import styles from './LinkButton.module.scss';
 import type { LinkButtonProps } from './types';
+
+// Same pattern as the anchor validation in the Studio schema.
+const ANCHOR_PATTERN = /^[a-z]+(?:-[a-z]+)*$/;
 
 const LinkButton = ({
   label,
@@ -13,9 +17,12 @@ const LinkButton = ({
   variant,
   hasIcon
 }: LinkButtonProps) => {
+  const t = useTranslations('LinkButton');
+
   if (!label || !url) return null;
 
-  const className = `${styles.button} ${styles[`button--${variant ?? 'primary'}`]}`;
+  const variantClass = variant ? styles[`button--${variant}`] : undefined;
+  const className = `${styles.button} ${variantClass ?? styles['button--primary']}`;
   const content = (
     <>
       {label}
@@ -34,12 +41,14 @@ const LinkButton = ({
         rel="noopener noreferrer"
       >
         {content}
+        <span className={styles.button__hidden}>{t('opensInNewTab')}</span>
       </a>
     ) : null;
   }
 
   const path = safePath(url);
-  const hash = hasAnchor && anchor ? `#${anchor}` : '';
+  const hash =
+    hasAnchor && anchor && ANCHOR_PATTERN.test(anchor) ? `#${anchor}` : '';
 
   return path ? (
     <Link className={className} href={`${path}${hash}`}>

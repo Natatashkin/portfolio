@@ -13,26 +13,24 @@
   text-decoration: none;
   transition: opacity 250ms ease-in-out;
 
-  &:hover {
-    opacity: 0.85;
+  // Hover only where a pointer exists, so touch taps don't leave the button dimmed.
+  @media (hover: hover) {
+    &:hover {
+      opacity: 0.85;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
   }
 
   &:focus-visible {
     @include focus-ring;
   }
 
-  &--primary {
-    background: var(--color-primary);
-    color: var(--color-on-primary);
-  }
+  @include button-variants;
 
-  &--secondary {
-    background: var(--color-secondary);
-    color: var(--color-on-secondary);
-  }
-
-  &--accent {
-    background: var(--color-accent);
-    color: var(--color-on-accent);
+  &__hidden {
+    @include visually-hidden;
   }
 }

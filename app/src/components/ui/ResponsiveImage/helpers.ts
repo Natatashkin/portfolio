@@ -1,5 +1,6 @@
 import type { SanityImageSource } from '@sanity/image-url';
 
+// One pixel below the `md` breakpoint (768px) in styles/_mixins.scss.
 export const MOBILE_MAX_WIDTH = 767;
 
 const REF_PATTERN = /^image-[A-Za-z0-9]+-(\d+)x(\d+)-[a-z]+$/;
