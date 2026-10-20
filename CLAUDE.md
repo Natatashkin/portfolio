@@ -8,7 +8,7 @@ only (nothing about selling, pricing, templates, client delivery or fullstack).
 
 Specs in `docs/` are the source of truth. Read the relevant spec before coding; change the spec first when behavior
 changes. Index and workflow: `docs/README.md`. Decisions and their reasons: `docs/decisions.md`.
-Project skills in `.claude/skills/` carry the procedures: `work-block`, `feature-spec`, `new-section`, `new-component`, `scroll-animation`, `docs-sync`.
+Project skills in `.claude/skills/` carry the procedures: `work-block`, `feature-spec`, `new-section`, `new-component`, `scroll-animation`, `ui-verify`, `docs-sync`.
 
 ## Repository
 

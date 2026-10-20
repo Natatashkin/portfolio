@@ -72,12 +72,3 @@ once it is restored.
   one, and re-check the burger panel order and the anchor links (see Decisions).
 - The language switcher and the theme switcher changes are done: see [language-switcher.md](language-switcher.md) and
   [theme-switcher.md](theme-switcher.md) (caveats are listed in their specs).
-- Console error from React DevTools (development only, not fixed in code). The author found the cause: it appears only
-  with the React DevTools extension enabled and only when the burger menu is open. It fails on `SocialLinks`, because
-  the same component with the same `_key` keys renders in the burger panel (`header__social` in `Header.tsx`) and in the footer
-  (`Footer.tsx:12`) at the same time. The error text is "The children should not have changed if we pass in the same
-  set." and every stack frame is inside the extension's `installHook.js`; production React does not log it. Not
-  reproduced by me; the cause is the author's finding. Proposed fix, to decide when the final header design is
-  settled: do not render `SocialLinks` twice with the same data (e.g. render the panel copy only while the menu is open), or
-  accept it as an extension-only message. It is not related to the theme switcher: it was first noticed on the first
-  theme change with the menu open, because that change re-rendered the tree.

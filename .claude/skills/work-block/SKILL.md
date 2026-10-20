@@ -33,13 +33,12 @@ is only the procedure. Re-read those rules at the start of a block instead of re
 
 Report real output, never assume a check passed.
 
-| Changed               | Run                                                                                |
-| --------------------- | ---------------------------------------------------------------------------------- |
-| `app/` code           | `pnpm format` and `pnpm code-quality` in `app/` (lint, format check, types, madge) |
-| GROQ in `queries.ts`  | `pnpm typegen` in `app/` before `code-quality` (stale types fail the type check)   |
-| Routes, data, config  | also `pnpm build` in `app/`                                                        |
-| `sanity-cms/` schemas | `pnpm format` and `pnpm build` in `sanity-cms/`, then `pnpm typegen` in `app/`     |
-| Docs only (`.md`)     | Prettier on the changed files (below)                                              |
+- **`app/` code:** `pnpm format` and `pnpm code-quality` in `app/` (lint, format check, types, madge).
+- **GROQ in `queries.ts`:** `pnpm typegen` in `app/` before `code-quality` (stale types fail the type check).
+- **Routes, data, config:** also `pnpm build` in `app/`.
+- **`sanity-cms/` schemas:** `pnpm format` and `pnpm build` in `sanity-cms/`, then `pnpm typegen` in `app/`.
+- **Visible or interactive UI:** the `ui-verify` skill (browser checks), on top of the checks above.
+- **Docs only (`.md`):** Prettier on the changed files (below).
 
 Docs Prettier: `cd sanity-cms && pnpm exec prettier --write <files>` for files inside `sanity-cms/` (its own config);
 `cd app && pnpm exec prettier --write <files>` for everything else. The second only borrows the binary: files outside

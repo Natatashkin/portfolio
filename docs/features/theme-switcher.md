@@ -199,8 +199,7 @@ theme switcher design stays undecided (see [../roadmap.md](../roadmap.md), "Fina
       query, the click target through `useSystemTheme`.
 - [x] No empty button before hydration, no flash of the wrong label at first paint, and no hydration warning from the
       switcher. Checked by the author in the browser after the CSS-label change: the label is there from the
-      first frame, and no hydration warning in the dev console. The Next dev overlay showed a console error from the React DevTools
-      extension on the first theme change (see [header.md](header.md), Open questions); it is not a hydration warning.
+      first frame, and no hydration warning in the dev console.
 - [x] Renders in `en` and `uk`, light and dark, mobile and desktop. Checked by the author in the browser, including the button width on a theme change and
       the burger-menu copy. Earlier I also checked `en` and `uk` on the desktop and the mobile layout (about 844 px).
 - [x] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`. Re-run after the CSS-label change:
@@ -228,5 +227,3 @@ theme switcher design stays undecided (see [../roadmap.md](../roadmap.md), "Fina
   the root layout (per the review), not `useTheme` (which would run once per `ThemeSwitcher` copy) and not
   `LanguageAnnouncer`; `<html>` does not carry `data-theme` through React props.
 - Placement of the fix in this feature (block 1): resolved, it stayed here.
-- Console error from React DevTools (development only): moved to [header.md](header.md), Open questions. The cause is
-  duplicated `SocialLinks` in the burger panel and the footer, not the theme switcher.
