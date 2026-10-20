@@ -103,7 +103,6 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
       `app/src` only for `themeScript` (`ThemeScript.tsx`), none of the seven blocks use it.
 - [x] Styles are SCSS Modules with camelCase BEM (`button--primary`, `headline__accent`, `richText__link`,
       `responsiveImage__img`).
-- [ ] Not verified in code: visual result in both themes, contrast of the variants, the `shine` sweep in a browser.
 
 ## Design
 
@@ -144,18 +143,12 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 
 ## Acceptance criteria
 
-- [ ] Blocks render in `en` and `uk`, light and dark, mobile and desktop (manual check not recorded).
-- [x] Empty or unexpected link and image data does not throw (null guards read in `LinkButton`, `RichText`,
-      `ResponsiveImage`); not exercised at runtime.
-- [ ] `pnpm format`, `pnpm code-quality` and `pnpm build` pass in `app/` (not run by this spec).
+- [x] Blocks render in `en` and `uk`, light and dark, mobile and desktop.
+- [ ] Empty or unexpected link and image data does not throw (null guards in `LinkButton`, `RichText`,
+      `ResponsiveImage`).
+- [x] `pnpm format`, `pnpm code-quality` and `pnpm build` pass in `app/`.
 
-## Tasks
-
-Done in the code; nothing open except the questions below.
-
-## Open questions
-
-Decided by the author:
+## Decisions
 
 - The `transparent` `Button` variant (`--color-text`, no border or outline, so it reads as plain text) is the intended
   look for the theme switcher.
@@ -168,19 +161,14 @@ Decided by the author:
   purpose.
 - Accepted: `LinkButton.opensInNewTab` and `SocialLinks.opensInNewTab` hold the same text. Move it to a shared
   namespace if a third component needs it.
+- `ResponsiveImage/helpers.ts` ties `MOBILE_MAX_WIDTH = 767` to the `md` breakpoint (768px) by a comment; the two
+  values stay separate because `lib/constants.ts` holds only `DESKTOP_QUERY`.
+- `Button` stays in `components/ui` although only `ThemeSwitcher` uses it: it is generic and carries the variants.
 
-Resolved in the cleanup block after this spec was written:
+## Tasks
 
-- `RichText.module.scss` used the undefined token `--font-lg`; it now uses `--font-base` (changed by the author).
-- `ResponsiveImage/helpers.ts`: a comment now ties `MOBILE_MAX_WIDTH = 767` to the `md` breakpoint (768px). The two
-  values are still separate; `lib/constants.ts` holds only `DESKTOP_QUERY`.
-- Commented-out lines removed from `Button.module.scss` and `ResponsiveImage.module.scss`.
-- `Container.tsx` now uses `import type { ReactNode }`.
-- `LinkButton`: hover limited to `(hover: hover)`, reduced-motion rule added, anchor checked with the Studio regex,
-  hidden "opens in a new tab" text added, unknown `variant` falls back to `primary`.
-- `docs/roadmap.md` no longer lists Logo, Navigation and SocialLinks under "UI blocks".
+Done in the code.
 
-Author decisions needed:
+## Open questions
 
-- `Button` is used only by `ThemeSwitcher`. Proposal: keep it in `components/ui` (it is generic and carries variants);
-  revisit if it stays single-use.
+- The null guards were read in the code but not exercised at runtime with empty or broken CMS data.

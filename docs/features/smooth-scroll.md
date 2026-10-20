@@ -92,5 +92,3 @@ Done in the code.
   preference (see the `scroll-animation` skill).
 - Anchor navigation with Lenis (header links to section ids) is not specified. Proposal: check when a section with an
   anchor exists; [language-switcher.md](language-switcher.md) has an equally untested `scrollIntoView` for the hash.
-- `specs/architecture.md` and `roadmap.md` describe the setup as "Lenis + GSAP" without saying GSAP loads after idle.
-  Proposal: leave as is, or add "(GSAP after idle)".

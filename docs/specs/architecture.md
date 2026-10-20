@@ -8,7 +8,7 @@
 | i18n    | `next-intl`, locales `en` (default) and `uk`, `localePrefix: "as-needed"`        |
 | CMS     | Sanity Studio v6 + `sanity-plugin-internationalized-array`, dataset `production` |
 | Data    | `next-sanity` client, GROQ with `defineQuery`, TypeGen types (`@/sanity.types`)  |
-| Motion  | Lenis + GSAP/ScrollTrigger (`SmoothScrollProvider`)                              |
+| Motion  | Lenis + GSAP/ScrollTrigger, GSAP loaded after idle (`SmoothScrollProvider`)      |
 | Tooling | pnpm, ESLint (Next + strict TS, sorted imports), Prettier, Husky + lint-staged   |
 | Hosting | Two Vercel projects: `app` (root `app`) and Studio (root `sanity-cms`, `dist`)   |
 

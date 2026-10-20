@@ -1,6 +1,6 @@
 # Footer
 
-Status: done (documented after implementation)
+Status: in progress (documented after implementation)
 
 ## Goal
 

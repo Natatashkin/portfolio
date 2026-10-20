@@ -1,6 +1,6 @@
 # Theme switcher
 
-Status: done, with a caveat: a real screen reader check is deferred
+Status: done, with caveats: a real screen reader check is deferred
 
 ## Goal
 

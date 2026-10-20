@@ -8,10 +8,9 @@ A header on every page with the site name, navigation (hidden for now), theme sw
 small screens the navigation, both switchers and social links move into a full-screen burger menu.
 
 **Temporarily hidden (author's decision):** the navigation is not rendered in the header, desktop or burger panel,
-until work on the nested pages starts. The code is commented out in `Header.tsx` (the `Navigation` import, the two
-`<Navigation … />` elements and the `navigation` prop destructuring); the component, its styles, the `navigation` prop
-and the `Header.navigation` message are kept. Requirements below that mention the navigation describe the behaviour
-once it is restored.
+until work on the nested pages starts. The component, its styles, the `navigation` prop and the `Header.navigation`
+message are kept; how to restore it is in Open questions. Requirements below that mention the navigation describe
+the behaviour once it is restored.
 
 ## Requirements
 
@@ -19,8 +18,9 @@ once it is restored.
 - [x] Logo shows `siteSettings.siteName` and links to the home page of the current locale; hidden when empty. Its
       vertical padding (`--space-1`) matches the navigation items and it has no side padding, so the text lines up with
       the container edge; keyboard focus uses the shared focus ring.
-- [x] (Hidden for now, see Goal.) Navigation from `siteSettings.navigation`: `isAnchor` items link to `#<url>`, others to `/<url>` through the
-      locale-aware `Link` after `safePath` (an invalid path renders no item); the current page gets `aria-current="page"`; items without a label are skipped.
+- [x] (Hidden for now, see Goal.) Navigation from `siteSettings.navigation`: `isAnchor` items link to `#<url>`,
+      others to `/<url>` through the locale-aware `Link` after `safePath` (an invalid path renders no item); the
+      current page gets `aria-current="page"`; items without a label are skipped.
 - [x] From `lg` (1024px): inline navigation (hidden for now), theme switcher and language switcher; the switchers sit
       on the right (`header__controls` has `margin-inline-start: auto`, so they stay there without the navigation).
 - [x] Below `lg`: burger toggle opens a full-screen panel. From the top: a centred row with the theme switcher and the
@@ -38,8 +38,7 @@ once it is restored.
 - **UI:** `Header` is a Server Component; `BurgerMenu` and `Navigation` are client components (state, `usePathname`).
   The header is absolutely positioned over the first section. Below `lg`, the header row takes `--color-bg` while
   the menu is open. When shown, `Navigation` is rendered twice (desktop row and burger panel); the copy for the other
-  breakpoint is `display: none`, so assistive tech sees one navigation landmark. At the moment it is not rendered at
-  all, and `Header` receives the `navigation` prop but ignores it.
+  breakpoint is `display: none`, so assistive tech sees one navigation landmark. Not rendered for now (see Goal).
 - **Accessibility:** toggle has `aria-label`, `aria-expanded`, `aria-controls`; panel has `data-lenis-prevent` so it
   scrolls natively; menu transition is disabled with reduced motion. The closed panel is `visibility: hidden`, so
   its links are out of the tab order. The Escape listener is attached only while the menu is open.
@@ -70,5 +69,3 @@ once it is restored.
 - To restore when work on the nested pages starts: uncomment the `Navigation` import, the two `<Navigation … />`
   elements and the `navigation` destructuring in `Header.tsx`, remove the type-only import that replaces the default
   one, and re-check the burger panel order and the anchor links (see Decisions).
-- The language switcher and the theme switcher changes are done: see [language-switcher.md](language-switcher.md) and
-  [theme-switcher.md](theme-switcher.md) (caveats are listed in their specs).
