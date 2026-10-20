@@ -30,24 +30,21 @@
 
 ## Motion (Lenis + GSAP)
 
+Procedure and traps: the `scroll-animation` skill (`.claude/skills/scroll-animation/SKILL.md`). Wiring and edge cases:
+[features/smooth-scroll.md](../features/smooth-scroll.md); reasons: D10 in [../decisions.md](../decisions.md).
+
 - Client-only. Never touch `window`/`document` during server rendering.
-- One Lenis instance, created in `SmoothScrollProvider` with its own `requestAnimationFrame` loop (`autoRaf`). It is
-  in the first bundle: smooth scroll must work from the first interaction.
-- GSAP and ScrollTrigger are not in the first bundle. `loadGsap()` (`lib/motion/loadGsap.ts`) imports them
-  dynamically once, registers the plugin and returns the same promise to every caller. `SmoothScrollProvider` calls
-  it when the browser is idle after load (`requestIdleCallback`, `setTimeout` fallback); a section that animates
-  awaits the same promise.
-- When GSAP is ready, `SmoothScrollProvider` calls `ScrollTrigger.update` on every Lenis scroll (required by the Lenis
-  docs for ScrollTrigger) through `useLenis`, which follows the root instance across rebuilds. Lenis keeps its own
-  loop and is not moved to `gsap.ticker`: a switch of clock would give `lenis.raf` a negative delta, which shows as a
-  jump. The cost is that a `scrub` or `pin` animation may trail Lenis by a frame.
+- One Lenis instance, created in `SmoothScrollProvider` with its own `requestAnimationFrame` loop (`autoRaf`), in the
+  first bundle. It is not driven from `gsap.ticker`.
+- GSAP and ScrollTrigger are not in the first bundle: get them only through `loadGsap()` (`lib/motion/loadGsap.ts`).
+  `SmoothScrollProvider` forwards Lenis scroll to `ScrollTrigger.update` once they are loaded.
 - Content is visible without JS: never hide an element in CSS (`opacity: 0`) to reveal it with GSAP. Initial states
   are applied after GSAP is ready, and first-screen motion is CSS.
 - Use `useGSAP` (or `gsap.context`) so tweens and ScrollTriggers clean up.
 - Animate `transform` and `opacity` only; never layout properties.
 - `prefers-reduced-motion`: no Lenis smoothing and no non-essential motion (`gsap.matchMedia` for GSAP code).
-  `SmoothScrollProvider` keeps `ReactLenis` mounted (changing the tree shape would remount the page) and sets
-  `smoothWheel: false`; it loads no GSAP, so a section that awaits `loadGsap` itself must check the preference.
+  The provider keeps `ReactLenis` mounted (the tree shape must not change) and loads no GSAP, so a section that
+  awaits `loadGsap` itself must check the preference.
 - Call `ScrollTrigger.refresh()` after async content changes page height.
 - A custom cursor, if ever added, is disabled for `(pointer: coarse)` and reduced motion.
 

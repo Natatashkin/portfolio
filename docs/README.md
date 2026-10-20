@@ -19,8 +19,8 @@ Roles: the main session coordinates and writes code; the `docs-writer` subagent 
 feature spec from the task and syncs it with the code when the feature is done; the `code-reviewer` subagent checks
 every block. The steps are encoded as project
 skills in `.claude/skills/`: `work-block` (one block from change to hand-off),
-`feature-spec` (write or update a spec in `features/`), `new-section` (a landing section end to end) and
-`docs-sync` (audit docs against code).
+`feature-spec` (write or update a spec in `features/`), `new-section` (a landing section end to end),
+`new-component` (folder, styles, strings, checks), `scroll-animation` (Lenis + GSAP motion) and `docs-sync` (audit docs against code).
 
 ## Index
 

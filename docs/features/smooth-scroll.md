@@ -110,7 +110,7 @@ Mismatches between docs and code:
 
 Author decisions needed:
 
-- `theming-and-motion.md` says the `scrub`/`pin` trail of one frame is accepted until real scroll animations exist.
+- D10 ([../decisions.md](../decisions.md)) accepts the `scrub`/`pin` trail of one frame until real scroll animations exist.
   Proposal: re-check when the first ScrollTrigger section is built.
 - Anchor navigation with Lenis (header links to section ids) is not specified. Proposal: check when a section with an
   anchor exists, as [language-switcher.md](language-switcher.md) already does.
