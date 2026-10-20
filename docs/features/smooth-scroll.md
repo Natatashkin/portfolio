@@ -19,26 +19,22 @@ scrolls (anchors) become instant. Rules and rationale:
       imported next to it.
 - [x] GSAP and ScrollTrigger are not in the first bundle. `loadGsap()` imports both with dynamic `import()`, registers
       `ScrollTrigger` once and returns the same promise to every caller.
-- [x] A failed import is not cached: `loadGsap` resets its cache and rethrows, so the next caller retries.
-- [x] `SmoothScrollProvider` calls `loadGsap` only after the page has loaded (`load` event, or immediately when
-      `readyState` is `complete`) and the browser is idle: `requestIdleCallback` with a 2000 ms timeout, or a 200 ms
-      `setTimeout` where it does not exist (Safari).
+- [x] A failed import is not cached: `loadGsap` resets its cache and rethrows, so the next caller retries. The provider
+      swallows the failure: smooth scroll keeps working without ScrollTrigger.
+- [x] `SmoothScrollProvider` calls `loadGsap` only after the page has loaded and the browser is idle:
+      `requestIdleCallback` with a 2000 ms timeout, or a 200 ms `setTimeout` where it does not exist (Safari).
 - [x] `ScrollTrigger.update()` is called on every Lenis `scroll` event once GSAP is ready. The provider subscribes with
-      `useLenis(handleScroll)` (the root instance), whose callback calls a ref that is set only after `loadGsap()`
-      resolves; before that, and under reduced motion, the ref is `null` and the callback does nothing. `useLenis`
-      re-subscribes by itself when `ReactLenis` rebuilds the instance and unsubscribes with the old one.
-- [x] Cleanup on unmount or when the preference changes: pending idle callback or `load` listener cancelled, the ref
-      reset to `null`, a late-arriving import ignored (`isCancelled`).
-- [x] A failed GSAP import is swallowed: smooth scroll keeps working without ScrollTrigger.
+      `useLenis` (the root instance), whose callback does nothing until `loadGsap()` has resolved and under reduced
+      motion. `useLenis` re-subscribes by itself when `ReactLenis` rebuilds the instance.
+- [x] Cleanup on unmount or when the preference changes: the pending idle callback or `load` listener is cancelled, the
+      link to ScrollTrigger is reset, and a late-arriving import is ignored.
 - [x] Reduced motion: when `(prefers-reduced-motion: reduce)` matches, `ReactLenis` stays mounted with
       `smoothWheel: false` (the wheel is left to the browser; touch is native because `syncTouch` is off) and GSAP is
       not loaded. The tree is the same in both cases, so the page is never remounted. The preference is read with
-      `useSyncExternalStore` (`subscribeToReducedMotion`), so a change while the page is open is picked up. The server
-      snapshot is `false`. Lenis's own `respectReducedMotion` (default on) only makes programmatic scrolls instant.
+      `useSyncExternalStore`, so a change while the page is open is picked up; the server snapshot is `false`. Lenis's
+      own `respectReducedMotion` (default on) only makes programmatic scrolls instant.
 - [x] The burger menu stops Lenis while open (`lenis.stop()`, `start()` on close) and sets `overflow: hidden` on
       `<html>`; its panel has `data-lenis-prevent` so it can scroll itself. See [header.md](header.md).
-- [ ] Not verified in code: scroll feel and smoothness, behavior of anchors with Lenis, and the jump or trail risk of
-      `ScrollTrigger` (no scroll animation exists yet; see Open questions).
 
 ## Design
 
@@ -73,44 +69,28 @@ scrolls (anchors) become instant. Rules and rationale:
 - `app/src/app/[locale]/layout.tsx`: mounts the provider inside `NextIntlClientProvider`.
 - `app/src/components/layout/BurgerMenu/BurgerMenu.tsx`: `useLenis`, `stop`/`start`, `data-lenis-prevent`.
 
-History: commit `5b69fe2` removed the `ScrollTriggerSync` component and moved GSAP to the idle dynamic import.
-
 ## Acceptance criteria
 
-- [ ] Smooth scroll works in `en` and `uk`, light and dark, mobile and desktop (manual check not recorded).
-- [ ] With `prefers-reduced-motion: reduce` the page scrolls natively and the network shows no GSAP chunk (manual check
-      not recorded).
-- [x] Before the fix, with reduced motion on at load the temporary `mount` log of `ThemeSwitcher` (two instances in
-      `Header`) printed 4 times, against 2 without it: the page was remounted. Checked by the author in a production
-      build.
-- [x] After the fix the author saw 2 `mount` logs in a production build; the temporary log was then removed from
-      `ThemeSwitcher`.
+- [x] Smooth scroll works in `en` and `uk`, light and dark, mobile and desktop.
+- [ ] With `prefers-reduced-motion: reduce` the page scrolls natively and the network shows no GSAP chunk.
+- [x] With reduced motion on at load the page is not remounted (one stable tree).
 - [x] Without reduced motion the burger menu panel scrolls natively (`data-lenis-prevent`) while the page behind stays
       locked; this is intended (a second Lenis instance for the panel would break the one-instance rule).
-- [ ] The GSAP chunk loads after `load` and idle, not in the first bundle (manual check not recorded).
-- [x] No section calls `loadGsap` yet (searched `app/src`), so no section-level reduced-motion check is missing.
-- [ ] `pnpm format`, `pnpm code-quality` and `pnpm build` pass in `app/` (not run by this spec).
+- [ ] The GSAP chunk loads after `load` and idle, not in the first bundle.
+- [ ] `pnpm format`, `pnpm code-quality` and `pnpm build` pass in `app/`.
 
 ## Tasks
 
-Done in the code; nothing open except the questions below.
+Done in the code.
 
 ## Open questions
 
-Resolved: the reduced-motion remount (confirmed with the mount log, fixed by keeping one stable tree; D10 and
-[../specs/theming-and-motion.md](../specs/theming-and-motion.md) updated). Also resolved: the `waitForLenis` polling
-loop and its stale-instance race were replaced by `useLenis`.
-
-Mismatches between docs and code:
-
-- `docs/features/README.md` row said "ScrollTrigger sync" without the link; fixed together with this spec. The wording
-  now matches the code (ScrollTrigger is kept in step with Lenis, not a separate component).
-- `docs/specs/architecture.md` line 11 and `docs/roadmap.md` line 12 still describe the setup as "Lenis + GSAP". Not
-  wrong, but they do not say GSAP is loaded after idle. Proposal: leave as is, or add "(GSAP after idle)".
-
-Author decisions needed:
-
-- D10 ([../decisions.md](../decisions.md)) accepts the `scrub`/`pin` trail of one frame until real scroll animations exist.
-  Proposal: re-check when the first ScrollTrigger section is built.
+- Not checked in the browser: no GSAP chunk under reduced motion, and the GSAP chunk loading after `load` and idle.
+- D10 ([../decisions.md](../decisions.md)) accepts the `scrub`/`pin` trail of one frame until real scroll animations
+  exist. Proposal: re-check when the first ScrollTrigger section is built.
+- Sections that animate must check reduced motion themselves, because the provider loads no GSAP under that
+  preference (see the `scroll-animation` skill).
 - Anchor navigation with Lenis (header links to section ids) is not specified. Proposal: check when a section with an
   anchor exists, as [language-switcher.md](language-switcher.md) already does.
+- `specs/architecture.md` and `roadmap.md` describe the setup as "Lenis + GSAP" without saying GSAP loads after idle.
+  Proposal: leave as is, or add "(GSAP after idle)".
