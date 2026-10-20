@@ -19,13 +19,13 @@ Requirements are the author's decisions; implementation choices agreed with the 
 - [x] Activating it opens the same page in the other locale.
   - Implementation detail (not part of the requirement): the `href` has an explicit locale prefix, also for the default
     locale (`href="/en"` on `uk`); the proxy redirects `/en` to `/`.
-- [x] Desktop (from `lg`, 1024px): placed in the header next to the theme switcher (`header__controls` group,
-      `Header.tsx:31-34`).
+- [x] Desktop (from `lg`, 1024px): placed in the header next to the theme switcher (`header__controls` group).
 - [x] Burger menu (below `lg`): placed in the top row of the panel next to the theme switcher, centred, with a line
-      under the row and the navigation below it (`header__menuControls`, `Header.tsx:37-40`; author's decision, see
+      under the row and the navigation below it (`header__menuControls`; author's decision, see
       [header.md](header.md)). Block 2 verified in Chrome at about 844px the earlier order in the accessibility tree:
-      Logo, Menu button, nav links, theme button, language link, Linkedin, GitHub. Now it is Logo, Menu button, theme
-      button, language link, nav links, Linkedin, GitHub (not re-checked).
+      Logo, Menu button, nav links, theme button, language link, Linkedin, GitHub. With the new layout it is Logo, Menu
+      button, theme button, language link, nav links, Linkedin, GitHub (not re-checked). The navigation is hidden for
+      now (see [header.md](header.md)), so at the moment there are no nav links in that list.
 - [x] Without JavaScript it is a real link that navigates to the other locale's URL; the cookie behaviour without
       JavaScript is verified (Design, "Locale cookie").
 - [x] Keyboard-operable. Keyboard focus shows an underline that grows from the centre (`muted-control`, see Styles
@@ -226,8 +226,8 @@ A soft locale switch used to lose the chosen theme on `<html>`; this is fixed an
 
 ### Duplicates in desktop row and burger menu
 
-`Header` renders the navigation and switchers twice (`Header.tsx:29-45`): in `header__desktop` and as `BurgerMenu`
-children. What the CSS does:
+`Header` renders the navigation (hidden for now, see [header.md](header.md)) and the switchers twice: in
+`header__desktop` and as `BurgerMenu` children. What the CSS does:
 
 - `.header__desktop`: `display: none` by default, `display: flex` from `lg` (`Header.module.scss:27-37`).
 - `.headerMenu` (the burger block): `display: none` from `lg` up (`BurgerMenu.module.scss:3-6`). Below `lg` the toggle
@@ -242,7 +242,8 @@ Acceptance criteria and Tasks). No `inert` or `aria-hidden` is set in the SCSS f
 not part of this check.
 
 Checked in Chrome (block 2) at the mobile layout (about 844px, the widest this browser tool reaches), burger menu
-open: the interactive accessibility tree lists Logo link, Menu button, nav links (Кейси, Проекти), theme button
+open (a dated record, from before the navigation was hidden and the switchers moved to the top of the panel): the
+interactive accessibility tree lists Logo link, Menu button, nav links (Кейси, Проекти), theme button
 "Перемкнути тему: Темна", language link "EN. Перемкнути мову: англійська" (href `/en#hero`), Linkedin, GitHub. Only the
 burger copy of each switcher is exposed; the desktop copy is `display: none`. After a switch the closed panel's copy
 cannot take focus, which is why the announcer falls back to the menu toggle. The desktop breakpoint (`lg` and above)
@@ -277,8 +278,8 @@ changed to compensate for it.
 - `lib/helpers/localeSwitch.ts`: `sessionStorage` helpers `rememberLocaleSwitch(hash)` and `takeLocaleSwitch()`
   over one key, exported through the `lib/helpers` barrel (`import { rememberLocaleSwitch } from '@/lib/helpers'`);
   storage failure is swallowed (the switch still works, only the hash, focus and announcement are skipped).
-- `Header` stays a Server Component. The switcher is in the desktop row (`Header.tsx:33`, block 1) and in the
-  `BurgerMenu` children, in the `header__menuControls` row after `ThemeSwitcher` (`Header.tsx:39`, block 2).
+- `Header` stays a Server Component. The switcher is in the desktop row (`header__controls`, block 1) and in the
+  `BurgerMenu` children, in the `header__menuControls` row after `ThemeSwitcher` (block 2).
 - `.header__desktop` is `justify-content: space-between`, so the two switchers go into one group element
   (`header__controls`) to stay together on the right.
 - **Edge cases:** an unknown locale never reaches the header (the layout calls `notFound()`, `layout.tsx:31`).
@@ -313,7 +314,7 @@ changed to compensate for it.
       checked in the DOM; full navigation and a real screen reader are open.
 - [x] Cookie check done and recorded: `NEXT_LOCALE` after a switch with JavaScript, and without JavaScript (curl).
 - [x] Desktop: next to the theme switcher (desktop check confirmed by the author); burger menu: after it
-      (`Header.tsx:38-39`); the panel closes after the switch (verified with a real click).
+      (`header__menuControls`); the panel closes after the switch (verified with a real click).
 - [x] Both copies of the language and theme switchers (header placement) checked in the browser (accessibility tree and
       tab order) at a breakpoint below `lg` and at `lg` and above: one reachable copy at a time. Below `lg`
       (about 844px, burger open) checked in block 2 in the accessibility tree: only the burger copy is exposed; the

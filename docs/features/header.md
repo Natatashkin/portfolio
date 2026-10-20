@@ -4,8 +4,8 @@ Status: done (documented after implementation)
 
 ## Goal
 
-A header on every page with the site name, navigation, theme switcher and language switcher; on small screens the
-navigation, both switchers and social links move into a full-screen burger menu.
+A header on every page with the site name, navigation (hidden for now), theme switcher and language switcher; on
+small screens the navigation, both switchers and social links move into a full-screen burger menu.
 
 **Temporarily hidden (author's decision):** the navigation is not rendered in the header, desktop or burger panel,
 until work on the nested pages starts. The code is commented out in `Header.tsx` (the `Navigation` import, the two
@@ -37,8 +37,9 @@ once it is restored.
   Labels use the `en` fallback from the query.
 - **UI:** `Header` is a Server Component; `BurgerMenu` and `Navigation` are client components (state, `usePathname`).
   The header is absolutely positioned over the first section. Below `lg`, the header row takes `--color-bg` while
-  the menu is open. `Navigation` is rendered twice (desktop row and burger panel); the copy for the other breakpoint
-  is `display: none`, so assistive tech sees one navigation landmark.
+  the menu is open. When shown, `Navigation` is rendered twice (desktop row and burger panel); the copy for the other
+  breakpoint is `display: none`, so assistive tech sees one navigation landmark. At the moment it is not rendered at
+  all, and `Header` receives the `navigation` prop but ignores it.
 - **Accessibility:** toggle has `aria-label`, `aria-expanded`, `aria-controls`; panel has `data-lenis-prevent` so it
   scrolls natively; menu transition is disabled with reduced motion. The closed panel is `visibility: hidden`, so
   its links are out of the tab order. The Escape listener is attached only while the menu is open.
@@ -47,7 +48,8 @@ once it is restored.
 
 - `app/src/components/layout/Header/`: layout, skip link, desktop/mobile split.
 - `app/src/components/layout/BurgerMenu/`: toggle, panel, Escape/breakpoint/link closing, scroll lock.
-- `app/src/components/ui/Navigation/`: list of anchor and page links (`NavigationItem` from TypeGen).
+- `app/src/components/ui/Navigation/`: list of anchor and page links (`NavigationItem` from TypeGen); not used by
+  `Header` for now.
 - `app/src/components/ui/Logo/`: site name link.
 - `app/src/components/icons/`: `BurgerIcon`, `CloseIcon`.
 
@@ -72,7 +74,7 @@ once it is restored.
   [theme-switcher.md](theme-switcher.md) (caveats are listed in their specs).
 - Console error from React DevTools (development only, not fixed in code). The author found the cause: it appears only
   with the React DevTools extension enabled and only when the burger menu is open. It fails on `SocialLinks`, because
-  the same component with the same `_key` keys renders in the burger panel (`Header.tsx:43`) and in the footer
+  the same component with the same `_key` keys renders in the burger panel (`header__social` in `Header.tsx`) and in the footer
   (`Footer.tsx:12`) at the same time. The error text is "The children should not have changed if we pass in the same
   set." and every stack frame is inside the extension's `installHook.js`; production React does not log it. Not
   reproduced by me; the cause is the author's finding. Proposed fix, to decide when the final header design is
