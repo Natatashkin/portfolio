@@ -23,7 +23,7 @@
     padding: var(--space-2) 0;
   }
 
-  // Desktop navigation and theme switcher; below lg the mobile menu replaces them.
+  // Desktop navigation and the theme and language switchers; below lg the mobile menu replaces them.
   &__desktop {
     display: none;
 
@@ -38,9 +38,21 @@
 
   // Theme and language switchers stay together on the right of the desktop row.
   &__controls {
+    // Stays on the right with or without the navigation next to it.
+    margin-inline-start: auto;
     display: flex;
     align-items: center;
     gap: var(--space-4);
+  }
+
+  // Top of the full-screen mobile menu: theme and language side by side, centred, a line below.
+  &__menuControls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-6);
+    padding-block-end: var(--space-4);
+    border-block-end: 1px solid var(--color-border);
   }
 
   // Pushed to the bottom of the full-screen mobile menu.

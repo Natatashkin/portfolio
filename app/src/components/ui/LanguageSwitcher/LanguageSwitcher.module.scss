@@ -14,8 +14,4 @@
       filter: brightness(0.92);
     }
   }
-
-  &:focus-visible {
-    @include focus-ring;
-  }
 }

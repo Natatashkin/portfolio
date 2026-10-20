@@ -15,7 +15,9 @@
 
 // Look comes from Button (variant "transparent"); this file only keeps the switcher's size.
 .themeSwitcher {
-  &__button {
+  // The doubled class raises specificity above Button's own padding, colour and focus ring, so the
+  // result does not depend on which stylesheet is emitted first.
+  &__button.themeSwitcher__button {
     @include muted-control;
   }
 

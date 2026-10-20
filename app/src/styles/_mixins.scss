@@ -63,22 +63,51 @@ $breakpoints: (
 }
 
 // Muted text that turns full strength on hover and keyboard focus: the look shared by the theme and
-// language switchers. The focus ring stays with the element (`focus-ring`).
+// language switchers. Keyboard focus draws an underline that grows from the centre in both directions
+// (`transform` only). The outline stays but is transparent, so forced-colors mode still shows it.
+// The transition lists `filter` too, because both users dim on hover with `filter`.
 @mixin muted-control {
+  position: relative;
   display: inline-flex;
   width: fit-content;
   padding: var(--space-1) 0;
   font-size: var(--font-base);
   color: var(--color-text-muted);
-  transition: color var(--transition-base);
+  transition:
+    color var(--transition-base),
+    filter var(--transition-base);
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    background: var(--color-accent-ink);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--transition-base);
+  }
 
   &:hover,
   &:focus-visible {
     color: var(--color-text);
   }
 
+  &:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+
+    &::after {
+      transition: none;
+    }
   }
 }
 

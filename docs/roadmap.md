@@ -27,6 +27,8 @@
 6. Final 404 design; resolve the `__next_error__` shell issue (decision D7).
 7. Decide on security headers (decision D13).
 8. Final theme switcher design.
+9. Bring the header navigation back when work on the nested pages starts: it is hidden now and the code is commented
+   out in `Header.tsx` ([features/header.md](features/header.md)).
 
 ## Deferred checks
 

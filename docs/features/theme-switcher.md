@@ -22,6 +22,11 @@ author re-checked the label-dependent items in the browser after that change (se
       shows the opposite of the system's effective theme (system dark -> `Light`; system light -> `Dark`). Built: CSS
       shows `Light` under `html[data-theme='dark']` and, without `data-theme`, under `prefers-color-scheme: dark`
       (`ThemeSwitcher.module.scss:6-14,31-40`); otherwise `Dark`. Checked in the browser by the author after the CSS-label change.
+- [x] Keyboard focus on the button shows the same centre-growing underline as the language switcher (`muted-control`
+      in `styles/_mixins.scss`) instead of the `Button` focus ring. The mixin sets a transparent 2px outline, which
+      keeps the ring visible in forced-colors mode; the doubled class `.themeSwitcher__button.themeSwitcher__button`
+      makes it win over `Button`'s own rules whatever the stylesheet order. Checked in the browser by the author
+      (the new header and burger design, both themes). Windows high contrast was not reported as checked.
 - [x] Themes stay `light`, `dark` and `system` (`Theme` in `lib/theme/theme.ts:4`).
 - [x] Labels come from `messages/` in both locales (`ThemeSwitcher.light`/`dark`; both rendered in the server HTML,
       `ThemeSwitcher.tsx:33-38`).

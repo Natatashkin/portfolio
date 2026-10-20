@@ -19,7 +19,10 @@ A footer on every page with the copyright line and social links.
 - **Data:** `fetchSiteSettings(locale)` in `[locale]/layout.tsx` (cache tag `site-settings`); props `copyright`,
   `socialLinks`.
 - **UI:** `Footer` and `SocialLinks` are Server Components. `SocialLinks` is shared with the burger menu.
-- **Styles:** flex row that wraps, top border, muted copyright text; tokens only.
+- **Styles:** flex row that wraps, top border, muted copyright text; tokens only. Each social link is an
+  `inline-flex` box with `--space-1` vertical padding, no side padding and a pill radius, like the header logo, so the
+  keyboard focus outline is rounded instead of square (the same applies to the copy in the burger panel). Not yet
+  checked in the browser.
 
 ## Files
 

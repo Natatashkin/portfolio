@@ -4,17 +4,28 @@ Status: done (documented after implementation)
 
 ## Goal
 
-A header on every page with the site name, navigation and theme switcher; on small screens the navigation, theme
-switcher and social links move into a full-screen burger menu.
+A header on every page with the site name, navigation, theme switcher and language switcher; on small screens the
+navigation, both switchers and social links move into a full-screen burger menu.
+
+**Temporarily hidden (author's decision):** the navigation is not rendered in the header, desktop or burger panel,
+until work on the nested pages starts. The code is commented out in `Header.tsx` (the `Navigation` import, the two
+`<Navigation … />` elements and the `navigation` prop destructuring); the component, its styles, the `navigation` prop
+and the `Header.navigation` message are kept. Requirements below that mention the navigation describe the behaviour
+once it is restored.
 
 ## Requirements
 
 - [x] Skip link to `#main-content`, visible on keyboard focus only.
-- [x] Logo shows `siteSettings.siteName` and links to the home page of the current locale; hidden when empty.
-- [x] Navigation from `siteSettings.navigation`: `isAnchor` items link to `#<url>`, others to `/<url>` through the
+- [x] Logo shows `siteSettings.siteName` and links to the home page of the current locale; hidden when empty. Its
+      vertical padding (`--space-1`) matches the navigation items and it has no side padding, so the text lines up with
+      the container edge; keyboard focus uses the shared focus ring.
+- [x] (Hidden for now, see Goal.) Navigation from `siteSettings.navigation`: `isAnchor` items link to `#<url>`, others to `/<url>` through the
       locale-aware `Link` after `safePath` (an invalid path renders no item); the current page gets `aria-current="page"`; items without a label are skipped.
-- [x] From `lg` (1024px): inline navigation and theme switcher.
-- [x] Below `lg`: burger toggle opens a full-screen panel with navigation, theme switcher and social links.
+- [x] From `lg` (1024px): inline navigation (hidden for now), theme switcher and language switcher; the switchers sit
+      on the right (`header__controls` has `margin-inline-start: auto`, so they stay there without the navigation).
+- [x] Below `lg`: burger toggle opens a full-screen panel. From the top: a centred row with the theme switcher and the
+      language switcher, a 1px `--color-border` line under it, the navigation (hidden for now), and the social links
+      at the bottom. (Author's decision.)
 - [x] Menu closes on Escape (focus returns to the toggle), on a tapped link, and when the viewport reaches `lg`.
 - [x] Page scroll is locked while the menu is open (`overflow: hidden` plus `lenis.stop()`).
 - [x] All interface strings (skip link, navigation label, menu label) come from `messages/` (`Header`).
@@ -54,11 +65,14 @@ switcher and social links move into a full-screen burger menu.
 
 ## Open questions
 
+- To restore when work on the nested pages starts: uncomment the `Navigation` import, the two `<Navigation … />`
+  elements and the `navigation` destructuring in `Header.tsx`, remove the type-only import that replaces the default
+  one, and re-check the burger panel order and the anchor links (see Decisions).
 - The language switcher and the theme switcher changes are done: see [language-switcher.md](language-switcher.md) and
   [theme-switcher.md](theme-switcher.md) (caveats are listed in their specs).
 - Console error from React DevTools (development only, not fixed in code). The author found the cause: it appears only
   with the React DevTools extension enabled and only when the burger menu is open. It fails on `SocialLinks`, because
-  the same component with the same `_key` keys renders in the burger panel (`Header.tsx:41`) and in the footer
+  the same component with the same `_key` keys renders in the burger panel (`Header.tsx:43`) and in the footer
   (`Footer.tsx:12`) at the same time. The error text is "The children should not have changed if we pass in the same
   set." and every stack frame is inside the extension's `installHook.js`; production React does not log it. Not
   reproduced by me; the cause is the author's finding. Proposed fix, to decide when the final header design is
