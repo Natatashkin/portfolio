@@ -8,7 +8,6 @@ import { useSystemTheme } from '@/hooks/useSystemTheme';
 import { useTheme } from '@/hooks/useTheme';
 import styles from './ThemeSwitcher.module.scss';
 
-// Temporary design: final behavior and design are not decided yet.
 // A two-way toggle on the effective theme: the label and the click both lead to the opposite one.
 // The label is chosen by CSS and the click target by JS; both read the same sources (the stored theme
 // and the system preference), so they must always agree.

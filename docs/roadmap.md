@@ -7,7 +7,7 @@
   tiles; `siteSettings` singleton; Studio deployed on Vercel.
 - Env-based Sanity client, `check-sanity` script, TypeGen wiring, `fetchPage` / `fetchSiteSettings`.
 - next-intl routing (`en` at `/`, `uk` at `/uk`), localized 404, `messages/`.
-- Tokens, themes with no-flash script, `useTheme`, temporary `ThemeSwitcher`.
+- Tokens, themes with no-flash script, `useTheme`, `ThemeSwitcher`.
 - UI blocks: Button, LinkButton, Headline, RichText, ResponsiveImage, Container, InView ([features/ui-blocks.md](features/ui-blocks.md)). Logo, Navigation and SocialLinks are part of the header and footer.
 - Layout: Header, BurgerMenu, Footer. Lenis + GSAP `SmoothScrollProvider`.
 - `HeroSection` (with `HeroGrid`, `HeroMetricNumber`).
@@ -26,8 +26,7 @@
 5. Draft preview via Draft Mode with the read token in a separate server-only client (see conventions: Security).
 6. Final 404 design; resolve the `__next_error__` shell issue (decision D7).
 7. Decide on security headers (decision D13).
-8. Final theme switcher design.
-9. Bring the header navigation back when work on the nested pages starts: it is hidden now and the code is commented
+8. Bring the header navigation back when work on the nested pages starts: it is hidden now and the code is commented
    out in `Header.tsx` ([features/header.md](features/header.md)).
 
 ## Deferred checks
