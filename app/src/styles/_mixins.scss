@@ -63,9 +63,9 @@ $breakpoints: (
 }
 
 // Muted text that turns full strength on hover and keyboard focus: the look shared by the theme and
-// language switchers. Keyboard focus draws an underline that grows from the centre in both directions
+// language switchers and the social links. Keyboard focus draws an underline that grows from the centre in both directions
 // (`transform` only). The outline stays but is transparent, so forced-colors mode still shows it.
-// The transition lists `filter` too, because both users dim on hover with `filter`.
+// The transition lists `filter` too, because the switchers dim on hover with `filter`.
 @mixin muted-control {
   position: relative;
   display: inline-flex;

@@ -13,16 +13,22 @@ A footer on every page with the copyright line and social links.
 - [x] Every social URL passes through `safeHref`; an unsafe or empty URL, or an empty label, renders no item.
 - [x] Each link carries a visually hidden "(opens in a new tab)" note; the list has an aria-label (`SocialLinks`
       messages).
+- [x] The content is wrapped in `Container`, so its gutters match the header and the sections.
+- [x] `SocialLinks` get the hover and focus styles of the theme switcher (`muted-control`), without the dot. It is
+      shared with the burger menu, so both copies change.
+- [ ] A top row of the footer with the logo, the location (`siteSettings.location`) and links to future pages. Where
+      the location goes and how the row is laid out is not decided yet.
+- [ ] Back-to-top control (label `siteSettings.backToTopLabel`). It is a separate fixed element, not part of the
+      footer layout, and appears while scrolling down once three sections from the top of the page have been passed.
 
 ## Design
 
 - **Data:** `fetchSiteSettings(locale)` in `[locale]/layout.tsx` (cache tag `site-settings`); props `copyright`,
-  `socialLinks`.
+  `socialLinks`. The query already returns `location` and `backToTopLabel`; the footer does not render them yet. The
+  localized `name` is not shown anywhere for now; it stays in the settings and may be removed.
 - **UI:** `Footer` and `SocialLinks` are Server Components. `SocialLinks` is shared with the burger menu.
-- **Styles:** flex row that wraps, top border, muted copyright text; tokens only. Each social link is an
-  `inline-flex` box with `--space-1` vertical padding, no side padding and a pill radius, like the header logo, so the
-  keyboard focus outline is rounded instead of square (the same applies to the copy in the burger panel). Not yet
-  checked in the browser.
+- **Styles:** flex row that wraps, top border, muted copyright text; tokens only. The social links use the
+  `muted-control` mixin (`styles/_mixins.scss`), like the theme and language switchers, without the dot.
 
 ## Files
 
@@ -35,12 +41,11 @@ A footer on every page with the copyright line and social links.
 - [x] Empty copyright or social links do not throw.
 - [x] Unsafe URLs (anything but `https`, `mailto`, `tel`, including relative paths) are not rendered.
 
-## Decisions
-
-- `location`, `backToTopLabel` and the localized `name` are already fetched with the settings; they will be rendered
-  in the footer when it is reworked (not yet built).
-- The footer will be wrapped in `Container` in the same rework, so its gutters match the header and sections.
-
 ## Tasks
 
-1. Footer rework: `Container`, location, back-to-top link (`backToTopLabel`), `name`.
+1. Top row: logo, location, links to future pages.
+2. Back-to-top control as a separate fixed element; it will need its own client component and its own spec.
+
+## Open questions
+
+None.

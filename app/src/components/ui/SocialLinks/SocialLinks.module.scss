@@ -8,17 +8,10 @@
   padding: 0;
   list-style: none;
 
-  // Same box as the header logo: vertical padding, none at the sides, a pill-shaped focus outline.
+  // Same look as the theme and language switchers, without the dot: muted text, full strength on hover,
+  // an underline on keyboard focus.
   &__link {
-    display: inline-flex;
-    padding: var(--space-1) 0;
-    border-radius: var(--radius-pill);
-    color: var(--color-text-muted);
-    text-decoration: none;
-
-    &:hover {
-      color: var(--color-text);
-    }
+    @include muted-control;
   }
 
   &__hidden {

@@ -10,7 +10,6 @@
   border-radius: var(--radius-pill);
   font-weight: 500;
   font-size: var(--font-base);
-  text-decoration: none;
   transition: opacity 250ms ease-in-out;
 
   // Hover only where a pointer exists, so touch taps don't leave the button dimmed.

@@ -44,6 +44,12 @@ body {
   @include focus-ring;
 }
 
+// Links look like their component, not like the browser default. Links inside running text opt back
+// in to an underline (RichText), so they are not told apart by colour alone.
+a {
+  text-decoration: none;
+}
+
 img,
 picture,
 svg {
