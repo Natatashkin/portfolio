@@ -64,7 +64,9 @@ they cannot express.
 ## SCSS
 
 - Colors, spacing and radii are CSS custom properties from `_tokens.scss`; never hard-code them.
-- Mixins stay minimal (breakpoints, focus ring, visually-hidden, `muted-control` shared by the theme and language switchers). Breakpoints are SCSS variables.
+- Mixins stay minimal (breakpoints, focus ring, visually-hidden, `muted-control` shared by the theme and language
+  switchers and the social links, `button-variants` / `button-variant-transparent` for `Button` and `LinkButton`).
+  Breakpoints are SCSS variables.
 - BEM in camelCase: `.hero`, `.hero__stackItem`, `.linkButton--accent`; nest with `&__` / `&--`; no
   element-of-element chains.
 
@@ -75,7 +77,8 @@ they cannot express.
 - Client config comes from env variables (`lib/sanity/env.ts`), never hardcoded IDs; `apiVersion` is pinned.
 - Interface strings in `app/messages/{uk,en}.json`; Studio-editable content never goes there.
 - Rich text via `@portabletext/react` with our own `components` and SCSS Modules.
-- Errors: `not-found.tsx` / `error.tsx` per route segment; helpers throw typed errors or call `notFound()`.
+- Errors: `[locale]/not-found.tsx` exists; add `error.tsx` per route segment when a route needs one. Helpers throw
+  typed errors or call `notFound()`.
 
 ## Icons
 
@@ -91,8 +94,9 @@ Icons are never stored in Sanity. They are components in `components/icons/`, ma
   locale-aware `Link` (`LinkButton` with `linkType: internal`, `Navigation`).
 - `dangerouslySetInnerHTML` is used only for the constant `themeScript`.
 - Secrets never reach client code; `NEXT_PUBLIC_` only for non-secret values.
-- `lib/sanity/env.ts` and `client.ts` can be imported from client code. The read token (`SANITY_API_READ_TOKEN`, for
-  draft preview) lives in a separate server-only client (`import 'server-only'`) that client code never imports.
+- `lib/sanity/env.ts` and `client.ts` can be imported from client code. When draft preview is built (roadmap),
+  the read token (`SANITY_API_READ_TOKEN`) lives in a separate server-only client (`import 'server-only'`) that
+  client code never imports.
 
 ## Comments
 

@@ -36,8 +36,8 @@ Two independent packages with their own lockfiles (pnpm); no root workspace. Run
 - All GROQ lives in `app/src/lib/sanity/queries.ts` via `defineQuery`; always pass `locale`; project only needed
   fields. Interface-only strings go to `app/messages/{uk,en}.json`; editable content stays in Sanity.
 - Every CMS-provided href goes through `safeHref`. Never pass CMS data to `dangerouslySetInnerHTML`.
-- Animation (Lenis + GSAP): client-only, one Lenis instance, `useGSAP` cleanup, animate `transform`/`opacity` only,
-  honor `prefers-reduced-motion`.
+- Animation (Lenis + GSAP): client-only, one Lenis instance, clean up every tween (`scroll-animation` skill), animate
+  `transform`/`opacity` only, honor `prefers-reduced-motion`.
 - Details and rationale: `docs/conventions.md`.
 
 ## Out of scope

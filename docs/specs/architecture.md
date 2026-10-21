@@ -23,13 +23,15 @@ app/[locale]/             layout (root layout), page, not-found, [...rest] catch
 components/
   ui/                     reusable blocks (Button, LinkButton, ResponsiveImage, RichText, Headline, ...)
   sections/               one component per Sanity section + SectionRenderer
-  layout/                 Header, Footer, BurgerMenu
+  layout/                 Header, Footer, BurgerMenu, ThemeScript
   icons/                  icon components
   SmoothScrollProvider/   the single Lenis + GSAP setup
-hooks/                    useTheme, useInView, useIsMounted
-i18n/                     routing.ts, request.ts, navigation.ts
-lib/sanity/               env, client, image, queries, types (Section, SectionOf), api/ (fetchPage, fetchSiteSettings)
-lib/helpers/              safeHref, safePath (re-exported by index.ts)
+hooks/                    useTheme, useSystemTheme, useInView, useIsMounted
+i18n/                     routing.ts, request.ts, navigation.ts, appConfig.d.ts
+lib/constants.ts          media-query strings (dark, reduced motion, pointer, desktop)
+lib/sanity/               env, apiVersion, client, image, queries, types (Section, SectionOf), api/ (fetchPage, fetchSiteSettings)
+lib/helpers/              safeHref, safePath, localeSwitch (re-exported by index.ts)
+lib/motion/               loadGsap (dynamic GSAP + ScrollTrigger import)
 lib/theme/                theme storage + the no-flash inline script
 styles/                   _tokens.scss, _mixins.scss, globals.scss
 ```
@@ -69,11 +71,11 @@ Sanity webhook → secret-checked route handler → `revalidateTag`; draft previ
 
 ## Environment variables (names only, see `app/.env.example`)
 
-| Name                             | Purpose                                          |
-| -------------------------------- | ------------------------------------------------ |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID`  | Sanity project ID                                |
-| `NEXT_PUBLIC_SANITY_DATASET`     | Sanity dataset (`production`)                    |
-| `NEXT_PUBLIC_SANITY_API_VERSION` | Pinned Sanity API version date                   |
-| `SANITY_API_READ_TOKEN`          | Server-only read token for drafts / preview      |
-| `SANITY_REVALIDATE_SECRET`       | Secret for the revalidate webhook route          |
-| `NEXT_PUBLIC_SITE_URL`           | Canonical site URL (metadata, hreflang, sitemap) |
+| Name                             | Purpose                                          | Status  |
+| -------------------------------- | ------------------------------------------------ | ------- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID`  | Sanity project ID                                | used    |
+| `NEXT_PUBLIC_SANITY_DATASET`     | Sanity dataset (`production`)                    | used    |
+| `NEXT_PUBLIC_SANITY_API_VERSION` | Pinned Sanity API version date                   | used    |
+| `SANITY_API_READ_TOKEN`          | Server-only read token for drafts / preview      | planned |
+| `SANITY_REVALIDATE_SECRET`       | Secret for the revalidate webhook route          | planned |
+| `NEXT_PUBLIC_SITE_URL`           | Canonical site URL (metadata, hreflang, sitemap) | planned |

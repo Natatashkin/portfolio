@@ -6,7 +6,7 @@ import styles from './LinkButton.module.scss';
 import type { LinkButtonProps } from './types';
 
 // Same pattern as the anchor validation in the Studio schema.
-const ANCHOR_PATTERN = /^[a-z]+(?:-[a-z]+)*$/;
+const ANCHOR_PATTERN = /^[a-z]+(?:-[a-z]+)*$/i;
 
 const LinkButton = ({
   label,

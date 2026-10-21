@@ -11,7 +11,7 @@ Start by reading CLAUDE.md, docs/README.md (the index) and the specs relevant to
 
 Check, in this order:
 
-1. Rule violations from CLAUDE.md: folder structure and naming (own folder per component, PascalCase.tsx + .module.scss, no folder-level index.ts barrels except components/icons and lib/helpers, no "widgets"), Working rules, "What not to do" (no Tailwind, other fonts, extra features, case pages, plain button block).
+1. Rule violations from CLAUDE.md: folder structure and naming (own folder per component, PascalCase.tsx + .module.scss, no folder-level index.ts barrels except components/icons and lib/helpers, no "widgets"), Working rules, "Out of scope" (no Tailwind, other fonts, extra features, case pages, plain button block).
 2. TypeScript: strict-mode problems, any, non-null !, missing type imports, unsafe assumptions about nullable Sanity/GROQ results (localized fields can be empty, en is the fallback, uk may be empty).
 3. Next 16 specifics: async params and searchParams, proxy.ts instead of middleware, Server Components by default, "use client" only on small leaf components, nothing touching window/document during server render, correct caching and revalidation usage. Verify against app/node_modules/next/dist/docs when unsure.
 4. Sanity: GROQ only in lib/sanity with defineQuery, locale always passed, minimal projections, env-based client, no hardcoded IDs, no secrets or tokens reachable from client code, NEXT_PUBLIC_ used only for non-secret values.

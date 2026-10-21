@@ -3,8 +3,10 @@
 ## Styling
 
 - SCSS Modules (`sass`). Design tokens are CSS custom properties in `styles/_tokens.scss`: bg, surface, border, text,
-  text-muted, primary, secondary, accent (+ on-colors, accent-ink), radius, spacing. SCSS holds no color values.
-- `styles/_mixins.scss` is a Sass partial kept minimal (breakpoints, focus ring, visually-hidden, `muted-control` for the switchers). Breakpoints are SCSS
+  text-muted, primary, secondary, accent (+ on-colors, accent-ink, accent-shine), fonts, radius, spacing. Colors are
+  defined only in `_tokens.scss`; modules use `var(--color-*)`.
+- `styles/_mixins.scss` is a Sass partial kept minimal (breakpoints, focus ring, visually-hidden, `muted-control` for
+  the switchers and the social links, `button-variants` and `button-variant-transparent`). Breakpoints are SCSS
   variables because custom properties do not work in media queries. Modules load it with `@use 'mixins' as *;`
   (`sassOptions.loadPaths` points at `src/styles`).
 - BEM per module in camelCase: block `.hero`, element `.hero__stackItem`, modifier `.linkButton--accent`; no
@@ -40,7 +42,8 @@ Procedure and traps: the `scroll-animation` skill (`.claude/skills/scroll-animat
   `SmoothScrollProvider` forwards Lenis scroll to `ScrollTrigger.update` once they are loaded.
 - Content is visible without JS: never hide an element in CSS (`opacity: 0`) to reveal it with GSAP. Initial states
   are applied after GSAP is ready, and first-screen motion is CSS.
-- Use `useGSAP` (or `gsap.context`) so tweens and ScrollTriggers clean up.
+- Clean up every tween and ScrollTrigger: `gsap.matchMedia` / `gsap.context` with `revert()` in an effect cleanup (the
+  pattern in the `scroll-animation` skill), or `useGSAP` where tweens are created synchronously.
 - Animate `transform` and `opacity` only; never layout properties.
 - `prefers-reduced-motion`: no Lenis smoothing and no non-essential motion (`gsap.matchMedia` for GSAP code).
   The provider keeps `ReactLenis` mounted (the tree shape must not change) and loads no GSAP, so a section that

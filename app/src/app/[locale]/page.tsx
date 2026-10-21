@@ -4,8 +4,8 @@ import SectionRenderer from '@/components/sections/SectionRenderer';
 import { routing } from '@/i18n/routing';
 import { fetchPage } from '@/lib/sanity/api/fetchPage';
 
-// Safety net: even if a webhook is missed, the page regenerates within an hour.
-// Edits in Studio are reflected immediately through tag revalidation.
+// The page regenerates within an hour. Tag revalidation will make Studio edits appear sooner once the
+// revalidate webhook route exists; until then this is the only refresh.
 export const revalidate = 3600;
 
 const HomePage = async ({ params }: PageProps<'/[locale]'>) => {

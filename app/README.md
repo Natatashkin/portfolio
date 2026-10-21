@@ -40,9 +40,11 @@ node --env-file-if-exists=.env.local scripts/check-sanity.mts
 ## Structure
 
 ```
-src/app/[locale]/   routes (layout, home, not-found)
-src/components/     ui/, sections/, layout/, icons/
+src/app/[locale]/   routes (layout, home, not-found, [...rest], projects, cases)
+src/components/     ui/, sections/, layout/, icons/, SmoothScrollProvider
+src/hooks/          shared hooks (theme, in-view, mounted)
 src/lib/sanity/     client, queries, fetchers, image helpers
+src/lib/            helpers/ (link safety, locale switch), theme/, motion/, constants
 src/i18n/           next-intl routing and config
 src/styles/         tokens, mixins, globals
 messages/           interface strings (en, uk)
