@@ -49,7 +49,8 @@ chosen theme is applied before the first paint, so there is no flash.
 
 - `app/src/styles/_tokens.scss`: palettes, scale, spacing, radius tokens and the dark-mode selectors.
 - `app/src/styles/globals.scss`: `body` uses the tokens; `theme-ready` transition, gated by reduced motion.
-- `app/src/lib/theme/theme.ts`: storage key, types, read/store/apply helpers, `themeScript`.
+- `app/src/lib/theme/theme.ts`: types, read/store/apply helpers, `themeScript`. The storage key
+  `THEME_STORAGE_KEY` is in `app/src/lib/constants.ts`.
 - `app/src/hooks/useTheme.ts`: `useTheme`.
 - `app/src/app/[locale]/layout.tsx`: mounts `ThemeScript` in `<head>`.
 

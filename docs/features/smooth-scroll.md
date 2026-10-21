@@ -65,7 +65,7 @@ scrolls (anchors) become instant. Rules and rationale:
   ScrollTrigger link.
 - `app/src/components/SmoothScrollProvider/index.ts`: re-export.
 - `app/src/lib/motion/loadGsap.ts`: shared dynamic import of `gsap` and `gsap/ScrollTrigger`, plugin registration.
-- `app/src/lib/constants.ts`: `REDUCED_MOTION_QUERY`.
+- `app/src/lib/constants.ts`: `REDUCED_MOTION_QUERY` and the idle timings.
 - `app/src/app/[locale]/layout.tsx`: mounts the provider inside `NextIntlClientProvider`.
 - `app/src/components/layout/BurgerMenu/BurgerMenu.tsx`: `useLenis`, `stop`/`start`, `data-lenis-prevent`.
 

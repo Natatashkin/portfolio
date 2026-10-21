@@ -2,36 +2,32 @@
 
 import { useEffect } from 'react';
 import { useLocale, useTranslations } from 'next-intl';
+import {
+  AFTER_SWITCH_DELAY_MS,
+  CLOSED_PANEL_SELECTOR,
+  LANGUAGE_ANNOUNCER_REGION_ID
+} from '@/lib/constants';
 import { takeLocaleSwitch } from '@/lib/helpers';
 import styles from './LanguageAnnouncer.module.scss';
-
-const REGION_ID = 'language-announcer';
-// Gives assistive tech time to register a freshly created or emptied live region before its text
-// changes, and the remounted layout time to settle before focus and hash are restored.
-const AFTER_SWITCH_DELAY_MS = 150;
 
 // Returns the live region, creating it outside React on first use: the locale layout is
 // remounted on a locale switch, which would replace a React-owned region and drop its text.
 const getRegion = (): HTMLElement => {
-  const existing = document.getElementById(REGION_ID);
+  const existing = document.getElementById(LANGUAGE_ANNOUNCER_REGION_ID);
   if (existing) return existing;
 
   const region = document.createElement('div');
-  region.id = REGION_ID;
+  region.id = LANGUAGE_ANNOUNCER_REGION_ID;
   region.setAttribute('role', 'status');
   region.className = styles.languageAnnouncer;
   document.body.append(region);
   return region;
 };
 
-// A closed menu panel only hides itself with `visibility`, after a delay on close, so anything
-// inside it must not count as visible even while the transition is still running.
-const CLOSED_PANEL = '[data-open="false"]';
-
 // `checkVisibility` is missing before Safari 17.4; the fallback cannot see `visibility: hidden`
 // itself, which is why the closed panel is excluded explicitly.
 const isVisible = (element: HTMLElement): boolean =>
-  element.closest(CLOSED_PANEL) === null &&
+  element.closest(CLOSED_PANEL_SELECTOR) === null &&
   (typeof element.checkVisibility === 'function'
     ? element.checkVisibility({ visibilityProperty: true })
     : element.getClientRects().length > 0);

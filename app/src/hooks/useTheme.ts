@@ -1,12 +1,12 @@
 'use client';
 
 import { useCallback, useSyncExternalStore } from 'react';
+import { THEME_STORAGE_KEY } from '@/lib/constants';
 import {
   applyTheme,
   readStoredTheme,
   storeTheme,
-  type Theme,
-  THEME_STORAGE_KEY
+  type Theme
 } from '@/lib/theme/theme';
 
 const listeners = new Set<() => void>();

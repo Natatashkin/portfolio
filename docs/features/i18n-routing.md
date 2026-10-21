@@ -20,6 +20,8 @@ The site is available in English and Ukrainian with clean URLs, and unknown path
       `NotFound`, `Header`, `ThemeSwitcher`, `LanguageSwitcher`, `LinkButton`, `SocialLinks`). Editable content stays in
       Sanity ([content-model](../specs/content-model.md)).
 - [x] Message types come from `messages/en.json` (`appConfig.d.ts`), so a missing key in code is a type error.
+- [x] `messages/uk.json` and `messages/en.json` must have the same keys at every level: `request.ts` fails type checking
+      if a key is missing from one of them or left behind in it.
 - [x] Internal links use `Link` from `i18n/navigation.ts`, which adds the locale prefix.
 - [x] An unknown path inside a locale renders `[locale]/not-found.tsx` (title and a "back home" link, localized)
       through the `[...rest]` catch-all, which only calls `notFound()`.
@@ -70,8 +72,6 @@ Done in the code.
 
 - Nothing here was run in a browser or build; the routing behavior is read from code and next-intl's documented
   behavior only.
-- `uk.json` is not typed against `en.json` (only `en.json` defines `Messages`; the loader only `satisfies` a locale map).
-  Is a missing key in `uk.json` caught anywhere? Proposed: a type check or a test, or accept the risk.
 - `not-found.tsx` renders `<main>` without `id="main-content"`, unlike the other pages. If the skip link targets
   `#main-content`, it does nothing on the 404 page. Proposed: add the id.
 - `projects` and `cases` titles are hard-coded English strings, not in `messages/`. Proposed: leave until the pages

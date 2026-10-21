@@ -1,4 +1,4 @@
-export const THEME_STORAGE_KEY = 'theme';
+import { THEME_STORAGE_KEY } from '@/lib/constants';
 
 export type StoredTheme = 'light' | 'dark';
 export type Theme = StoredTheme | 'system';

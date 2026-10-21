@@ -58,6 +58,10 @@ they cannot express.
 ## Naming
 
 - Components `PascalCase`; hooks `useThing`; utilities `camelCase.ts`; folders under `src/lib/` kebab-case.
+- Constants are `UPPER_SNAKE_CASE` and live in `lib/constants.ts`, grouped by meaning with a comment per group (media
+  queries, storage keys, timing, DOM ids, patterns). Exceptions: GROQ and its cache tags stay in
+  `lib/sanity/queries.ts`, and `DEFAULT_API_VERSION` stays in `lib/sanity/apiVersion.ts` so a script can import it
+  without loading `env.ts`.
 - Handlers and listener callbacks: `handle<Thing>`, never `onChange`. `useSyncExternalStore` subscribers:
   `subscribeTo<Thing>` (empty one: `subscribeNoop`).
 

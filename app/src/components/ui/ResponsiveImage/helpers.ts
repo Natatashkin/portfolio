@@ -1,12 +1,8 @@
 import type { SanityImageSource } from '@sanity/image-url';
+import { IMAGE_REF_PATTERN } from '@/lib/constants';
 
-// One pixel below the `md` breakpoint (768px) in styles/_mixins.scss.
-export const MOBILE_MAX_WIDTH = 767;
-
-const REF_PATTERN = /^image-[A-Za-z0-9]+-(\d+)x(\d+)-[a-z]+$/;
-
-// A Sanity asset `_ref` encodes the intrinsic size ("image-<id>-1200x800-jpg"),
-// which lets the <img> reserve its space without an extra query field.
+// Reads the intrinsic size from the asset `_ref`, which lets the <img> reserve its space without an
+// extra query field.
 export const getDimensions = (
   source: SanityImageSource
 ): { width: number; height: number } | null => {
@@ -15,7 +11,7 @@ export const getDimensions = (
   const asset = source.asset;
   const ref =
     asset && typeof asset === 'object' && '_ref' in asset ? asset._ref : null;
-  const match = typeof ref === 'string' ? REF_PATTERN.exec(ref) : null;
+  const match = typeof ref === 'string' ? IMAGE_REF_PATTERN.exec(ref) : null;
 
   return match ? { width: Number(match[1]), height: Number(match[2]) } : null;
 };

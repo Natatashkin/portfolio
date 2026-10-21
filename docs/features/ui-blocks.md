@@ -134,7 +134,7 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 - `app/src/components/ui/Button/`: `Button.tsx`, `.module.scss`, `types.ts` (`ButtonProps`, `ButtonVariant`), `index.ts`.
 - `app/src/components/ui/Headline/`: `Headline.tsx`, `.module.scss` (accent colour, shine keyframes), `index.ts`.
 - `app/src/components/ui/RichText/`: `RichText.tsx`, `.module.scss`, `index.ts`.
-- `app/src/components/ui/ResponsiveImage/`: `ResponsiveImage.tsx`, `helpers.ts` (`getDimensions`, `MOBILE_MAX_WIDTH`),
+- `app/src/components/ui/ResponsiveImage/`: `ResponsiveImage.tsx`, `helpers.ts` (`getDimensions`),
   `.module.scss`, `index.ts`.
 - `app/src/components/ui/Container/`: `Container.tsx`, `.module.scss`, `index.ts`.
 - `app/src/components/ui/InView/`: `InView.tsx`, `index.ts`.
@@ -161,9 +161,8 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
   purpose.
 - Accepted: `LinkButton.opensInNewTab` and `SocialLinks.opensInNewTab` hold the same text. Move it to a shared
   namespace if a third component needs it.
-- `ResponsiveImage/helpers.ts` ties `MOBILE_MAX_WIDTH = 767` to the `md` breakpoint (768px) by a comment; the two
-  values stay separate because `lib/constants.ts` holds media-query strings and only `DESKTOP_QUERY` mirrors a
-  breakpoint.
+- `MOBILE_MAX_WIDTH = 767` in `lib/constants.ts` is tied to the `md` breakpoint (768px) by a comment; the two values
+  stay separate because the SCSS variable cannot be read from TypeScript.
 - `Button` stays in `components/ui` although only `ThemeSwitcher` uses it: it is generic and carries the variants.
 
 ## Tasks

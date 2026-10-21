@@ -1,13 +1,14 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { POINTER_QUERY } from '@/lib/constants';
+import {
+  HERO_GRID_SETTLE_DISTANCE,
+  HERO_GRID_SMOOTHING,
+  HERO_GRID_START_X,
+  HERO_GRID_START_Y,
+  POINTER_QUERY
+} from '@/lib/constants';
 import styles from './HeroGrid.module.scss';
-
-const SMOOTHING = 0.12;
-const SETTLE_DISTANCE = 0.5;
-const START_X = 0.5;
-const START_Y = 0.4;
 
 type Props = {
   className?: string;
@@ -23,22 +24,22 @@ const HeroGrid = ({ className }: Props) => {
 
     const startTracking = (): (() => void) => {
       const { width, height } = element.getBoundingClientRect();
-      let currentX = width * START_X;
-      let currentY = height * START_Y;
+      let currentX = width * HERO_GRID_START_X;
+      let currentY = height * HERO_GRID_START_Y;
       let targetX = currentX;
       let targetY = currentY;
       let frame = 0;
       let isVisible = true;
 
       const paint = () => {
-        currentX += (targetX - currentX) * SMOOTHING;
-        currentY += (targetY - currentY) * SMOOTHING;
+        currentX += (targetX - currentX) * HERO_GRID_SMOOTHING;
+        currentY += (targetY - currentY) * HERO_GRID_SMOOTHING;
         element.style.setProperty('--spot-x', `${currentX}px`);
         element.style.setProperty('--spot-y', `${currentY}px`);
 
         const isSettled =
-          Math.abs(targetX - currentX) < SETTLE_DISTANCE &&
-          Math.abs(targetY - currentY) < SETTLE_DISTANCE;
+          Math.abs(targetX - currentX) < HERO_GRID_SETTLE_DISTANCE &&
+          Math.abs(targetY - currentY) < HERO_GRID_SETTLE_DISTANCE;
         frame = isSettled ? 0 : requestAnimationFrame(paint);
       };
 

@@ -28,7 +28,7 @@ components/
   SmoothScrollProvider/   the single Lenis + GSAP setup
 hooks/                    useTheme, useSystemTheme, useInView, useIsMounted
 i18n/                     routing.ts, request.ts, navigation.ts, appConfig.d.ts
-lib/constants.ts          media-query strings (dark, reduced motion, pointer, desktop)
+lib/constants.ts          all shared constants, grouped by meaning (media queries, storage keys, timing, patterns)
 lib/sanity/               env, apiVersion, client, image, queries, types (Section, SectionOf), api/ (fetchPage, fetchSiteSettings)
 lib/helpers/              safeHref, safePath, localeSwitch (re-exported by index.ts)
 lib/motion/               loadGsap (dynamic GSAP + ScrollTrigger import)

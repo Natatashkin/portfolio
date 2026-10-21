@@ -1,7 +1,8 @@
 import Image, { getImageProps } from 'next/image';
 import type { SanityImageSource } from '@sanity/image-url';
+import { MOBILE_MAX_WIDTH } from '@/lib/constants';
 import { urlFor } from '@/lib/sanity/image';
-import { getDimensions, MOBILE_MAX_WIDTH } from './helpers';
+import { getDimensions } from './helpers';
 import styles from './ResponsiveImage.module.scss';
 
 type Props = {

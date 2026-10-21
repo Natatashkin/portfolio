@@ -52,6 +52,7 @@ A private child is not re-exported. When a second component needs it, move it to
    locale-aware `Link` from `@/i18n/navigation`. Never pass CMS data to `dangerouslySetInnerHTML`.
 10. **Naming.** Handlers `handle<Thing>`, never `onChange` for your own functions; `useSyncExternalStore` subscribers
     `subscribeTo<Thing>` (empty one `subscribeNoop`). Hooks `useThing`; utilities `camelCase.ts`.
+    Constants (timings, ids, keys, patterns) go to `lib/constants.ts`, in the group they belong to.
 11. **Accessibility** (a11y practice, not a rule of `conventions.md`). Visible focus (the `focus-ring` mixin or
     `muted-control`), a name for every control, and, when an `aria-label` is used, the visible text inside it (WCAG
     2.5.3, as the language and theme switchers do).

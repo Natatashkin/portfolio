@@ -3,13 +3,14 @@
 import type { ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react';
 import { ReactLenis, useLenis } from 'lenis/react';
-import { REDUCED_MOTION_QUERY } from '@/lib/constants';
+import {
+  IDLE_FALLBACK_DELAY_MS,
+  IDLE_TIMEOUT_MS,
+  REDUCED_MOTION_QUERY
+} from '@/lib/constants';
 import { loadGsap } from '@/lib/motion/loadGsap';
 
 import 'lenis/dist/lenis.css';
-
-const IDLE_TIMEOUT_MS = 2000;
-const IDLE_FALLBACK_DELAY_MS = 200;
 
 const subscribeToReducedMotion = (handleChange: () => void) => {
   const query = window.matchMedia(REDUCED_MOTION_QUERY);
