@@ -1,5 +1,6 @@
 import {ProjectsIcon} from '@sanity/icons/Projects'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 export const projectType = defineType({
@@ -7,7 +8,9 @@ export const projectType = defineType({
   title: 'Project',
   type: 'document',
   icon: ProjectsIcon,
+  orderings: [orderRankOrdering],
   fields: [
+    orderRankField({type: 'project'}),
     defineField({
       name: 'title',
       type: 'internationalizedArrayString',

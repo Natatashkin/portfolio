@@ -49,6 +49,9 @@ it when the toggle is turned off).
 
 ## Documents
 
+Every document below except `siteSettings` and `page` also carries a hidden `orderRank` (Studio drag-and-drop order only, not queried by the
+site).
+
 | Document                                      | Fields                                                                                                                                                                                                                                                                                          |
 | --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `siteSettings` (singleton, id `siteSettings`) | `siteName`, `name` (loc), `navigation[]` {`label` loc, `isAnchor`, `url`}, `socialLinks[]` {`label`, `url`}, `location` (loc), `copyright` (loc), `backToTopLabel` (loc)                                                                                                                        |

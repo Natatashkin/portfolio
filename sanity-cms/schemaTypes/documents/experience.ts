@@ -1,5 +1,6 @@
 import {CaseIcon} from '@sanity/icons/Case'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 import {DATE_OPTIONS} from '../lib/constants'
 import {formatDate} from '../lib/helpers'
 import {baseText, requiredInAllLanguages} from '../lib/localized'
@@ -23,7 +24,21 @@ export const experienceType = defineType({
   title: 'Experience',
   type: 'document',
   icon: CaseIcon,
+  orderings: [
+    orderRankOrdering,
+    {
+      title: 'Newest first',
+      name: 'periodStartDesc',
+      by: [
+        {
+          field: 'periodStart',
+          direction: 'desc',
+        },
+      ],
+    },
+  ],
   fields: [
+    orderRankField({type: 'experience'}),
     defineField({
       name: 'company',
       type: 'internationalizedArrayString',
@@ -83,18 +98,6 @@ export const experienceType = defineType({
         }),
       ],
     }),
-  ],
-  orderings: [
-    {
-      title: 'Newest first',
-      name: 'periodStartDesc',
-      by: [
-        {
-          field: 'periodStart',
-          direction: 'desc',
-        },
-      ],
-    },
   ],
   preview: {
     select: {

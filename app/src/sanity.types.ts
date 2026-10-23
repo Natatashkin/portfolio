@@ -191,6 +191,7 @@ export type Technology = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  orderRank?: string;
   name: string;
   iconKey?: string;
 };
@@ -201,6 +202,7 @@ export type Metric = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  orderRank?: string;
   value: string;
   label?: InternationalizedArrayString;
 };
@@ -217,6 +219,7 @@ export type Road = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  orderRank?: string;
   period?: InternationalizedArrayString;
   title?: InternationalizedArrayString;
   description?: InternationalizedArrayString;
@@ -228,6 +231,7 @@ export type Piece = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  orderRank?: string;
   title?: InternationalizedArrayString;
   hint?: InternationalizedArrayString;
   componentKey:
@@ -240,6 +244,7 @@ export type Skill = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  orderRank?: string;
   title?: InternationalizedArrayString;
   description?: InternationalizedArrayText;
   iconKey?: string;
@@ -257,6 +262,7 @@ export type Experience = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  orderRank?: string;
   company?: InternationalizedArrayString;
   experienceType: 'primary' | 'secondary';
   role?: InternationalizedArrayString;
@@ -283,6 +289,7 @@ export type Project = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  orderRank?: string;
   title?: InternationalizedArrayString;
   slug: Slug;
   summary?: InternationalizedArrayRichText;

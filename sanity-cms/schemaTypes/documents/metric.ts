@@ -1,5 +1,6 @@
 import {BarChartIcon} from '@sanity/icons/BarChart'
 import {defineField, defineType} from 'sanity'
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 export const metricType = defineType({
@@ -7,7 +8,9 @@ export const metricType = defineType({
   title: 'Metric',
   type: 'document',
   icon: BarChartIcon,
+  orderings: [orderRankOrdering],
   fields: [
+    orderRankField({type: 'metric'}),
     defineField({
       name: 'value',
       type: 'string',

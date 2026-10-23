@@ -1,24 +1,14 @@
 import {CodeIcon} from '@sanity/icons/Code'
 import {defineField, defineType} from 'sanity'
+import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
 
 export const technologyType = defineType({
   name: 'technology',
   title: 'Technology',
   type: 'document',
   icon: CodeIcon,
-  fields: [
-    defineField({
-      name: 'name',
-      type: 'string',
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
-      name: 'iconKey',
-      type: 'string',
-      description: 'Optional. Icon name from the site code; unknown keys show no icon.',
-    }),
-  ],
   orderings: [
+    orderRankOrdering,
     {
       title: 'Name',
       name: 'nameAsc',
@@ -29,6 +19,19 @@ export const technologyType = defineType({
         },
       ],
     },
+  ],
+  fields: [
+    orderRankField({type: 'technology'}),
+    defineField({
+      name: 'name',
+      type: 'string',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'iconKey',
+      type: 'string',
+      description: 'Optional. Icon name from the site code; unknown keys show no icon.',
+    }),
   ],
   preview: {
     select: {

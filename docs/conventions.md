@@ -57,6 +57,11 @@ they cannot express.
 - Shared Studio constants (e.g. `DATE_OPTIONS`, the `DD-MM-YYYY` date input format) live in
   `schemaTypes/lib/constants.ts`; pure helpers (e.g. `formatDate` for list previews) in
   `schemaTypes/lib/helpers/<name>.ts`, re-exported by name from `schemaTypes/lib/helpers/index.ts` (import `from '../lib/helpers'`).
+- Content documents (`project`, `experience`, `skill`, `piece`, `road`, `metric`, `technology`) are drag-and-drop
+  orderable inside their collection in the Studio: each has `orderRankField({type})` and `orderRankOrdering`, and
+  `structure.ts` lists them with `orderableDocumentListDeskItem` (`@sanity/orderable-document-list`). Keep `CONTENT_TYPES`
+  in `structure.ts` in sync with the schemas that carry the field. Studio-only: queries do not sort by `orderRank`; the
+  site order comes from the section references.
 - Field reference: [specs/content-model.md](specs/content-model.md).
 
 ## Naming

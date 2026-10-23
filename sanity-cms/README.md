@@ -31,9 +31,13 @@ schemaTypes/documents/   page, siteSettings, project, experience, skill, piece, 
 schemaTypes/sections/    one object type per landing section
 schemaTypes/lib/         languages, constants, localized-field helpers, shared section groups
 schemaTypes/lib/helpers/ small pure helpers, one per file, re-exported by index.ts (formatDate)
-structure.ts             desk structure (siteSettings singleton)
+structure.ts             desk structure (siteSettings singleton, orderable content lists; Studio-only order)
 static/sections/         insert-menu tile images
 ```
+
+Content documents are drag-and-drop orderable inside each collection (`@sanity/orderable-document-list`). The order
+exists only in the Studio: site queries do not sort by `orderRank`. After adding the field to a type with existing
+documents, run **Reset Order** once from the list menu.
 
 The content model is described in [`../docs/specs/content-model.md`](../docs/specs/content-model.md). Changing a
 schema means updating that spec and running `pnpm typegen` in `../app`.
