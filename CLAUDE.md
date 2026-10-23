@@ -1,8 +1,7 @@
 # CLAUDE.md
 
 Bilingual (uk / en) portfolio landing of a **frontend developer**: Next.js 16, React 19, strict TypeScript, content in
-Sanity. The repo is shown to employers, so code and docs stay clean and position the author as a frontend developer
-only (nothing about selling, pricing, templates, client delivery or fullstack).
+Sanity. The repo is shown to employers, so code and docs stay clean and position the author as a frontend developer.
 
 ## Spec-driven workflow
 

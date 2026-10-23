@@ -29,7 +29,8 @@ pnpm build      # output in dist/
 schemaTypes/blocks/      linkButton, responsiveImage, richText, headline
 schemaTypes/documents/   page, siteSettings, project, experience, skill, piece, road, metric, technology
 schemaTypes/sections/    one object type per landing section
-schemaTypes/lib/         languages, localized-field helpers, shared section groups
+schemaTypes/lib/         languages, constants, localized-field helpers, shared section groups
+schemaTypes/lib/helpers/ small pure helpers, one per file, re-exported by index.ts (formatDate)
 structure.ts             desk structure (siteSettings singleton)
 static/sections/         insert-menu tile images
 ```

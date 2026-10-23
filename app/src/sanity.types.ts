@@ -257,10 +257,12 @@ export type Experience = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  company: string;
+  company?: InternationalizedArrayString;
+  experienceType: 'primary' | 'secondary';
   role?: InternationalizedArrayString;
   periodStart: string;
   periodEnd?: string;
+  descriptionPreview?: InternationalizedArrayRichText;
   description?: InternationalizedArrayRichText;
   technologies?: Array<
     {

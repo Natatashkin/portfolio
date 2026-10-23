@@ -35,31 +35,34 @@ it when the toggle is turned off).
 
 ## Validation rules (Studio)
 
-| Field                                   | Rule                                                                                                                                          |
-| --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
-| `linkButton.url`                        | Required. External: valid URL with `https`, `mailto` or `tel`. Internal: `^[a-z0-9]+(?:[-/][a-z0-9]+)*$` (case-insensitive), no leading slash |
-| `linkButton.anchor`                     | Visible and required only when `hasAnchor`. Letters and hyphens: `^[a-z]+(?:-[a-z]+)*$` (case-insensitive), no `#`, no digits                 |
-| `<section>.anchorId`                    | Optional. `^[a-z0-9-]+$` (digits allowed, unlike `linkButton.anchor`)                                                                         |
-| `siteSettings.navigation[].url`         | Required. Lowercase letters only: `^[a-z]+$`                                                                                                  |
-| `siteSettings.socialLinks[].url`        | Required. `https`, `mailto` or `tel`                                                                                                          |
-| `page.slug`                             | Required. Generated from the internal `title`; `home` is the landing                                                                          |
-| `project.slug`                          | Required. Generated from the `en` (base) entry of the localized `title` via a source function                                                 |
-| `piece.componentKey`                    | One of `animatedCard`, `formValidation`, `themeSwitcher`, `responsiveDesign`                                                                  |
-| `technology.name`, `experience.company` | Required                                                                                                                                      |
+| Field                            | Rule                                                                                                                                          |
+| -------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `linkButton.url`                 | Required. External: valid URL with `https`, `mailto` or `tel`. Internal: `^[a-z0-9]+(?:[-/][a-z0-9]+)*$` (case-insensitive), no leading slash |
+| `linkButton.anchor`              | Visible and required only when `hasAnchor`. Letters and hyphens: `^[a-z]+(?:-[a-z]+)*$` (case-insensitive), no `#`, no digits                 |
+| `<section>.anchorId`             | Optional. `^[a-z0-9-]+$` (digits allowed, unlike `linkButton.anchor`)                                                                         |
+| `siteSettings.navigation[].url`  | Required. Lowercase letters only: `^[a-z]+$`                                                                                                  |
+| `siteSettings.socialLinks[].url` | Required. `https`, `mailto` or `tel`                                                                                                          |
+| `page.slug`                      | Required. Generated from the internal `title`; `home` is the landing                                                                          |
+| `project.slug`                   | Required. Generated from the `en` (base) entry of the localized `title` via a source function                                                 |
+| `piece.componentKey`             | One of `animatedCard`, `formValidation`, `themeSwitcher`, `responsiveDesign`                                                                  |
+| `technology.name`                | Required                                                                                                                                      |
 
 ## Documents
 
-| Document                                      | Fields                                                                                                                                                                   |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `siteSettings` (singleton, id `siteSettings`) | `siteName`, `name` (loc), `navigation[]` {`label` loc, `isAnchor`, `url`}, `socialLinks[]` {`label`, `url`}, `location` (loc), `copyright` (loc), `backToTopLabel` (loc) |
-| `page`                                        | `title` (internal), `slug` (`home` = landing), `sections[]`, `seo` {`title` loc, `description` loc text, `ogImage`}                                                      |
-| `metric`                                      | `value` (string, e.g. "4+"), `label` (loc)                                                                                                                               |
-| `road`                                        | `period`, `title`, `description` (loc strings)                                                                                                                           |
-| `skill`                                       | `title` (loc), `description` (loc text), `iconKey`                                                                                                                       |
-| `piece`                                       | `title`, `hint` (loc), `componentKey` (list; maps to a client demo)                                                                                                      |
-| `technology`                                  | `name`, `iconKey`                                                                                                                                                        |
-| `project`                                     | `title` (loc), `slug` (from `en` title), `summary` (loc richText), `image`, `technologies[]` → technology, `repoUrl`, `liveUrl`, `link` (linkButton)                     |
-| `experience`                                  | `company`, `role` (loc), `periodStart`, `periodEnd` (empty = present), `description` (loc richText), `technologies[]` → technology                                       |
+| Document                                      | Fields                                                                                                                                                                                                                                                                                          |
+| --------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `siteSettings` (singleton, id `siteSettings`) | `siteName`, `name` (loc), `navigation[]` {`label` loc, `isAnchor`, `url`}, `socialLinks[]` {`label`, `url`}, `location` (loc), `copyright` (loc), `backToTopLabel` (loc)                                                                                                                        |
+| `page`                                        | `title` (internal), `slug` (`home` = landing), `sections[]`, `seo` {`title` loc, `description` loc text, `ogImage`}                                                                                                                                                                             |
+| `metric`                                      | `value` (string, e.g. "4+"), `label` (loc)                                                                                                                                                                                                                                                      |
+| `road`                                        | `period`, `title`, `description` (loc strings)                                                                                                                                                                                                                                                  |
+| `skill`                                       | `title` (loc), `description` (loc text), `iconKey`                                                                                                                                                                                                                                              |
+| `piece`                                       | `title`, `hint` (loc), `componentKey` (list; maps to a client demo)                                                                                                                                                                                                                             |
+| `technology`                                  | `name`, `iconKey`                                                                                                                                                                                                                                                                               |
+| `project`                                     | `title` (loc), `slug` (from `en` title), `summary` (loc richText), `image`, `technologies[]` → technology, `repoUrl`, `liveUrl`, `link` (linkButton)                                                                                                                                            |
+| `experience`                                  | `company` (loc), `experienceType` (`primary` / `secondary`), `role` (loc), `periodStart`, `periodEnd` (empty = present; both entered as `DD-MM-YYYY`, stored ISO), `descriptionPreview` (loc richText, short card text), `description` (loc richText), `technologies[]` → technology (optional) |
+
+`experience`: every field is required except `periodEnd` and `technologies`. `descriptionPreview` is the short text shown
+on the card; `description` is the full text.
 
 ## Sections (`page.sections`)
 
@@ -75,7 +78,7 @@ it when the toggle is turned off).
 | `ctaSection`        | `eyebrow`, `headline`, `description`, `tagline`, `button`                                                                                            |
 
 Text fields in sections are loc unless noted. Plain (non-localized) strings: `heroSection.role`, `siteSettings.siteName`,
-`technology.name`, `experience.company`, `metric.value`. Implementation status per section:
+`technology.name`, `metric.value`. Implementation status per section:
 [../features/README.md](../features/README.md).
 
 ## Adding or changing a section

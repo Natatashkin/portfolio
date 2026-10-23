@@ -19,8 +19,9 @@ they cannot express.
 - `index.ts` re-exports only: `export { default } from './Navigation'`, and public types by name
   (`export type { NavigationItem } from './types'`). No logic, no `export *`, no folder-level barrels,
   with two named exceptions: `components/icons/index.ts` (a set of uniform icons, imported as
-  `import { ArrowIcon } from '@/components/icons'`) and `lib/helpers/index.ts` (imported as
-  `import { safeHref, safePath } from '@/lib/helpers'`). Both re-export by name only.
+  `import { ArrowIcon } from '@/components/icons'`) and `app/src/lib/helpers/index.ts` (imported as
+  `import { safeHref, safePath } from '@/lib/helpers'`). Both re-export by name only. The Studio has the same
+  kind of barrel in `sanity-cms/schemaTypes/lib/helpers/index.ts`.
 - Consumers import by folder (`@/components/ui/Navigation`), never the inner file. Inside the folder, import types
   relatively. Route files in `app/` keep Next's names and are not re-exported.
 - A private client child sits flat in its parent's folder (`HeroSection/HeroGrid.tsx`) and is not re-exported; when a
@@ -53,6 +54,9 @@ they cannot express.
   `sanity-cms/static/sections/<type>.svg`.
 - Localized fields use the internationalized-array types (`internationalizedArrayString`, `...Text`,
   `...RichText`, `...Headline`); required ones use `requiredInAllLanguages` from `schemaTypes/lib/localized.ts`.
+- Shared Studio constants (e.g. `DATE_OPTIONS`, the `DD-MM-YYYY` date input format) live in
+  `schemaTypes/lib/constants.ts`; pure helpers (e.g. `formatDate` for list previews) in
+  `schemaTypes/lib/helpers/<name>.ts`, re-exported by name from `schemaTypes/lib/helpers/index.ts` (import `from '../lib/helpers'`).
 - Field reference: [specs/content-model.md](specs/content-model.md).
 
 ## Naming
