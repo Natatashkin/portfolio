@@ -17,10 +17,6 @@ export const skillType = defineType({
       validation: requiredInAllLanguages,
     }),
     defineField({
-      name: 'description',
-      type: 'internationalizedArrayText',
-    }),
-    defineField({
       name: 'iconKey',
       type: 'string',
       description: 'Optional. Icon name from the site code; unknown keys show no icon.',

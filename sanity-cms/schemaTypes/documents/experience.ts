@@ -10,14 +10,15 @@ const EXPERIENCE_TYPES = [
   {title: 'Secondary', value: 'secondary'},
 ] as const
 
-// Sanity passes the document untyped; read the start date through one guard.
-const startOf = (document: unknown): string | undefined =>
-  typeof document === 'object' &&
-  document !== null &&
-  'periodStart' in document &&
-  typeof document.periodStart === 'string'
-    ? document.periodStart
-    : undefined
+// Sanity passes the document untyped; read its string fields through one guard.
+const stringField = (document: unknown, name: string): string | undefined => {
+  if (typeof document !== 'object' || document === null) return undefined
+  const value: unknown = Reflect.get(document, name)
+  return typeof value === 'string' ? value : undefined
+}
+
+const isPrimary = (document: unknown) => stringField(document, 'experienceType') === 'primary'
+const isSecondary = (document: unknown) => stringField(document, 'experienceType') === 'secondary'
 
 export const experienceType = defineType({
   name: 'experience',
@@ -40,11 +41,6 @@ export const experienceType = defineType({
   fields: [
     orderRankField({type: 'experience'}),
     defineField({
-      name: 'company',
-      type: 'internationalizedArrayString',
-      validation: requiredInAllLanguages,
-    }),
-    defineField({
       name: 'experienceType',
       title: 'Experience type',
       type: 'string',
@@ -54,6 +50,11 @@ export const experienceType = defineType({
         direction: 'horizontal',
       },
       validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'company',
+      type: 'internationalizedArrayString',
+      validation: requiredInAllLanguages,
     }),
     defineField({
       name: 'role',
@@ -73,7 +74,7 @@ export const experienceType = defineType({
       description: 'Leave empty for the current position.',
       validation: (rule) =>
         rule.custom((end, context) => {
-          const start = startOf(context.document)
+          const start = stringField(context.document, 'periodStart')
           return end && start && end < start ? 'End date must not be before the start date' : true
         }),
     }),
@@ -84,19 +85,57 @@ export const experienceType = defineType({
       validation: requiredInAllLanguages,
     }),
     defineField({
-      name: 'description',
+      name: 'companyDescription',
+      title: 'Company description',
       type: 'internationalizedArrayRichText',
-      validation: requiredInAllLanguages,
     }),
     defineField({
-      name: 'technologies',
+      name: 'entries',
+      title: 'Experience entries',
       type: 'array',
+      hidden: ({document}) => !isPrimary(document),
       of: [
         defineArrayMember({
-          type: 'reference',
-          to: [{type: 'technology'}],
+          name: 'experienceEntry',
+          title: 'Experience entry',
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'title',
+              type: 'internationalizedArrayString',
+              validation: requiredInAllLanguages,
+            }),
+            defineField({
+              name: 'technologies',
+              type: 'array',
+              of: [
+                defineArrayMember({
+                  type: 'reference',
+                  to: [{type: 'technology'}, {type: 'skill'}],
+                }),
+              ],
+            }),
+            defineField({
+              name: 'description',
+              type: 'internationalizedArrayRichText',
+              validation: requiredInAllLanguages,
+            }),
+          ],
+          preview: {
+            select: {title: 'title'},
+            prepare: ({title}) => ({title: baseText(title) ?? 'Experience entry'}),
+          },
         }),
       ],
+      validation: (rule) =>
+        rule.custom((entries, context) =>
+          isPrimary(context.document) && !entries?.length ? 'Add at least one entry' : true,
+        ),
+    }),
+    defineField({
+      name: 'description',
+      type: 'internationalizedArrayRichText',
+      hidden: ({document}) => !isSecondary(document),
     }),
   ],
   preview: {
