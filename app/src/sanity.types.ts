@@ -222,8 +222,14 @@ export type Road = {
   orderRank?: string;
   period?: InternationalizedArrayString;
   title?: InternationalizedArrayString;
-  description?: InternationalizedArrayString;
+  description?: InternationalizedArrayText;
 };
+
+export type InternationalizedArrayText = Array<
+  {
+    _key: string;
+  } & InternationalizedArrayTextValue
+>;
 
 export type Piece = {
   _id: string;
@@ -257,20 +263,17 @@ export type Experience = {
   _rev: string;
   orderRank?: string;
   company?: InternationalizedArrayString;
-  experienceType: 'primary' | 'secondary';
   role?: InternationalizedArrayString;
   periodStart: string;
   periodEnd?: string;
-  descriptionPreview?: InternationalizedArrayRichText;
   companyDescription?: InternationalizedArrayRichText;
-  entries?: Array<{
+  entries: Array<{
     title?: InternationalizedArrayString;
     technologies?: ArrayOf<TechnologyReference | SkillReference>;
     description?: InternationalizedArrayRichText;
     _type: 'experienceEntry';
     _key: string;
   }>;
-  description?: InternationalizedArrayRichText;
 };
 
 export type InternationalizedArrayRichText = Array<
@@ -405,12 +408,6 @@ export type SanityImageHotspot = {
   height: number;
   width: number;
 };
-
-export type InternationalizedArrayText = Array<
-  {
-    _key: string;
-  } & InternationalizedArrayTextValue
->;
 
 export type InternationalizedArrayHeadline = Array<
   {
@@ -619,6 +616,7 @@ export type AllSanitySchemaTypes =
   | Metric
   | InternationalizedArrayString
   | Road
+  | InternationalizedArrayText
   | Piece
   | Skill
   | Experience
@@ -631,7 +629,6 @@ export type AllSanitySchemaTypes =
   | Page
   | SanityImageCrop
   | SanityImageHotspot
-  | InternationalizedArrayText
   | InternationalizedArrayHeadline
   | SiteSettings
   | Headline

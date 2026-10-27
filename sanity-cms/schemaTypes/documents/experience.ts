@@ -5,20 +5,12 @@ import {DATE_OPTIONS} from '../lib/constants'
 import {formatDate} from '../lib/helpers'
 import {baseText, requiredInAllLanguages} from '../lib/localized'
 
-const EXPERIENCE_TYPES = [
-  {title: 'Primary', value: 'primary'},
-  {title: 'Secondary', value: 'secondary'},
-] as const
-
 // Sanity passes the document untyped; read its string fields through one guard.
 const stringField = (document: unknown, name: string): string | undefined => {
   if (typeof document !== 'object' || document === null) return undefined
   const value: unknown = Reflect.get(document, name)
   return typeof value === 'string' ? value : undefined
 }
-
-const isPrimary = (document: unknown) => stringField(document, 'experienceType') === 'primary'
-const isSecondary = (document: unknown) => stringField(document, 'experienceType') === 'secondary'
 
 export const experienceType = defineType({
   name: 'experience',
@@ -40,17 +32,6 @@ export const experienceType = defineType({
   ],
   fields: [
     orderRankField({type: 'experience'}),
-    defineField({
-      name: 'experienceType',
-      title: 'Experience type',
-      type: 'string',
-      options: {
-        list: [...EXPERIENCE_TYPES],
-        layout: 'radio',
-        direction: 'horizontal',
-      },
-      validation: (rule) => rule.required(),
-    }),
     defineField({
       name: 'company',
       type: 'internationalizedArrayString',
@@ -79,12 +60,6 @@ export const experienceType = defineType({
         }),
     }),
     defineField({
-      name: 'descriptionPreview',
-      title: 'Description preview',
-      type: 'internationalizedArrayRichText',
-      validation: requiredInAllLanguages,
-    }),
-    defineField({
       name: 'companyDescription',
       title: 'Company description',
       type: 'internationalizedArrayRichText',
@@ -93,7 +68,6 @@ export const experienceType = defineType({
       name: 'entries',
       title: 'Experience entries',
       type: 'array',
-      hidden: ({document}) => !isPrimary(document),
       of: [
         defineArrayMember({
           name: 'experienceEntry',
@@ -127,15 +101,7 @@ export const experienceType = defineType({
           },
         }),
       ],
-      validation: (rule) =>
-        rule.custom((entries, context) =>
-          isPrimary(context.document) && !entries?.length ? 'Add at least one entry' : true,
-        ),
-    }),
-    defineField({
-      name: 'description',
-      type: 'internationalizedArrayRichText',
-      hidden: ({document}) => !isSecondary(document),
+      validation: (rule) => rule.required().min(1),
     }),
   ],
   preview: {

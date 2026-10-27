@@ -15,6 +15,7 @@ export const roadType = defineType({
     defineField({
       name: 'period',
       type: 'internationalizedArrayString',
+      validation: requiredInAllLanguages,
     }),
     defineField({
       name: 'title',
@@ -23,7 +24,7 @@ export const roadType = defineType({
     }),
     defineField({
       name: 'description',
-      type: 'internationalizedArrayString',
+      type: 'internationalizedArrayText',
     }),
   ],
   preview: {
