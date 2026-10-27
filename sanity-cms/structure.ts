@@ -11,6 +11,7 @@ const CONTENT_TYPES = [
   'road',
   'metric',
   'technology',
+  'downloadDocument',
 ] as const
 
 export const structure: StructureResolver = (S, context) =>

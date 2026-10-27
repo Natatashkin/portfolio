@@ -36,24 +36,20 @@ export const careerSectionType = defineType({
       ],
     }),
     defineField({
-      name: 'caption',
-      type: 'internationalizedArrayString',
-      group: 'content',
-    }),
-    defineField({
       name: 'tagline',
       type: 'internationalizedArrayString',
       group: 'content',
     }),
     defineField({
-      name: 'image',
+      name: 'cover',
       type: 'responsiveImage',
       group: 'media',
     }),
     defineField({
-      name: 'button',
-      type: 'linkButton',
+      name: 'buttons',
+      type: 'array',
       group: 'actions',
+      of: [defineArrayMember({type: 'linkButton'})],
     }),
     defineField({
       name: 'anchorId',

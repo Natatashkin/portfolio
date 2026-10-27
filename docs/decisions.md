@@ -104,3 +104,23 @@ created in `document.body` outside React. After a 150 ms timer `LanguageAnnounce
 announces; focus uses `preventScroll` because the scroll position is already settled, and the effect cleanup clears
 both timers. An entry older than 10 s is discarded (stale: no announcement, no focus move). Details:
 [features/language-switcher.md](features/language-switcher.md).
+
+## D15. Download link in `linkButton`
+
+Downloadable files live in a `downloadDocument` collection ("Documents" in Studio): each document has a `title` and a
+`files` object with one PDF per language (`en` required, `uk` optional). The CV is one such document, so a new CV needs no deploy. A visitor
+does not think of switching the site language to get the other CV, so the Career section shows one button per language
+version (`buttons[]`), whatever the site locale. `linkType` gets a third value, `download` (shown as "Download"), and
+the button has a `download` object: a `document` reference and the `language` version of it (a reference cannot carry
+the language, so both sit in one object); label, variant and icon work as for any button, so the
+author translates each label in Studio. The app reads `download.document->files[download.language].asset->url` in GROQ (only for
+`linkType == "download"`), passes it through `safeHref` (D6) and appends `?dl=<filename>` (the asset's
+`originalFilename`, fallback `document.pdf`), because the `download` attribute is ignored for a cross-origin CDN URL
+and the Sanity CDN answers `?dl=` with `Content-Disposition: attachment`. Each `file` field sets
+`options.accept: 'application/pdf'`, so the upload picker offers PDF only (a hint of the browser file dialog, not a hard
+server-side check). The files are a plain object, not `internationalizedArrayFile`: the plugin's array UI picked every
+version at once and the object is simpler to read in GROQ.
+Rejected: one document per language file (the picker lists "CV" twice and the author tells them apart by hand); a file in `app/public/` (every CV change is a commit and a deploy), a file
+inside each button (the author would upload it again for every button), a fixed `en` / `uk` pair in `siteSettings`
+(not reusable for other documents) and picking the file by the site locale (the visitor would have to switch the site
+language).

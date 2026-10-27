@@ -21,6 +21,18 @@ type ArrayOf<T> = Array<
 >;
 
 // Source: schema.json
+export type DownloadDocumentReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'downloadDocument';
+};
+
+export type Download = {
+  document: DownloadDocumentReference;
+  language: 'en' | 'uk';
+};
+
 export type CtaSection = {
   _type: 'ctaSection';
   eyebrow?: InternationalizedArrayString;
@@ -153,10 +165,13 @@ export type CareerSection = {
       _key: string;
     } & RoadReference
   >;
-  caption?: InternationalizedArrayString;
   tagline?: InternationalizedArrayString;
-  image?: ResponsiveImage;
-  button?: LinkButton;
+  cover?: ResponsiveImage;
+  buttons?: Array<
+    {
+      _key: string;
+    } & LinkButton
+  >;
   anchorId?: string;
 };
 
@@ -306,8 +321,9 @@ export type Project = {
 export type LinkButton = {
   _type: 'linkButton';
   label?: InternationalizedArrayString;
-  linkType?: 'internal' | 'external';
+  linkType?: 'internal' | 'external' | 'download';
   url?: string;
+  download?: Download;
   hasAnchor?: boolean;
   anchor?: string;
   variant?: 'primary' | 'secondary' | 'accent';
@@ -439,6 +455,35 @@ export type SiteSettings = {
   location?: InternationalizedArrayString;
   copyright?: InternationalizedArrayString;
   backToTopLabel?: InternationalizedArrayString;
+};
+
+export type SanityFileAssetReference = {
+  _ref: string;
+  _type: 'reference';
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset';
+};
+
+export type DownloadDocument = {
+  _id: string;
+  _type: 'downloadDocument';
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  orderRank?: string;
+  title: string;
+  files?: {
+    en: {
+      asset?: SanityFileAssetReference;
+      media?: unknown;
+      _type: 'file';
+    };
+    uk?: {
+      asset?: SanityFileAssetReference;
+      media?: unknown;
+      _type: 'file';
+    };
+  };
 };
 
 export type Headline = Array<{
@@ -597,6 +642,8 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+  | DownloadDocumentReference
+  | Download
   | CtaSection
   | TechnologyReference
   | TechStackSection
@@ -631,6 +678,8 @@ export type AllSanitySchemaTypes =
   | SanityImageHotspot
   | InternationalizedArrayHeadline
   | SiteSettings
+  | SanityFileAssetReference
+  | DownloadDocument
   | Headline
   | RichText
   | InternationalizedArrayHeadlineValue
@@ -708,7 +757,7 @@ export type PAGE_QUERY_RESULT = {
           alt: string | null;
         } | null;
         ctaButton: {
-          linkType: 'external' | 'internal' | null;
+          linkType: 'download' | 'external' | 'internal' | null;
           url: string | null;
           hasAnchor: boolean | null;
           anchor: string | null;

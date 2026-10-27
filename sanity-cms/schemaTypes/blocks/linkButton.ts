@@ -2,11 +2,13 @@ import {LinkIcon} from '@sanity/icons/Link'
 import {ConditionalDescription} from '../../components/ConditionalDescription'
 import {createElement} from 'react'
 import {defineField, defineType} from 'sanity'
+import {LANGUAGES} from '../lib/languages'
 import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 const LINK_TYPES = [
   {title: 'Internal', value: 'internal'},
   {title: 'External', value: 'external'},
+  {title: 'Download', value: 'download'},
 ] as const
 
 type LinkButtonValue = {
@@ -16,6 +18,8 @@ type LinkButtonValue = {
 
 // Sanity passes the parent object untyped; read it through one helper.
 const linkButtonOf = (parent: unknown) => parent as LinkButtonValue | undefined
+
+const isDownload = (parent: unknown) => linkButtonOf(parent)?.linkType === 'download'
 
 export const linkButtonType = defineType({
   name: 'linkButton',
@@ -48,7 +52,8 @@ export const linkButtonType = defineType({
     defineField({
       name: 'url',
       title: 'URL',
-      type: 'url',
+      // `string`, not `url`: the built-in url type rejects internal paths ("about"); the rules below cover both link types.
+      type: 'string',
       components: {
         field: (props) =>
           createElement(ConditionalDescription, {
@@ -60,9 +65,14 @@ export const linkButtonType = defineType({
             },
           }),
       },
+      hidden: ({parent}) => isDownload(parent),
       validation: (rule) =>
         rule.custom((value, context) => {
           const linkType = linkButtonOf(context.parent)?.linkType
+
+          if (linkType === 'download') {
+            return true
+          }
 
           if (!value) {
             return 'This field is required'
@@ -93,20 +103,48 @@ export const linkButtonType = defineType({
           }
         }),
     }),
+    // A reference cannot carry the language, so the document and its language version sit in one object.
+    // Hidden fields are not validated, so the inner `required` rules apply to `download` only.
+    defineField({
+      name: 'download',
+      type: 'object',
+      hidden: ({parent}) => !isDownload(parent),
+      options: {columns: 1},
+      fields: [
+        defineField({
+          name: 'document',
+          type: 'reference',
+          to: [{type: 'downloadDocument'}],
+          validation: (rule) => rule.required(),
+        }),
+        defineField({
+          name: 'language',
+          type: 'string',
+          description: 'Which language version of the document this button downloads.',
+          options: {
+            list: LANGUAGES.map(({id, title}) => ({title, value: id})),
+            layout: 'radio',
+            direction: 'horizontal',
+          },
+          validation: (rule) => rule.required(),
+        }),
+      ],
+    }),
     defineField({
       name: 'hasAnchor',
       title: 'Has anchor?',
       type: 'boolean',
+      hidden: ({parent}) => isDownload(parent),
     }),
     defineField({
       name: 'anchor',
       title: 'Anchor',
       type: 'string',
       description: 'Enter anchor without # and spaces',
-      hidden: ({parent}) => !linkButtonOf(parent)?.hasAnchor,
+      hidden: ({parent}) => isDownload(parent) || !linkButtonOf(parent)?.hasAnchor,
       validation: (rule) =>
         rule.custom((value, context) => {
-          if (!linkButtonOf(context.parent)?.hasAnchor) {
+          if (isDownload(context.parent) || !linkButtonOf(context.parent)?.hasAnchor) {
             return true
           }
 

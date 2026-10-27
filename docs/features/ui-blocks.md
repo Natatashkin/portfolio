@@ -25,6 +25,11 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
       matches `^[a-z]+(?:-[a-z]+)*$` (the Studio regex, copied by hand); otherwise it is dropped.
 - [x] External links carry a visually hidden "(opens in a new tab)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.opensInNewTab`); the string is the same as in `SocialLinks`.
+- [ ] `linkType: download`: renders `<a href download>` with the PDF URL of `download.document` in `download.language`,
+      after `safeHref`, with `?dl=<originalFilename>` (fallback `document.pdf`) appended; no `target="_blank"`. Renders nothing when there is no file or
+      the URL is unsafe. Props gain `fileUrl` (resolved in GROQ, D15).
+- [ ] A download link carries a visually hidden "(PDF download)" after the content, from `messages/{en,uk}.json`
+      (`LinkButton.download`).
 - [x] `variant` is `primary` (default when empty or unknown), `secondary` or `accent`; classes `button--<variant>`.
 - [x] `hasIcon` appends `ArrowIcon` after the label; the icon is `aria-hidden` with `focusable="false"`.
 - [x] Styles: tokens only (`--color-*`, `--space-*`, `--radius-pill`, `--font-base`), `focus-visible` uses the
@@ -126,7 +131,8 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
   - Unknown `variant` from the CMS (an API write can skip the schema): `LinkButton` falls back to `button--primary`.
     `Button` merges classes with `clsx`, which drops an `undefined` class.
   - `hasAnchor` with an `anchor` that does not match the pattern: the anchor is ignored.
-  - `hasAnchor` with `linkType: external`: the anchor is ignored.
+  - `hasAnchor` with `linkType: external` or `download`: the anchor is ignored.
+  - `download` with a stale `url` left from an earlier link type: `url` is ignored, the link comes from `download`.
 
 ## Files
 

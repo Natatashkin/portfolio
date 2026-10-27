@@ -2,6 +2,7 @@ import {headlineType} from './blocks/headline'
 import {linkButtonType} from './blocks/linkButton'
 import {responsiveImageType} from './blocks/responsiveImage'
 import {richTextType} from './blocks/richText'
+import {downloadDocumentType} from './documents/downloadDocument'
 import {experienceType} from './documents/experience'
 import {metricType} from './documents/metric'
 import {pageType} from './documents/page'
@@ -29,6 +30,7 @@ export const schemaTypes = [
   roadType,
   metricType,
   technologyType,
+  downloadDocumentType,
   // Sections
   ...sectionTypes,
 ]
