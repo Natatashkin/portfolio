@@ -22,7 +22,8 @@
     }
   },
   "LinkButton": {
-    "opensInNewTab": "відкривається в новій вкладці"
+    "opensInNewTab": "відкривається в новій вкладці",
+    "download": "завантажити файл"
   },
   "SocialLinks": {
     "label": "Соціальні мережі",

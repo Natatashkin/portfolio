@@ -60,6 +60,9 @@ export const INTERNAL_PATH_PATTERN = /^[a-z0-9]+(?:[-/][a-z0-9]+)*$/i;
 // Editor-entered URLs reach `href`; anything but https, mailto and tel is dropped.
 export const ALLOWED_LINK_PROTOCOLS = ['https:', 'mailto:', 'tel:'];
 
+// Name offered to the browser when a downloaded Sanity file has no original filename.
+export const DEFAULT_DOWNLOAD_FILENAME = 'document.pdf';
+
 // A Sanity asset `_ref` encodes the intrinsic size ("image-<id>-1200x800-jpg").
 export const IMAGE_REF_PATTERN = /^image-[A-Za-z0-9]+-(\d+)x(\d+)-[a-z]+$/;
 

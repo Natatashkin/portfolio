@@ -115,7 +115,7 @@ the button has a `download` object: a `document` reference and the `language` ve
 the language, so both sit in one object); label, variant and icon work as for any button, so the
 author translates each label in Studio. The app reads `download.document->files[download.language].asset->url` in GROQ (only for
 `linkType == "download"`), passes it through `safeHref` (D6) and appends `?dl=<filename>` (the asset's
-`originalFilename`, fallback `document.pdf`), because the `download` attribute is ignored for a cross-origin CDN URL
+`originalFilename`, fallback `DEFAULT_DOWNLOAD_FILENAME` (`document.pdf`)), because the `download` attribute is ignored for a cross-origin CDN URL
 and the Sanity CDN answers `?dl=` with `Content-Disposition: attachment`. Each `file` field sets
 `options.accept: 'application/pdf'`, so the upload picker offers PDF only (a hint of the browser file dialog, not a hard
 server-side check). The files are a plain object, not `internationalizedArrayFile`: the plugin's array UI picked every

@@ -15,8 +15,9 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 
 ### LinkButton (server)
 
-- [x] Props are `NonNullable<SectionOf<'heroSection'>['ctaButton']>` (TypeGen, follows the GROQ projection):
-      `label`, `linkType`, `url`, `hasAnchor`, `anchor`, `variant`, `hasIcon` (`LinkButton/types.ts`).
+- [x] Props are built from the Studio schema type `LinkButton` (TypeGen) and not from any section: `linkType`, `url`,
+      `hasAnchor`, `anchor`, `variant`, `hasIcon` (each may be `null`, as GROQ returns empty fields), plus `label`
+      (the localized string resolved in GROQ), `fileUrl` and `fileName` (`LinkButton/types.ts`).
 - [x] Renders nothing without `label` or `url`, or when the link does not pass the safety check.
 - [x] `linkType: external`: `url` goes through `safeHref`; the `<a>` gets `target="_blank"` and
       `rel="noopener noreferrer"`.
@@ -26,9 +27,9 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 - [x] External links carry a visually hidden "(opens in a new tab)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.opensInNewTab`); the string is the same as in `SocialLinks`.
 - [ ] `linkType: download`: renders `<a href download>` with the PDF URL of `download.document` in `download.language`,
-      after `safeHref`, with `?dl=<originalFilename>` (fallback `document.pdf`) appended; no `target="_blank"`. Renders nothing when there is no file or
-      the URL is unsafe. Props gain `fileUrl` (resolved in GROQ, D15).
-- [ ] A download link carries a visually hidden "(PDF download)" after the content, from `messages/{en,uk}.json`
+      after `safeHref`, with `?dl=<originalFilename>` (fallback `document.pdf`, `DEFAULT_DOWNLOAD_FILENAME`) appended; no `target="_blank"`. Renders nothing when there is no file or
+      the URL is unsafe. Props gain `fileUrl` and `fileName` (resolved in GROQ, D15).
+- [ ] A download link carries a visually hidden "(download file)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.download`).
 - [x] `variant` is `primary` (default when empty or unknown), `secondary` or `accent`; classes `button--<variant>`.
 - [x] `hasIcon` appends `ArrowIcon` after the label; the icon is `aria-hidden` with `focusable="false"`.

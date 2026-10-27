@@ -22,7 +22,8 @@
     }
   },
   "LinkButton": {
-    "opensInNewTab": "opens in a new tab"
+    "opensInNewTab": "opens in a new tab",
+    "download": "download file"
   },
   "SocialLinks": {
     "label": "Social links",

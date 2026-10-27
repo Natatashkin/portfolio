@@ -1,6 +1,15 @@
-import type { SectionOf } from '@/lib/sanity/types';
+import type { LinkButton } from '@/sanity.types';
 
-// Derived from the TypeGen result of PAGE_QUERY, so it follows the GROQ projection.
-export type LinkButtonProps = NonNullable<
-  SectionOf<'heroSection'>['ctaButton']
->;
+type LinkButtonField =
+  'linkType' | 'url' | 'hasAnchor' | 'anchor' | 'variant' | 'hasIcon';
+
+// Field types come from the Studio schema (TypeGen); GROQ returns an empty field as `null`.
+// `label`, `fileUrl` and `fileName` are resolved in GROQ: the localized label as a string, the file
+// from `download.document->files[download.language]` (read only for `linkType: download`, D15).
+export type LinkButtonProps = {
+  [Key in LinkButtonField]?: NonNullable<LinkButton[Key]> | null;
+} & {
+  label?: string | null;
+  fileUrl?: string | null;
+  fileName?: string | null;
+};
