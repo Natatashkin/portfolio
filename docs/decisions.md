@@ -124,3 +124,10 @@ Rejected: one document per language file (the picker lists "CV" twice and the au
 inside each button (the author would upload it again for every button), a fixed `en` / `uk` pair in `siteSettings`
 (not reusable for other documents) and picking the file by the site locale (the visitor would have to switch the site
 language).
+
+## D16. Shared `DotGrid` (was the hero's `HeroGrid`)
+
+The pointer-lit dot grid moves from `components/sections/HeroSection/` to `components/ui/DotGrid` because the Career
+section uses it too (desktop `lg` up only); the convention is to move a private child to `components/ui/` when a second
+component needs it. The `HERO_GRID_*` constants become `DOT_GRID_*`. Behaviour is unchanged. Status: planned with
+[features/career-section.md](features/career-section.md); the code moves in its first block.

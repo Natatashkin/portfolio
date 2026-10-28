@@ -21,7 +21,7 @@ starts; features built before the spec-driven workflow are marked "done (documen
 
 | Feature               | Notes                                                                                 |
 | --------------------- | ------------------------------------------------------------------------------------- |
-| Career section        |                                                                                       |
+| Career section        | Draft: [career-section.md](career-section.md); also extracts the shared `DotGrid`     |
 | What I do section     |                                                                                       |
 | Playground section    | Needs a `componentKey` → demo map                                                     |
 | Projects section      | `projects/` route is a placeholder                                                    |
