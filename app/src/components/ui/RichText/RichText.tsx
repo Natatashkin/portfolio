@@ -1,4 +1,5 @@
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
+import clsx from 'clsx';
 import { safeHref } from '@/lib/helpers';
 import type { RichText as RichTextValue } from '@/sanity.types';
 import styles from './RichText.module.scss';
@@ -39,7 +40,7 @@ const components: PortableTextComponents = {
 };
 
 const RichText = ({ value, className }: Props) => (
-  <div className={[styles.richText, className].filter(Boolean).join(' ')}>
+  <div className={clsx(styles.richText, className)}>
     <PortableText value={value} components={components} />
   </div>
 );

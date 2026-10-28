@@ -1,10 +1,10 @@
 import Container from '@/components/ui/Container';
+import DotGrid from '@/components/ui/DotGrid';
 import Headline from '@/components/ui/Headline';
 import LinkButton from '@/components/ui/LinkButton';
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import RichText from '@/components/ui/RichText';
 import type { SectionOf } from '@/lib/sanity/types';
-import HeroGrid from './HeroGrid';
 import HeroMetricNumber from './HeroMetricNumber';
 import styles from './HeroSection.module.scss';
 
@@ -23,7 +23,7 @@ const HeroSection = ({
   <section id={anchorId ?? undefined} className={styles.hero}>
     <Container>
       <div className={styles.hero__container}>
-        <HeroGrid className={styles.hero__grid} />
+        <DotGrid className={styles.hero__grid} />
         <div className={styles.hero__heading}>
           {role && <p className={styles.hero__role}>{role}</p>}
           {fullname && <h1 className={styles.hero__fullname}>{fullname}</h1>}

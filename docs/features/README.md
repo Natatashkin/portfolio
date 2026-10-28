@@ -9,7 +9,7 @@ starts; features built before the spec-driven workflow are marked "done (documen
 | ----------------- | ---------------------------------------------------------------------------------------------------------- | ------------------ | -------------------------------------------- |
 | Header            | Header, Logo, Navigation, BurgerMenu, skip link, theme switcher slot                                       | done               | [header.md](header.md)                       |
 | Footer            | Footer, SocialLinks, copyright                                                                             | in progress        | [footer.md](footer.md)                       |
-| Hero section      | HeroSection, HeroGrid, HeroMetricNumber, metrics                                                           | done               | [hero-section.md](hero-section.md)           |
+| Hero section      | HeroSection, DotGrid, HeroMetricNumber, metrics                                                            | done               | [hero-section.md](hero-section.md)           |
 | UI blocks         | LinkButton, Button, Headline, RichText, ResponsiveImage, Container, InView                                 | done               | [ui-blocks.md](ui-blocks.md)                 |
 | Theming           | Light/dark themes, no-flash script, `useTheme`                                                             | done               | [theming.md](theming.md)                     |
 | i18n and routing  | Locales, proxy, localized 404, `messages/`                                                                 | done               | [i18n-routing.md](i18n-routing.md)           |

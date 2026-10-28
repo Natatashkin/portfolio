@@ -1,21 +1,22 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import clsx from 'clsx';
 import {
-  HERO_GRID_SETTLE_DISTANCE,
-  HERO_GRID_SMOOTHING,
-  HERO_GRID_START_X,
-  HERO_GRID_START_Y,
+  DOT_GRID_SETTLE_DISTANCE,
+  DOT_GRID_SMOOTHING,
+  DOT_GRID_START_X,
+  DOT_GRID_START_Y,
   POINTER_QUERY
 } from '@/lib/constants';
-import styles from './HeroGrid.module.scss';
+import styles from './DotGrid.module.scss';
 
 type Props = {
   className?: string;
 };
 
 // Dot grid lit around the cursor. Pointer-only: touch and reduced-motion keep the static spot.
-const HeroGrid = ({ className }: Props) => {
+const DotGrid = ({ className }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -24,22 +25,22 @@ const HeroGrid = ({ className }: Props) => {
 
     const startTracking = (): (() => void) => {
       const { width, height } = element.getBoundingClientRect();
-      let currentX = width * HERO_GRID_START_X;
-      let currentY = height * HERO_GRID_START_Y;
+      let currentX = width * DOT_GRID_START_X;
+      let currentY = height * DOT_GRID_START_Y;
       let targetX = currentX;
       let targetY = currentY;
       let frame = 0;
       let isVisible = true;
 
       const paint = () => {
-        currentX += (targetX - currentX) * HERO_GRID_SMOOTHING;
-        currentY += (targetY - currentY) * HERO_GRID_SMOOTHING;
+        currentX += (targetX - currentX) * DOT_GRID_SMOOTHING;
+        currentY += (targetY - currentY) * DOT_GRID_SMOOTHING;
         element.style.setProperty('--spot-x', `${currentX}px`);
         element.style.setProperty('--spot-y', `${currentY}px`);
 
         const isSettled =
-          Math.abs(targetX - currentX) < HERO_GRID_SETTLE_DISTANCE &&
-          Math.abs(targetY - currentY) < HERO_GRID_SETTLE_DISTANCE;
+          Math.abs(targetX - currentX) < DOT_GRID_SETTLE_DISTANCE &&
+          Math.abs(targetY - currentY) < DOT_GRID_SETTLE_DISTANCE;
         frame = isSettled ? 0 : requestAnimationFrame(paint);
       };
 
@@ -86,9 +87,9 @@ const HeroGrid = ({ className }: Props) => {
     <div
       ref={ref}
       aria-hidden="true"
-      className={[styles.heroGrid, className].filter(Boolean).join(' ')}
+      className={clsx(styles.dotGrid, className)}
     />
   );
 };
 
-export default HeroGrid;
+export default DotGrid;

@@ -29,7 +29,7 @@ with a quote and key metrics. Also the reference implementation for every other 
   `alt`), `ctaButton` (all `linkButton` fields) and `metrics` (`value`, `label`), each localized field with the `en`
   fallback. Dangling references are filtered (`defined(@->_id)`). Cache tags: `page`, `technology`, `skill`, `metric`.
 - **UI:** `HeroSection` is a Server Component typed with `SectionOf<'heroSection'>`. Client children:
-  - `HeroGrid`: follows the pointer with eased `requestAnimationFrame` updates of CSS variables; runs only for
+  - `DotGrid` (shared, `components/ui/DotGrid`): follows the pointer with eased `requestAnimationFrame` updates of CSS variables; runs only for
     `(hover: hover) and (pointer: fine)` without reduced motion, pauses off screen (`IntersectionObserver`).
   - `HeroMetricNumber`: server HTML is fully visible; after hydration it is hidden and revealed with an opacity and
     transform transition when in view (`useInView`, `useIsMounted`). With reduced motion it stays visible.
@@ -38,7 +38,8 @@ with a quote and key metrics. Also the reference implementation for every other 
 
 ## Files
 
-- `app/src/components/sections/HeroSection/`: `HeroSection`, `HeroGrid`, `HeroMetricNumber` and their modules.
+- `app/src/components/sections/HeroSection/`: `HeroSection`, `HeroMetricNumber` and their modules.
+- `app/src/components/ui/DotGrid/`: the dot grid, shared with the career section.
 - `app/src/lib/sanity/queries.ts`: `heroSection` branch and `PAGE_QUERY_TAGS`.
 - `app/src/hooks/useInView.ts`, `app/src/hooks/useIsMounted.ts`.
 

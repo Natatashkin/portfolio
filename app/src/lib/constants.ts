@@ -66,14 +66,14 @@ export const DEFAULT_DOWNLOAD_FILENAME = 'document.pdf';
 // A Sanity asset `_ref` encodes the intrinsic size ("image-<id>-1200x800-jpg").
 export const IMAGE_REF_PATTERN = /^image-[A-Za-z0-9]+-(\d+)x(\d+)-[a-z]+$/;
 
-// Hero grid pointer tracking.
+// Dot grid pointer tracking.
 
 // Easing factor per frame: how much of the remaining distance to the pointer is covered.
-export const HERO_GRID_SMOOTHING = 0.12;
+export const DOT_GRID_SMOOTHING = 0.12;
 
 // In pixels: closer than this to the pointer counts as settled and the animation loop stops.
-export const HERO_GRID_SETTLE_DISTANCE = 0.5;
+export const DOT_GRID_SETTLE_DISTANCE = 0.5;
 
 // Resting position as fractions of the element's width and height.
-export const HERO_GRID_START_X = 0.5;
-export const HERO_GRID_START_Y = 0.4;
+export const DOT_GRID_START_X = 0.5;
+export const DOT_GRID_START_Y = 0.4;

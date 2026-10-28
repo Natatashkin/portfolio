@@ -10,7 +10,7 @@
 - Tokens, themes with no-flash script, `useTheme`, `ThemeSwitcher`.
 - UI blocks: Button, LinkButton, Headline, RichText, ResponsiveImage, Container, InView ([features/ui-blocks.md](features/ui-blocks.md)). Logo, Navigation and SocialLinks are part of the header and footer.
 - Layout: Header, BurgerMenu, Footer. Lenis `SmoothScrollProvider` with GSAP loaded after idle ([features/smooth-scroll.md](features/smooth-scroll.md)).
-- `HeroSection` (with `HeroGrid`, `HeroMetricNumber`).
+- `HeroSection` (with `HeroMetricNumber`) and the shared `DotGrid`.
 - Language switcher ([features/language-switcher.md](features/language-switcher.md)) in the desktop header and the burger menu.
 - Theme switcher: label shows the target theme, the chosen theme survives a language switch ([features/theme-switcher.md](features/theme-switcher.md)).
 

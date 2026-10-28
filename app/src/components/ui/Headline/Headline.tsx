@@ -1,5 +1,6 @@
 import type { ElementType } from 'react';
 import { PortableText, type PortableTextComponents } from '@portabletext/react';
+import clsx from 'clsx';
 import InView from '@/components/ui/InView';
 import type { Headline as HeadlineValue } from '@/sanity.types';
 import styles from './Headline.module.scss';
@@ -22,13 +23,11 @@ const components: PortableTextComponents = {
 };
 
 const Headline = ({ value, as: Tag = 'h2', shine, className }: Props) => {
-  const classNames = [
+  const classNames = clsx(
     styles.headline,
     shine && styles['headline--shine'],
     className
-  ]
-    .filter(Boolean)
-    .join(' ');
+  );
   const content = <PortableText value={value} components={components} />;
 
   return shine ? (
