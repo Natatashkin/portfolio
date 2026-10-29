@@ -110,21 +110,16 @@ must not change; later work adds only the reveal and the pulse to it.
 
 ## Decisions
 
-- D16: `HeroGrid` becomes the shared `DotGrid` (a second component needs it).
-- D17: `CareerSteps` renders both variants and keeps one after hydration (no repeated ids; duplicate markup until then).
-- D18: the reveal uses GSAP + ScrollTrigger, not CSS `useInView` (staggered per breakpoint, driven by scroll); the
-  hidden state comes from GSAP only. The pulse runs continuously: an endless animation over 5s is a WCAG 2.2.2
-  concern, accepted because the ring is decorative and off under reduced motion.
-- D19: Caveat is the handwriting accent font (about 50 KB latin, 94 KB `uk`, accepted, re-check in production). The
-  tagline is white with a bottom scrim on the photo (`--color-on-primary` turns dark in dark theme).
-- D20: the tagline needs a cover or steps (it lives in the media block).
+In [../decisions.md](../decisions.md): D16 shared `DotGrid`, D17 `CareerSteps` rendered per viewport, D18 GSAP reveal and
+the continuous pulse, D19 Caveat as the handwriting accent, D20 the tagline needs a cover or steps. Here:
+
 - Card positions are CSS by index, not data: designed for four steps, the author controls the count.
-- The plain list is a fallback that is also animated and shows markers (author decision); its lines are separate
-  tweens with no shared timeline, because the stagger timing already puts the desktop line at each marker.
-- The step `start` is a function capped at `maxScroll - 1`: a short list near the page end could not be scrolled up
-  to a fixed line; GSAP's `clamp()` on `start` left progress at 0 and on `end` counted the trigger as passed at load.
-- `--color-accent-ink` for the eyebrow rule (shared mixin, so the hero's too) and, from `lg`, the tagline underline,
-  because `--color-accent` is too pale on the light page background; markers, lines and the pulse ring keep
-  `--color-accent`.
-- One mobile breakpoint value in TypeScript, `MOBILE_QUERY` (mirrors `lg`); `useIsMobile` stays in `hooks/`.
-- Two CV buttons (one per language, D15) render in a row; the section has no minimum height.
+- The plain list is an animated fallback with markers (author decision); its lines are separate tweens, no shared
+  timeline, because the stagger timing already puts the desktop line at each marker.
+- The step `start` is a function capped at `maxScroll - 1`: a short list near the page end could not be scrolled up to
+  a fixed line, and GSAP's `clamp()` on `start`/`end` did not fix that.
+- `--color-accent-ink` for the eyebrow rule (shared mixin, so the hero's too) and, from `lg`, the tagline underline:
+  `--color-accent` is too pale on the light page background. Markers, lines and the pulse keep `--color-accent`.
+- On the photo the tagline is white with a bottom scrim (`--color-on-primary` turns dark in the dark theme).
+- `CareerText` owns the `career__textBody` ref and takes its class as a prop.
+- Two CV buttons (D15) in a row; no minimum height; `MOBILE_QUERY` mirrors `lg`; `useIsMobile` stays in `hooks/`.

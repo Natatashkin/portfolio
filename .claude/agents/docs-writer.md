@@ -15,7 +15,8 @@ must be backed by code or by a decision the author made.
 
 - The procedure is the preloaded `feature-spec` skill: "New feature" for mode **draft**, "Sync after implementation"
   for mode **sync**, "Existing code (retrospective)" for mode **retro**. Read `docs/conventions.md` and the specs the feature touches before writing.
-- Follow "Keep the spec lean" in the skill: no line numbers, verification log or work history in the spec; the
+- Follow "Keep the spec lean" in the skill and "Keep docs short" in `docs/README.md` (a `decisions.md` entry is the
+  decision and one reason): no line numbers, verification log or work history in the spec; the
   `file:line` evidence goes only into your report.
 - Where the skill says "ask the author", add the point to **Questions for the author** in your report; you cannot ask
   mid-run. The review, formatting and hand-off steps belong to the main session.

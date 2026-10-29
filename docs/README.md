@@ -47,3 +47,15 @@ skills in `.claude/skills/`: `work-block` (one block from change to hand-off),
    decisions; the author reviews it and the feature is `done`.
 
 `specs/` holds cross-cutting documents that change rarely; `features/` holds one spec per feature.
+
+## Keep docs short
+
+Each fact lives in one place; the others link to it.
+
+- **`decisions.md`:** the decision and one reason, a few lines; add an accepted cost only if it changes how someone
+  must work. Details, rejected alternatives and implementation go in the feature spec or the code.
+- **Feature specs:** what the feature does and the rules a later change must keep, about 150 lines or fewer. Do not
+  retell the code, repeat token values or CSS numbers, or restate the project skills.
+- **When a spec grows**, cut duplicates between its Requirements, Design and Decisions before adding more.
+
+The `docs-writer` subagent follows these rules.
