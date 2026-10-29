@@ -43,7 +43,7 @@ A private child gets its own folder (component, module, `index.ts`) and is impor
    no non-null `!`; prefer `import type`.
 6. **Styles.** SCSS Module, BEM in camelCase (`.card`, `.card__title`, `.card--accent`), nest with `&__` and `&--`, no
    element-of-element chains. Colors, spacing and radii only from tokens (`var(--...)`); no hard-coded values. Load
-   mixins with `@use 'mixins' as *;`. Montserrat is the only font; no Tailwind.
+   mixins with `@use 'mixins' as *;`. Montserrat is the text font and Caveat (`--font-handwritten`) the handwriting accent, only where the design asks for it (D19); no Tailwind.
 7. **Strings.** Anything the interface says (labels, aria-labels, "more") goes to `app/messages/en.json` and
    `uk.json` in the same change, with the same keys. Editable content stays in Sanity. Server components read it with
    `useTranslations` / `getTranslations`.

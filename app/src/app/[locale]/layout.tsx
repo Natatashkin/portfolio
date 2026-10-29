@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Montserrat } from 'next/font/google';
+import { Caveat, Montserrat } from 'next/font/google';
 import { notFound } from 'next/navigation';
 import { hasLocale, NextIntlClientProvider } from 'next-intl';
 import Footer from '@/components/layout/Footer';
@@ -17,6 +17,16 @@ const montserrat = Montserrat({
   style: ['normal'],
   variable: '--font-montserrat',
   display: 'swap'
+});
+
+// Handwriting accent for short sign-offs and notes (`--font-handwritten`), used where the design
+// asks for it, not for body text. Not preloaded: it is used below the fold; revisit if it is used above.
+const caveat = Caveat({
+  subsets: ['latin', 'cyrillic'],
+  weight: ['600'],
+  variable: '--font-caveat',
+  display: 'swap',
+  preload: false
 });
 
 // Pre-launch: keep the site out of search engines. Remove when going live.
@@ -37,7 +47,7 @@ const LocaleLayout = async ({ children, params }: LayoutProps<'/[locale]'>) => {
   return (
     <html
       lang={locale}
-      className={montserrat.variable}
+      className={`${montserrat.variable} ${caveat.variable}`}
       suppressHydrationWarning
     >
       <head>

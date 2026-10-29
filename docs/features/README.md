@@ -5,23 +5,23 @@ starts; features built before the spec-driven workflow are marked "done (documen
 
 ## Implemented
 
-| Feature           | Covers                                                                                                     | Status             | Spec                                         |
-| ----------------- | ---------------------------------------------------------------------------------------------------------- | ------------------ | -------------------------------------------- |
-| Header            | Header, Logo, Navigation, BurgerMenu, skip link, theme switcher slot                                       | done               | [header.md](header.md)                       |
-| Footer            | Footer, SocialLinks, copyright                                                                             | in progress        | [footer.md](footer.md)                       |
-| Hero section      | HeroSection, DotGrid, HeroMetricNumber, metrics                                                            | done               | [hero-section.md](hero-section.md)           |
-| UI blocks         | LinkButton, Button, Headline, RichText, ResponsiveImage, Container, InView                                 | done               | [ui-blocks.md](ui-blocks.md)                 |
-| Theming           | Light/dark themes, no-flash script, `useTheme`                                                             | done               | [theming.md](theming.md)                     |
-| i18n and routing  | Locales, proxy, localized 404, `messages/`                                                                 | done               | [i18n-routing.md](i18n-routing.md)           |
-| Smooth scroll     | SmoothScrollProvider, `loadGsap`, Lenis, GSAP loaded after idle, reduced motion                            | done               | [smooth-scroll.md](smooth-scroll.md)         |
-| Language switcher | `EN`/`UK` link in the desktop header and the burger menu; hash, focus and announcement kept after a switch | done, with caveats | [language-switcher.md](language-switcher.md) |
-| Theme switcher    | Label shows the theme a click leads to; the chosen theme survives a language switch                        | done, with caveats | [theme-switcher.md](theme-switcher.md)       |
+| Feature           | Covers                                                                                                         | Status             | Spec                                         |
+| ----------------- | -------------------------------------------------------------------------------------------------------------- | ------------------ | -------------------------------------------- |
+| Header            | Header, Logo, Navigation, BurgerMenu, skip link, theme switcher slot                                           | done               | [header.md](header.md)                       |
+| Footer            | Footer, SocialLinks, copyright                                                                                 | in progress        | [footer.md](footer.md)                       |
+| Hero section      | HeroSection, DotGrid, HeroMetricNumber, metrics                                                                | done               | [hero-section.md](hero-section.md)           |
+| UI blocks         | LinkButton, Button, Headline, RichText, ResponsiveImage, Container, InView                                     | done               | [ui-blocks.md](ui-blocks.md)                 |
+| Theming           | Light/dark themes, no-flash script, `useTheme`                                                                 | done               | [theming.md](theming.md)                     |
+| i18n and routing  | Locales, proxy, localized 404, `messages/`                                                                     | done               | [i18n-routing.md](i18n-routing.md)           |
+| Smooth scroll     | SmoothScrollProvider, `loadGsap`, Lenis, GSAP loaded after idle, reduced motion                                | done               | [smooth-scroll.md](smooth-scroll.md)         |
+| Language switcher | `EN`/`UK` link in the desktop header and the burger menu; hash, focus and announcement kept after a switch     | done, with caveats | [language-switcher.md](language-switcher.md) |
+| Theme switcher    | Label shows the theme a click leads to; the chosen theme survives a language switch                            | done, with caveats | [theme-switcher.md](theme-switcher.md)       |
+| Career section    | CareerSection, CareerText, CareerSteps, GSAP reveal, plain list, markers and lines, pulse, handwritten tagline | done               | [career-section.md](career-section.md)       |
 
 ## Planned
 
 | Feature               | Notes                                                                                 |
 | --------------------- | ------------------------------------------------------------------------------------- |
-| Career section        | In progress: [career-section.md](career-section.md); static layout done, reveal next  |
 | What I do section     |                                                                                       |
 | Playground section    | Needs a `componentKey` → demo map                                                     |
 | Projects section      | `projects/` route is a placeholder                                                    |

@@ -29,7 +29,7 @@ Motion is client-only and layered on top of content that already works without i
    not re-exported). The section itself stays a Server Component. Interface-only or purely visual wrappers are fine;
    no CMS data into `dangerouslySetInnerHTML`.
 4. **Write the effect.**
-   - Pattern (no section uses it yet, so confirm it on the first animation). Use `useEffect`, not `useGSAP`: tweens
+   - Pattern (confirmed on the career section: `CareerText` and `CareerSteps`). Use `useEffect`, not `useGSAP`: tweens
      created after an `await` are not captured by the context `useGSAP` makes, so the cleanup is written by hand.
 
      ```tsx
@@ -71,9 +71,20 @@ no-preference)', ...)` callback from step 4, and the content stays in its static
 
 ## Traps
 
-- A `scrub` or `pin` animation may trail Lenis by one frame; this is the accepted cost of D10. The first
-  ScrollTrigger section is where to re-check it. If the trail is visible, record a new decision in
-  `docs/decisions.md`; do not quietly switch the clock.
+- A `scrub` or `pin` animation may trail Lenis by one frame; this is the accepted cost of D10. The career section
+  uses neither (one-shot reveals), so the trail has not been re-checked yet: re-check it on the first `scrub` or
+  `pin`. If the trail is visible, record a new decision in `docs/decisions.md`; do not quietly switch the clock.
+- A tween started from a ScrollTrigger callback (`onEnter`) is created after the `matchMedia` callback returned, so
+  `mm.revert()` does not own it: kill it, and clear its inline styles, in the cleanup the callback returns.
+- Create the trigger first and hide the element only if it has not been reached (`progress === 0` and `onEnter` has
+  not fired); GSAP fires `onEnter` at creation for a line already passed, and a hidden element would never be shown
+  again once `once` has killed the trigger.
+- Check `prefers-reduced-motion` before `loadGsap()` as well, or the GSAP chunk is fetched for nothing.
+- A trigger line can be unreachable when the page ends first (a short block near the bottom). Use a function `start`
+  capped at `ScrollTrigger.maxScroll(window) - 1`; `clamp()` on `start` left the progress at 0 and on `end` made the
+  trigger count as already passed.
+- Trigger on an element that is never transformed and animate a child, or the hidden state moves the trigger's own
+  `start`.
 - Do not remount the tree based on the reduced-motion preference: its server snapshot is `false`, so a different tree
   shape remounts header, page and footer on every load. Change options, not structure.
 - Lenis locks scroll for the burger menu; do not add a second scroll lock.

@@ -4,6 +4,10 @@ export const DARK_QUERY = '(prefers-color-scheme: dark)';
 
 export const REDUCED_MOTION_QUERY = '(prefers-reduced-motion: reduce)';
 
+// The condition scroll animations are built under; the content stays static otherwise.
+export const NO_REDUCED_MOTION_QUERY =
+  '(prefers-reduced-motion: no-preference)';
+
 // Also requires no reduced-motion preference, not only a fine hover-capable pointer.
 export const POINTER_QUERY =
   '(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)';

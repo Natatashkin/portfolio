@@ -1,12 +1,26 @@
 @use 'mixins' as *;
 
+// These hold `var(--…)` values, so they are used as `#{$name}` for a custom property and as `$name`
+// inside `calc()`.
+//
+// `--steps-gap` is set on the list and on the desktop wrapper (`__plain`): the line sits beside the
+// list, not inside it, and computes its ends from the same gap.
+$plain-gap: var(--space-4);
+
+// Distance between a plain-list marker and its card (desktop: above it), and the room the marker
+// takes on the left of a mobile card.
+$marker-offset: var(--space-3);
+$marker-gutter: var(--space-6);
+
 // A plain list by default. `--overlay` (up to four steps) turns it into cards laid over the cover.
 // Both variants are in the server HTML; the media queries below hide the wrong one until the client
 // keeps only the matching variant in the DOM.
 .steps {
+  --steps-gap: #{$plain-gap};
+
   display: flex;
   flex-direction: column;
-  gap: var(--space-4);
+  gap: var(--steps-gap);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -42,15 +56,31 @@
     }
   }
 
-  &__item {
+  // Plain list on desktop: one non-wrapping row of equal items, markers above them. The `ol` follows
+  // the line in `steps__plain`, so the cards paint over it.
+  &--desktop:not(&--overlay) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  &--desktop:not(&--overlay) &__item {
+    flex: 1 1 0;
+    min-width: 0;
+  }
+
+  // Plain list on mobile: the marker sits in a gutter on the left of the card.
+  &--mobile:not(&--overlay) &__item {
     position: relative;
-    box-sizing: border-box;
+    padding-left: $marker-gutter;
+  }
+
+  // The `li` keeps the layout only (set per variant below) and is never animated, so it stays an
+  // untransformed scroll trigger; the card inside it carries the look and the reveal.
+  &__card {
+    position: relative;
     padding: var(--space-2);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
-  }
-
-  &--overlay &__item {
     background: color-mix(in srgb, var(--color-bg) 78%, transparent);
     backdrop-filter: blur(6px);
   }
@@ -137,22 +167,25 @@
     color: var(--color-text-muted);
   }
 
-  // Accent dot under the card with a thin line down to the road; only the cards have it.
+  // Accent dot of a step. Its place depends on the mode: see the overlay and plain-list rules below.
   &__marker {
-    --marker-line-mobile: var(--space-8);
-    --marker-line: var(--space-12);
-
-    display: none;
     position: absolute;
-    top: 100%;
-    left: 50%;
     width: var(--marker-size);
     height: var(--marker-size);
-    margin: var(--space-1) 0 0 calc(var(--marker-size) / -2);
     border-radius: 50%;
     background: var(--color-accent);
     box-shadow: 0 0 0 3px
       color-mix(in srgb, var(--color-accent) 35%, transparent);
+  }
+
+  // Overlay: under the card, with a thin line down to the road.
+  &--overlay &__marker {
+    --marker-line-mobile: var(--space-8);
+    --marker-line: var(--space-12);
+
+    top: 100%;
+    left: 50%;
+    margin: var(--space-1) 0 0 calc(var(--marker-size) / -2);
 
     &::after {
       content: '';
@@ -168,7 +201,86 @@
     }
   }
 
-  &--overlay &__marker {
-    display: block;
+  // Plain list, mobile: centred vertically on the card, in the gutter on its left.
+  &--mobile:not(&--overlay) &__marker {
+    top: 50%;
+    left: calc($marker-gutter / -2);
+    margin: calc(var(--marker-size) / -2) 0 0 calc(var(--marker-size) / -2);
+  }
+
+  // Plain list, desktop: centred above the card.
+  &--desktop:not(&--overlay) &__marker {
+    bottom: calc(100% + $marker-offset);
+    left: 50%;
+    margin-left: calc(var(--marker-size) / -2);
+  }
+
+  // Mobile plain list: one dashed segment per item, from its marker centre to the next marker centre
+  // (the next card is as tall as this one, or the end shifts slightly). It comes before the card in
+  // the DOM, so the card and its marker paint over it. Placed with `left` and `top`, never a
+  // `translate`: the reveal animates `scaleY` and clears `transform` afterwards.
+  &__segment {
+    position: absolute;
+    top: 50%;
+    left: calc($marker-gutter / 2);
+    height: calc(100% + var(--steps-gap));
+    border-left: 1px dashed var(--color-accent);
+    transform-origin: top;
+  }
+
+  // Desktop plain list: the wrapper holds the line and the list. It is hidden below `lg` with the list,
+  // also before hydration and without JS. Top padding makes room for the markers above the cards.
+  &__plain {
+    --steps-gap: #{$plain-gap};
+
+    display: none;
+
+    @include media-up(lg) {
+      display: block;
+      position: relative;
+      margin-top: var(--space-4);
+      padding-top: calc(var(--marker-size) + $marker-offset);
+    }
+  }
+
+  // Dashed line through the marker centres: from the middle of the first item to the middle of the
+  // last one (items have equal width). `scaleX` draws it from the left.
+  &__line {
+    --line-inset: calc(
+      (100% - (var(--steps-count) - 1) * var(--steps-gap)) /
+        var(--steps-count) / 2
+    );
+
+    position: absolute;
+    top: calc(var(--marker-size) / 2);
+    right: var(--line-inset);
+    left: var(--line-inset);
+    border-top: 1px dashed var(--color-accent);
+    transform-origin: left;
+  }
+
+  // The last step is the current one: its marker pulses without end once it has been revealed. The
+  // ring animates `transform` and `opacity` only and exists only when motion is welcome.
+  @media (prefers-reduced-motion: no-preference) {
+    &__item[data-revealed] &__marker::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: var(--color-accent);
+      animation: pulse 1.5s ease-out infinite;
+    }
+  }
+}
+
+@keyframes pulse {
+  from {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+
+  to {
+    transform: scale(2.6);
+    opacity: 0;
   }
 }

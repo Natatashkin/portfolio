@@ -41,6 +41,12 @@
   @include light-palette;
 
   --font-sans: var(--font-montserrat), system-ui, sans-serif;
+  --font-handwritten: var(--font-caveat), cursive;
+
+  // Text laid directly on a photo: light in both themes, unlike `--color-on-primary`.
+  --color-on-photo: #ffffff;
+  // Tint laid over a photo to keep that light text readable.
+  --color-photo-scrim: #000000;
 
   // Small text
   --font-xs-extra: clamp(0.67rem, 0.5rem + 0.2vw, 0.75rem);
@@ -57,6 +63,10 @@
 
   // Hero display — larger than H1
   --font-display: clamp(2rem, 1.5rem + 2.5vw, 3.5rem);
+
+  // Handwritten text runs small for its size, so it is set larger than a heading of the same rank
+  --font-handwritten-lg: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+  --font-handwritten-md: clamp(1.5rem, 1.2rem + 1vw, 2rem);
 
   // Statistics
   --font-metric: clamp(1.5rem, 1.3rem + 0.8vw, 2rem);

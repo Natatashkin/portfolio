@@ -1,155 +1,130 @@
 # Career section
 
-Status: in progress (static layout done; scroll reveal and pulsing dot pending)
+Status: done, no open questions (not observed: the eyebrow-only section, a failed GSAP import; the frame-by-frame
+no-flash check was not done and is accepted by the author)
 
 ## Goal
 
 Show the author's career path ("My way"): an intro with a CV download and a short list of steps laid over a road photo,
-ending with a tagline. The section also makes the hero's dot grid a shared component.
+ending with a handwritten tagline. The section also makes the hero's dot grid a shared component.
+
+The overlay mode (cards on the cover, desktop diagonal, mobile zigzag, marker with its line to the road) is built and
+must not change; later work adds only the reveal and the pulse to it.
 
 ## Requirements
 
-- [x] Renders `eyebrow`, `headline` (`Headline`, accent on the highlighted part), rich-text `description`, `buttons`
-      (`LinkButton`, may be a CV download, D15), `steps`, `tagline` and `cover`. Every field is optional: a missing
-      field renders nothing, never an empty wrapper.
-- [x] `steps` are `road` references; each card shows `period` (accent colour), `title` and `description`. Steps keep
-      the order of the references. No steps: no list.
-- [ ] `cover` is the road photo. Without a desktop asset no image renders and the steps fall back to the plain list
-      (no cards overlay); the text column and the tagline still render.
-- [x] Desktop (`lg` up): two columns. Left: eyebrow, headline, description, buttons. Right: the cover with the step
-      cards overlaid, the tagline below it.
-- [x] Desktop cards rise diagonally from left to right (each next card higher). Each card has an accent dot with a dashed
-      vertical line pointing down to the road. Positions are CSS by index (`:nth-child` offsets), designed for up to
-      four steps.
-- [x] Mobile: the cover (mobile crop, falls back to desktop) is a full-bleed background of the whole section. On top:
-      eyebrow with a short accent rule, headline, description, buttons, then the cards stacked in a zigzag over the
-      road, each with a dot and a thin vertical line to the road; the tagline at the bottom.
-- [x] Tagline is italic Montserrat with an accent underline stroke.
-- [x] The dot grid (`DotGrid`) shows in the lower middle of the section from `lg` up only.
-- [ ] The last step's dot pulses (CSS animation of `transform` and `opacity` only).
-- [ ] Text and cards appear gradually on scroll: staggered fade and translate, once, on `transform` and `opacity`
-      only, through the `useInView` pattern.
-- [ ] Without JS and with `prefers-reduced-motion`, everything is visible and static: the server HTML is fully visible,
-      the hidden state is applied only after hydration and only for `no-preference`; the pulse is off under reduced
-      motion.
-- [x] `HeroGrid` becomes the shared `DotGrid` in `components/ui/DotGrid`; the hero uses it with unchanged behaviour
-      and the `HERO_GRID_*` constants become `DOT_GRID_*`.
-- [ ] Non-functional: steps are an ordered list (`ol`/`li`); dots and lines are decorative (`aria-hidden`, no text);
-      text keeps readable contrast over the photo in both themes (dark theme not checked); no interface strings, so
-      nothing is added to `messages/`.
+- [x] Renders `eyebrow`, `headline`, rich-text `description`, `buttons` (may be a CV download, D15), `steps` (`road`
+      references, in order; `period`, `title`, `description` per card), `tagline` and `cover`. Every field is optional;
+      a missing one renders nothing, never an empty wrapper.
+- [x] Without a desktop cover asset no image renders, the steps fall back to the plain list and the text still renders.
+      The tagline shows only together with a cover or steps (D20).
+- [x] Desktop (`lg` up): text column on the left; on the right the cover with the step cards overlaid diagonally, the
+      tagline below. Mobile: the cover is a full-bleed background; the text, then the cards in a zigzag, then the
+      tagline. A dot grid shows from `lg` up only.
+- [x] Mobile only: a top wash in the page colour keeps the theme's text readable and a bottom scrim keeps the light
+      tagline readable over the road, in both themes.
+- [x] The tagline is handwritten (Caveat, D19) with an underline. On the photo (below `lg`) it is white with a soft
+      shadow; from `lg` it sits on the page background in the text colour.
+- [x] Plain list (more than four steps, or no cover; a fallback): desktop is one non-wrapping row of equal-width cards
+      for any step count, long text wraps; mobile is a column. Markers sit centred above each card on desktop and in a
+      left gutter, centred on the card, on mobile. Dashed lines join the markers (desktop: one line; mobile: a
+      segment per item, none after the last, the last marker covers the end).
+- [x] The plain-list lines are drawn gradually with `scale` in step with the items appearing; without JS and under
+      reduced motion they are fully drawn.
+- [x] The last step's marker pulses continuously once its item is revealed (a CSS ring on `transform` and `opacity`,
+      only under `no-preference`; static before the reveal, without JS and under reduced motion).
+- [x] Text reveal (GSAP + ScrollTrigger, once): headline, description and buttons fade in and rise with a stagger when
+      `career__textBody` reaches `top 80%`; the eyebrow is not animated.
+- [x] Steps reveal (cards and plain-list items): desktop, one tween with a stagger started by one trigger on the
+      `<ol>`; mobile, one trigger per item. Only `transform` and `opacity` animate; inline styles are cleared after.
+- [x] Without JS and under `prefers-reduced-motion` everything is visible and static: the server HTML is final, the
+      hidden state is applied by GSAP only after it loads, only under `no-preference`, and only for elements whose
+      trigger has not been reached (one already past its line is left alone). No GSAP chunk loads under reduced motion.
+- [ ] A failed GSAP import leaves the static state (a `.catch` in the code; not simulated).
+- [ ] A section with only an eyebrow renders no `career__textBody` and no client text component. The schema has no rule
+      against it (all fields are optional; the author chose not to add one); the guard is from code and was not
+      observed, because it needs such data in Sanity.
+- [x] `HeroGrid` becomes the shared `DotGrid` in `components/ui/DotGrid`, unchanged in the hero; `HERO_GRID_*` becomes
+      `DOT_GRID_*`.
+- [x] Steps are an ordered list; markers, dots and lines are `aria-hidden`; text is readable over the photo in both
+      themes; no interface strings, nothing is added to `messages/`.
 
 ## Design
 
-- **Schema:** exists, no change: `careerSection` and `road` in [../specs/content-model.md](../specs/content-model.md).
-  `eyebrow`, `headline`, `description`, `tagline`, `road.period`, `road.title`, `road.description` and the cover `alt`
-  are localized; `road.period` and `road.title` are required in Studio, `road.description` is optional.
-- **Query:** a `careerSection` branch in `PAGE_QUERY` projects `eyebrow`, `headline`, `description`, `tagline`,
-  `steps` (`steps[defined(@->_id)]->{ _id, period, title, description }`, each with the literal `en` fallback),
-  `cover{ desktop, mobile, alt }` as in the hero image, and `buttons[]` with every `linkButton` field plus the resolved
-  `fileUrl` and `fileName` for `linkType == "download"` (D15). `anchorId` is already projected for all sections.
-  `PAGE_QUERY_TAGS` gains `road`; TypeGen is regenerated.
-- **UI:**
-  - `CareerSection` (`components/sections/CareerSection/`) is a Server Component typed with
-    `SectionOf<'careerSection'>`, registered in `SectionRenderer`. Root `<section id={anchorId ?? undefined}>` in
-    `Container`; text parts reuse `Headline`, `RichText`, `LinkButton`, `ResponsiveImage`.
-  - Pending (reveal block): a client child only for the reveal: one private reveal child in the section folder, built like `HeroMetricNumber`
-    (`useInView` and `useIsMounted`; hidden only after mount and only under `prefers-reduced-motion: no-preference`).
-    The plain `InView` is not used: it always renders `data-in-view="false"` in the server HTML, so CSS hiding on that
-    value would hide the content without JS. One sequence driven by the section: the text group first, then the
-    cards, staggered by an `--index` custom property and `transition-delay`. The section itself stays a Server
-    Component.
-  - `DotGrid` is a client leaf (pointer-lit dot grid, moved from `HeroSection/HeroGrid`); the hero and the career
-    section pass it a `className` for placement. In the career section it is hidden below `lg`.
-  - Cards: `CareerSteps` (private child in its own folder `CareerSection/CareerSteps/`, with its own module and
-    `index.ts`), rendered twice with a `variant` prop: `mobile` sits in `career__container` between the text and the
-    tagline (a column of cards, zigzag from `docs/layouts/my-way-mob.png`); `desktop` sits over the cover inside the
-    media wrapper (absolute cards, diagonal by `:nth-child`). `career__media` and `career__mediaWrapper` are
-    `display: contents` below `lg`, so the picture fills the section and the tagline joins the container column.
-    `CareerSteps` is a small client leaf: it reads the `lg` breakpoint with `useIsMobile` (`useSyncExternalStore` on
-    `MOBILE_QUERY`, server snapshot `null`) and, after hydration, returns `null` for the variant that does not match,
-    also after a resize, so only one list (and no repeated ids) is in the DOM. The server HTML has both (the viewport
-    is unknown there) and CSS hides one, so the content is visible without JS. The cost is that until hydration the
-    step markup is in the HTML twice and the step data is serialised twice in the RSC payload; four short steps make
-    that acceptable, and `display: none` keeps the hidden copy out of the accessibility tree. The mobile cards follow
-    the DOM order top to bottom (no `column-reverse`, so tab order matches) and are placed by `--step-offset` from the
-    container centre (the `md` breakpoint has other offsets), so the zigzag stays on the road at any width below `lg`.
-    The pulsing dot on the last card (`:last-child`) is pending.
-  - Overlay mode: `CareerSection` passes `isOverlay` when there are at most `MAX_OVERLAY_STEPS` (4) steps. The list is
-    a plain list by default; the `--overlay` modifier turns it into cards, and the dot markers exist only there. With
-    more steps both variants render a plain list, so cards never leave the photo.
-  - Tokens: colours, spacing and radii from `_tokens.scss` only; accent via `var(--color-accent)`.
-- **Image sizes:** desktop `sizes` mirrors the width of the right column (about half of the container); mobile is
-  `100vw`. Exact values are set with the SCSS and checked against `next.config.ts` `deviceSizes`. The cover is not
-  `priority` (below the fold).
-- **Edge cases:**
-  - A step without `period` or `title` still renders what it has; a card with no text at all is skipped.
-  - Dangling `steps` references are filtered in GROQ.
-  - Empty `uk` value falls back to `en` in GROQ (D3); untranslated content is not an error.
-  - A download button without a usable `https` file URL renders nothing (`LinkButton`); the rest of the section is
-    unaffected.
-  - Long text wraps; cards do not overlap the text column on desktop.
+- **Schema and query:** exist, no change: `careerSection` and `road` in
+  [../specs/content-model.md](../specs/content-model.md); the `careerSection` branch of `PAGE_QUERY` filters dangling
+  step references and resolves download files (D15).
+- **Split:** `CareerSection` is a Server Component. `CareerText`, `CareerSteps` and `DotGrid` are client leaves.
+  `CareerSteps` is rendered twice (`mobile`, `desktop`), keeps only the variant for the viewport after hydration and is
+  CSS-hidden before it (D17).
+- **Overlay vs plain list:** `isOverlay` = a cover and at most `MAX_OVERLAY_STEPS` (4) steps; otherwise both variants
+  render the plain list and the media wrapper gets `career__mediaWrapper--plain`. The wrapper and the desktop line
+  exist only in the plain list, so the overlay markup stays untouched.
+- **Untransformed trigger:** the `li` keeps layout and is never animated; the inner `steps__card` carries the visual
+  box and the marker and is the only animated element (a transformed trigger would move its own `start`).
+- **Lines:** real `aria-hidden` elements (GSAP cannot animate pseudo-elements), positioned with `left`/`top`/`margin`,
+  never `translate` (the scale tweens and `clearProps: 'transform'` would overwrite it); `transform-origin` is in CSS.
+  Desktop: `steps__line` in the `steps__plain` wrapper, an independent `scaleX` tween in the cards' `onEnter` that
+  reaches each marker as its item starts. Mobile: one `scaleY` segment per item in that item's own `onEnter`.
+- **Trigger `start`** is a function capped at `ScrollTrigger.maxScroll(window) - 1` (reason in Decisions), line 0.5 on
+  the `<ol>` (desktop) or 0.85 on each `li` (mobile). No `ScrollTrigger.refresh()`: the page height does not change
+  after load and ScrollTrigger re-evaluates a function `start` on resize.
+- **GSAP:** follow the `scroll-animation` skill. Section-specific: the `CareerSteps` effect depends on
+  `[isAnimated, variant, isOverlay, steps]`; the reveal tweens start from `onEnter`, outside the matchMedia context,
+  so the cleanup of the `mm.add` callback kills the trigger, the tweens and their inline styles; the last item's
+  `onComplete` sets `data-revealed`, which starts the pulse.
+- **`CareerText`:** owns the `career__textBody` ref and takes its `className` from the section (it never imports the
+  section's SCSS module); the section renders it only when headline, description or buttons exist. The stagger targets
+  are `ref.children`, so each part renders one root element (true for `Headline`, `RichText` and the actions `div`).
+- **Edge cases:** a card with no text is skipped; an empty `uk` value falls back to `en` in GROQ (D3); if every button
+  renders nothing, the empty `career__actions` is still staggered and takes a gap (accepted). Also accepted: a button
+  at opacity 0 stays focusable; a line may lead its marker by the card's fade; the mobile segment end can be a few px
+  off when card heights differ; dashes stretch while a line draws.
 
 ## Files
 
-- `app/src/components/sections/CareerSection/`: `CareerSection`, module, `index.ts`.
-- `app/src/components/sections/CareerSection/CareerSteps/`: private client child (`CareerSteps`, module, `index.ts`).
-- `app/src/hooks/useIsMobile.ts`: `matchMedia` subscription on `MOBILE_QUERY`, `null` on the server.
-- `app/src/components/ui/DotGrid/`: `DotGrid`, module, `index.ts` (moved and renamed from `HeroSection/HeroGrid.tsx` and `HeroGrid.module.scss`; `index.ts` is new).
-- `app/src/components/sections/HeroSection/HeroSection.tsx`: imports `DotGrid`.
-- `app/src/components/sections/SectionRenderer/SectionRenderer.tsx`: `careerSection` case.
-- `app/src/lib/sanity/queries.ts`: `careerSection` branch and `PAGE_QUERY_TAGS`.
-- `app/src/lib/constants.ts`: `DOT_GRID_*` (renamed from `HERO_GRID_*`), `MOBILE_QUERY`.
-- `app/src/components/ui/ResponsiveImage/ResponsiveImage.tsx`: `<source media>` uses `MOBILE_QUERY`.
-- `app/src/styles/_tokens.scss`: `--marker-size` (dot size, reusable).
-- `app/src/sanity.types.ts`: regenerated.
+- `app/src/components/sections/CareerSection/`: `CareerSection`, with private `CareerSteps/` and `CareerText/`.
+- `app/src/components/ui/DotGrid/`: moved and renamed from `HeroSection/HeroGrid`; the hero imports it.
+- `app/src/hooks/useIsMobile.ts`: viewport subscription, `null` on the server.
+- `app/src/lib/constants.ts`, `styles/_tokens.scss`, `styles/_mixins.scss`, `app/[locale]/layout.tsx`: the new query
+  constants, the handwriting / on-photo / scrim tokens, the eyebrow rule colour, the Caveat font.
 
 ## Acceptance criteria
 
-- [ ] Renders in `en` and `uk`, light and dark, mobile and desktop.
-- [ ] Empty or unexpected CMS data (no steps, no cover, no buttons, a one-step list, five steps) does not throw.
-- [ ] The cards never leave the cover on desktop with four steps.
-- [ ] With JS disabled and with reduced motion the text and cards are visible; the pulse does not run under reduced
-      motion.
-- [ ] The grid does not show below `lg`; the hero grid behaves as before after the move.
-- [ ] Content is in the server HTML.
-- [ ] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`; Studio builds.
+- [x] Renders in `en` and `uk`, light and dark, mobile and desktop; the `uk` plain list wraps long text without
+      overflow. Empty or unexpected CMS data does not throw; the cards stay on the cover with four steps (author
+      confirmed).
+- [x] Overlay unchanged except for the pulse ring on the last marker.
+- [x] JS off and reduced motion: text and cards visible, lines fully drawn, no pulse; reduced motion loads no GSAP
+      chunk (production build). The content is in the server HTML (`/en`, `/uk`).
+- [x] Text reveals once at `top 80%`; desktop steps appear one after another, mobile steps each at their line;
+      `data-revealed` lands on the last `li`; a resize across `lg` (both ways) and a soft language switch rebuild the
+      reveal without stale triggers or hidden items; no inline style remains afterwards.
+- [x] Plain list (with a cover, and with four steps forced past the limit): desktop row, markers and `scaleX` line
+      drawn in step with the cards, tagline below; mobile gutter markers and `scaleY` segments; the pulse after the
+      reveal, in the overlay too.
+- [x] No flash: a reload or resize past the line leaves the content visible (seen); the frame-by-frame check was not
+      done, the author accepted it. By design an item in the lower half of the viewport at GSAP load is hidden after it
+      was visible; rare, accepted.
+- [x] `pnpm format`, `pnpm code-quality` and `pnpm build` pass in `app/`.
 
 ## Decisions
 
-- `HeroGrid` moves to `components/ui/DotGrid` and the constants become `DOT_GRID_*`: a second component needs it, and
-  [../conventions.md](../conventions.md#components) says a private child moves to `components/ui/` then. Recorded in
-  [../decisions.md](../decisions.md) as D16.
-- Card positions are CSS by index, not data: the layout is designed for four steps and the author controls the count.
-- `CareerSteps` is a private child in its own folder, and its two variants are rendered conditionally after
-  hydration: the author wanted no repeated ids and one list in the DOM; the cost is the duplicate markup until
-  hydration. Recorded in [../decisions.md](../decisions.md) as D17.
-- One mobile breakpoint value in TypeScript, `MOBILE_QUERY = '(max-width: 1023px)'` (mirrors `lg`); `MOBILE_MAX_WIDTH`
-  is removed.
-- Reveal is CSS-driven through the existing `useInView` pattern, not GSAP: the effect is a one-shot fade, and the
-  server HTML stays visible (see [../specs/theming-and-motion.md](../specs/theming-and-motion.md)).
-
-## Tasks
-
-Done in the code: the `DotGrid` extraction, the query branch, and the static layout (desktop and mobile).
-
-Pending:
-
-1. Scroll reveal and the pulsing dot on the last card, reduced-motion handling.
-2. Final sync of the spec, `features/README.md` and `roadmap.md`.
-
-## Open questions
-
-- Text contrast over the full-bleed mobile photo: a gradient from tokens is in place; the amount is decided with the
-  real photo. Not checked: `uk`, dark theme, five real steps, `pnpm build`, no-JS.
-
-## Resolved
-
-- Tagline: italic Montserrat plus an accent underline stroke (`text-decoration` or a pseudo-element); no second font.
-- Buttons: all `buttons[]` render in a row; the author adds two (one CV per language version, D15).
-- More than four steps, or no cover: plain list, no overlay (`isOverlay = hasCover && steps <= MAX_OVERLAY_STEPS`).
-- Minimum height: the section has none; its height comes from the content (the old `100dvh` requirement and the
-  `150dvh` below `lg` are dropped).
-- `useIsMobile` stays in `hooks/`: more components will use it.
-- The eyebrow accent rule applies at every breakpoint.
-- Reveal: one sequence driven by the section (text, then cards), threshold below 0.5 because the section is taller
-  than the viewport.
+- D16: `HeroGrid` becomes the shared `DotGrid` (a second component needs it).
+- D17: `CareerSteps` renders both variants and keeps one after hydration (no repeated ids; duplicate markup until then).
+- D18: the reveal uses GSAP + ScrollTrigger, not CSS `useInView` (staggered per breakpoint, driven by scroll); the
+  hidden state comes from GSAP only. The pulse runs continuously: an endless animation over 5s is a WCAG 2.2.2
+  concern, accepted because the ring is decorative and off under reduced motion.
+- D19: Caveat is the handwriting accent font (about 50 KB latin, 94 KB `uk`, accepted, re-check in production). The
+  tagline is white with a bottom scrim on the photo (`--color-on-primary` turns dark in dark theme).
+- D20: the tagline needs a cover or steps (it lives in the media block).
+- Card positions are CSS by index, not data: designed for four steps, the author controls the count.
+- The plain list is a fallback that is also animated and shows markers (author decision); its lines are separate
+  tweens with no shared timeline, because the stagger timing already puts the desktop line at each marker.
+- The step `start` is a function capped at `maxScroll - 1`: a short list near the page end could not be scrolled up
+  to a fixed line; GSAP's `clamp()` on `start` left progress at 0 and on `end` counted the trigger as passed at load.
+- `--color-accent-ink` for the eyebrow rule (shared mixin, so the hero's too) and, from `lg`, the tagline underline,
+  because `--color-accent` is too pale on the light page background; markers, lines and the pulse ring keep
+  `--color-accent`.
+- One mobile breakpoint value in TypeScript, `MOBILE_QUERY` (mirrors `lg`); `useIsMobile` stays in `hooks/`.
+- Two CV buttons (one per language, D15) render in a row; the section has no minimum height.

@@ -145,3 +145,38 @@ Reason: the author wanted no repeated ids and one list in the DOM for assistive 
 markup is duplicated and the step data is serialised twice in the RSC payload. The mobile breakpoint in TypeScript is a
 single `MOBILE_QUERY` (`(max-width: 1023px)`, the complement of `DESKTOP_QUERY`, mirrors `lg`); `MOBILE_MAX_WIDTH` is
 gone.
+
+## D18. Career reveal with GSAP + ScrollTrigger, not CSS `useInView`
+
+The Career section reveals its text and steps with GSAP + ScrollTrigger (`loadGsap`, `gsap.matchMedia`, `useEffect`
+whose cleanup reverts the matchMedia; see the `scroll-animation` skill). Reason: a staggered sequence per breakpoint
+driven by scroll position (desktop items one after another from one trigger, mobile one trigger per item) does not fit
+a single in-view flag. Rules: the server HTML is final and visible, the hidden state is applied only on the client after
+GSAP loads, only under `(prefers-reduced-motion: no-preference)` and only for elements whose trigger has not been
+reached yet, never in CSS; triggers sit on untransformed elements; the step triggers use a function `start` clamped to the end of the page (a
+short list near the bottom could not otherwise be scrolled up to its line); only `transform` and `opacity` animate. The pulsing
+marker stays CSS: it starts when the reveal sets `data-revealed` on the last item and then runs continuously. An endless
+animation longer than 5s is a WCAG 2.2.2 concern; the author accepted it deliberately because the ring is decorative
+(`aria-hidden`, no content, no flashing) and is switched off under `prefers-reduced-motion`. Details:
+[features/career-section.md](features/career-section.md).
+
+## D19. Caveat as the handwriting accent font next to Montserrat
+
+Montserrat stays the font of all text. Caveat is the project's handwriting accent (`next/font/google`, latin +
+cyrillic, weight 600, variable `--font-caveat`, `display: swap`, `preload: false`), exposed as the token
+`--font-handwritten` with two size tokens, `--font-handwritten-md` (the career tagline) and `--font-handwritten-lg`
+(for later use); handwriting runs small, so both are larger than the matching Montserrat sizes. It is used wherever the design
+asks for a handwritten accent, never for body text; today only the career tagline uses it. Reason: a pen-like face
+carries a personal sign-off; Caveat has full Cyrillic and a stroke thick enough to stay legible on a photo. Compared on
+real `en` and `uk` text: Marck Script, Bad Script and Comforter were too thin or wide; Pangolin and Neucha do not look
+handwritten. Accepted cost: one more self-hosted font file (about 50 KB latin, about 94 KB for `uk`: latin + cyrillic),
+which the browser loads on page load because the tagline text is in the DOM, although `preload` is off; the author
+keeps it as is and re-checks in production. Text laid on a photo uses the new `--color-on-photo` token (white in both
+themes) over a `--color-photo-scrim` tint (`#000000`). `CLAUDE.md` and the `new-component` skill carry the matching
+rule. Details: [features/career-section.md](features/career-section.md).
+
+## D20. The career tagline needs a cover or steps
+
+The tagline sits in the media block of the career section, which renders only when `hasCover || cards.length > 0`. With
+neither a cover nor any step the tagline is not shown. This is deliberate: the tagline closes the road picture and the
+steps, so without them it has nothing to close. Details: [features/career-section.md](features/career-section.md).

@@ -10,22 +10,39 @@
   padding: var(--space-section) 0;
   overflow-x: clip;
 
-  // Keeps the text readable over the photo; the amount is tuned with the real image.
-  &::before {
+  // Mobile only: tints that keep the text readable over the photo; the amounts are tuned with the real
+  // image. At the top the page colour keeps the theme's dark text readable; at the bottom a dark scrim
+  // keeps the light tagline readable in both themes.
+  &::before,
+  &::after {
     content: '';
     position: absolute;
-    inset: 0;
     z-index: -1;
+    pointer-events: none;
+
+    @include media-up(lg) {
+      display: none;
+    }
+  }
+
+  &::before {
+    inset: 0;
     background: linear-gradient(
       to bottom,
       color-mix(in srgb, var(--color-bg) 75%, transparent),
       color-mix(in srgb, var(--color-bg) 45%, transparent) 50%,
       transparent
     );
+  }
 
-    @include media-up(lg) {
-      display: none;
-    }
+  &::after {
+    inset: auto 0 0;
+    height: 12rem;
+    background: linear-gradient(
+      to top,
+      color-mix(in srgb, var(--color-photo-scrim) 60%, transparent),
+      transparent
+    );
   }
 
   &__container {
@@ -33,7 +50,7 @@
     flex-direction: column;
     justify-content: space-between;
     min-height: 100%;
-    gap: var(--space-10);
+    gap: var(--space-12);
 
     @include media-up(lg) {
       position: relative;
@@ -62,6 +79,14 @@
 
   &__text {
     grid-area: text;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+  }
+
+  // Headline, description and buttons: the part that slides in on scroll (`CareerText`).
+  &__textBody {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -115,6 +140,14 @@
     }
   }
 
+  // Plain list: the steps follow the picture instead of lying on it, so the picture takes its height
+  // from its aspect ratio and the wrapper grows with the list (the overlay keeps the full height).
+  &__mediaWrapper--plain &__picture {
+    @include media-up(lg) {
+      height: auto;
+    }
+  }
+
   // Mobile: positioned against `.career`, because `__media` and `__mediaWrapper` generate no boxes there.
   &__picture {
     position: absolute;
@@ -142,13 +175,25 @@
     }
   }
 
+  // Handwritten sign-off. On mobile it lies on the photo, so it is light with a soft shadow; from `lg`
+  // up it sits under the picture on the page background.
   &__tagline {
     margin: 0;
-    font-size: var(--font-h3);
-    font-style: italic;
+    font-family: var(--font-handwritten);
+    font-size: var(--font-handwritten-md);
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-on-photo);
+    text-shadow: 0 1px 8px rgb(0 0 0 / 60%);
     text-decoration: underline;
     text-decoration-color: var(--color-accent);
     text-decoration-thickness: 2px;
-    text-underline-offset: 0.4em;
+    text-underline-offset: 0.3em;
+
+    @include media-up(lg) {
+      color: var(--color-text);
+      text-shadow: none;
+      text-decoration-color: var(--color-accent-ink);
+    }
   }
 }

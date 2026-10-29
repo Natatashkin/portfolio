@@ -11,7 +11,9 @@
   (`sassOptions.loadPaths` points at `src/styles`).
 - BEM per module in camelCase: block `.hero`, element `.hero__stackItem`, modifier `.linkButton--accent`; no
   element-of-element chains.
-- Font: Montserrat only (`next/font/google`, latin + cyrillic, `--font-montserrat`).
+- Font: Montserrat for text (`next/font/google`, latin + cyrillic, `--font-montserrat`); Caveat as a handwriting accent
+  where the design asks for it, never body text (`--font-caveat`, token `--font-handwritten`, weight 600, latin +
+  cyrillic, not preloaded; D19).
 
 ## Themes
 

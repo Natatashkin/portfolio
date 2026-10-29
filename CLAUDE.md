@@ -30,7 +30,7 @@ Two independent packages with their own lockfiles (pnpm); no root workspace. Run
 - One folder per component: `PascalCase.tsx`, `PascalCase.module.scss`, `index.ts` (re-export only, no `export *`,
   no folder-level barrels except `components/icons` and `lib/helpers`), optional `types.ts`. Import a component by its folder, never by the inner file.
 - BEM inside SCSS Modules, camelCase (`styles.hero__stackItem`); tokens are CSS custom properties; no Tailwind;
-  Montserrat is the only font.
+  Montserrat is the text font; Caveat (`--font-handwritten`) is the one handwriting accent, only where the design asks for it (D19).
 - Handlers are named `handle<Thing>`; `useSyncExternalStore` subscribers `subscribeTo<Thing>`.
 - All GROQ lives in `app/src/lib/sanity/queries.ts` via `defineQuery`; always pass `locale`; project only needed
   fields. Interface-only strings go to `app/messages/{uk,en}.json`; editable content stays in Sanity.

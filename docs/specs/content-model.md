@@ -18,12 +18,12 @@ How schemas are written (helpers, registration, tiles) is in
 
 ## Blocks (object types)
 
-| Block             | Fields                                                                                                                                                                                                                                            |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `linkButton`      | `label` (loc string), `linkType` (internal \| external \| download), `url`, `download` {`document` (→ downloadDocument), `files` {`en`, `uk`}, one PDF per language |\| uk)} (`download` only), `hasAnchor`, `anchor`, `variant` (primary \| secondary \| accent), `hasIcon` |
-| `responsiveImage` | `desktop` (required, hotspot), `mobile` (optional, falls back to desktop), `alt` (loc string)                                                                                                                                                     |
-| `richText`        | Portable Text: normal style, bullets, `strong`, `em`, link annotation (`href`)                                                                                                                                                                    |
-| `headline`        | Portable Text: one normal block, decorator `accent`, no lists or links                                                                                                                                                                            |
+| Block             | Fields                                                                                                                                                              |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `linkButton`      | `label` (loc string), `linkType` (internal \| external \| download), `url`, `download` {`document` (→ downloadDocument), `files` {`en`, `uk`}, one PDF per language | \| uk)} (`download` only), `hasAnchor`, `anchor`, `variant` (primary \| secondary \| accent), `hasIcon` |
+| `responsiveImage` | `desktop` (required, hotspot), `mobile` (optional, falls back to desktop), `alt` (loc string)                                                                       |
+| `richText`        | Portable Text: normal style, bullets, `strong`, `em`, link annotation (`href`)                                                                                      |
+| `headline`        | Portable Text: one normal block, decorator `accent`, no lists or links                                                                                              |
 
 `linkButton` defaults for every new button: `linkType: internal`, `variant: primary`, `hasIcon: false`,
 `hasAnchor: false`.
@@ -42,9 +42,9 @@ ignored for the other two types. See
 
 | Field                            | Rule                                                                                                                                                                           |
 | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `linkButton.download`            | Visible only for `download`; `document` (reference to a `downloadDocument`) and `language` (`en` or `uk`) are both required |
+| `linkButton.download`            | Visible only for `download`; `document` (reference to a `downloadDocument`) and `language` (`en` or `uk`) are both required                                                    |
 | `downloadDocument.title`         | Required (internal name)                                                                                                                                                       |
-| `downloadDocument.files`         | `en` required, `uk` optional; the upload picker accepts PDF only (`accept`) |
+| `downloadDocument.files`         | `en` required, `uk` optional; the upload picker accepts PDF only (`accept`)                                                                                                    |
 | `linkButton.url`                 | Hidden for `download`. Otherwise required. External: valid URL with `https`, `mailto` or `tel`. Internal: `^[a-z0-9]+(?:[-/][a-z0-9]+)*$` (case-insensitive), no leading slash |
 | `linkButton.anchor`              | Visible and required only when `hasAnchor`. Letters and hyphens: `^[a-z]+(?:-[a-z]+)*$` (case-insensitive), no `#`, no digits                                                  |
 | `<section>.anchorId`             | Optional. `^[a-z0-9-]+$` (digits allowed, unlike `linkButton.anchor`)                                                                                                          |
@@ -63,7 +63,7 @@ site).
 | Document                                      | Fields                                                                                                                                                                   |
 | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `siteSettings` (singleton, id `siteSettings`) | `siteName`, `name` (loc), `navigation[]` {`label` loc, `isAnchor`, `url`}, `socialLinks[]` {`label`, `url`}, `location` (loc), `copyright` (loc), `backToTopLabel` (loc) |
-| `downloadDocument` ("Documents" in Studio)    | `title` (internal name, e.g. "CV"), `files` {`en`, `uk`}, one PDF per language |
+| `downloadDocument` ("Documents" in Studio)    | `title` (internal name, e.g. "CV"), `files` {`en`, `uk`}, one PDF per language                                                                                           |
 | `page`                                        | `title` (internal), `slug` (`home` = landing), `sections[]`, `seo` {`title` loc, `description` loc text, `ogImage`}                                                      |
 | `metric`                                      | `value` (string, e.g. "4+"), `label` (loc)                                                                                                                               |
 | `road`                                        | `period` (loc string), `title` (loc string), `description` (loc text, optional); `period` and `title` are required                                                       |

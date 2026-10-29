@@ -72,12 +72,15 @@ scrolls (anchors) become instant. Rules and rationale:
 ## Acceptance criteria
 
 - [x] Smooth scroll works in `en` and `uk`, light and dark, mobile and desktop.
-- [ ] With `prefers-reduced-motion: reduce` the page scrolls natively and the network shows no GSAP chunk.
+- [x] With `prefers-reduced-motion: reduce` the page scrolls natively and the network shows no GSAP chunk. Seen in a
+      production build (`next build` + `next start`, Playwright): the GSAP core and ScrollTrigger chunks were never
+      requested.
 - [x] With reduced motion on at load the page is not remounted (one stable tree).
 - [x] Without reduced motion the burger menu panel scrolls natively (`data-lenis-prevent`) while the page behind stays
       locked; this is intended (a second Lenis instance for the panel would break the one-instance rule).
-- [ ] The GSAP chunk loads after `load` and idle, not in the first bundle.
-- [ ] `pnpm format`, `pnpm code-quality` and `pnpm build` pass in `app/`.
+- [x] The GSAP chunk loads after `load` and idle, not in the first bundle. Seen in the same production build: the
+      chunks were requested at about 264 ms, after the `load` event at about 202 ms.
+- [x] `pnpm format`, `pnpm code-quality` and `pnpm build` pass in `app/`.
 
 ## Tasks
 
@@ -85,10 +88,10 @@ Done in the code.
 
 ## Open questions
 
-- Not checked in the browser: no GSAP chunk under reduced motion, and the GSAP chunk loading after `load` and idle.
-- D10 ([../decisions.md](../decisions.md)) accepts the `scrub`/`pin` trail of one frame until real scroll animations
-  exist. Proposal: re-check when the first ScrollTrigger section is built.
-- Sections that animate must check reduced motion themselves, because the provider loads no GSAP under that
-  preference (see the `scroll-animation` skill).
+- D10 ([../decisions.md](../decisions.md)) accepts the `scrub`/`pin` trail of one frame. The career section is the
+  first ScrollTrigger user but uses no scrub or pin, so the trail is still not re-checked. Note: re-check it for the
+  first section that scrubs or pins.
+- Sections that animate check reduced motion themselves, because the provider loads no GSAP under that preference (see
+  the `scroll-animation` skill): done in `CareerText` and `CareerSteps`, which return before `loadGsap()`.
 - Anchor navigation with Lenis (header links to section ids) is not specified. Proposal: check when a section with an
   anchor exists; [language-switcher.md](language-switcher.md) has an equally untested `scrollIntoView` for the hash.
