@@ -122,3 +122,21 @@ $breakpoints: (
   white-space: nowrap;
   border: 0;
 }
+
+@mixin eyebrow {
+  margin: 0;
+  font-size: var(--font-sm);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-bottom: var(--space-16);
+
+  &::after {
+    content: '';
+    display: block;
+    width: 2.5rem;
+    height: 2px;
+    margin-top: var(--space-1);
+    background: var(--color-accent);
+  }
+}

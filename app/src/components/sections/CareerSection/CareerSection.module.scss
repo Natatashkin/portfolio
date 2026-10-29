@@ -1,0 +1,154 @@
+@use 'mixins' as *;
+
+// Mobile: the cover is a full-bleed background of the whole section and the steps zigzag up over it.
+// Desktop (`lg` up): two columns; the cover is a rounded picture and the steps are cards placed on it.
+.career {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  box-sizing: border-box;
+  padding: var(--space-section) 0;
+  overflow-x: clip;
+
+  // Keeps the text readable over the photo; the amount is tuned with the real image.
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-bg) 75%, transparent),
+      color-mix(in srgb, var(--color-bg) 45%, transparent) 50%,
+      transparent
+    );
+
+    @include media-up(lg) {
+      display: none;
+    }
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100%;
+    gap: var(--space-10);
+
+    @include media-up(lg) {
+      position: relative;
+      display: grid;
+      grid-template-areas:
+        'text media'
+        'text media';
+      grid-template-columns: 4fr 7fr;
+      column-gap: var(--space-10);
+      row-gap: var(--space-6);
+    }
+  }
+
+  // Lower middle of the container, behind the content. Desktop only.
+  &__grid {
+    display: none;
+    pointer-events: none;
+
+    @include media-up(lg) {
+      display: block;
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+    }
+  }
+
+  &__text {
+    grid-area: text;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+  }
+
+  &__eyebrow {
+    @include eyebrow;
+  }
+
+  &__headline {
+    margin: 0;
+    font-size: var(--font-h2);
+    font-weight: 400;
+  }
+
+  &__description {
+    color: var(--color-text);
+
+    @include media-up(lg) {
+      color: var(--color-text-muted);
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  // Mobile: no boxes of its own, so the picture fills the section and the tagline joins the container's column.
+  &__media,
+  &__mediaWrapper {
+    display: contents;
+  }
+
+  &__media {
+    @include media-up(lg) {
+      grid-area: media;
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-6);
+    }
+  }
+
+  &__mediaWrapper {
+    @include media-up(lg) {
+      position: relative;
+      display: block;
+      flex-grow: 1;
+    }
+  }
+
+  // Mobile: positioned against `.career`, because `__media` and `__mediaWrapper` generate no boxes there.
+  &__picture {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    display: flex;
+
+    img {
+      object-fit: cover;
+      object-position: 75% 0%;
+
+      @include media-up(md) {
+        object-position: 55% 0%;
+      }
+    }
+
+    @include media-up(lg) {
+      position: static;
+      z-index: auto;
+      aspect-ratio: 16 / 7;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  &__tagline {
+    margin: 0;
+    font-size: var(--font-h3);
+    font-style: italic;
+    text-decoration: underline;
+    text-decoration-color: var(--color-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.4em;
+  }
+}

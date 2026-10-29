@@ -11,17 +11,17 @@ instead, and motion follows `scroll-animation`.
 
 ## Where it goes
 
-| It is                                             | Place                                                            |
-| ------------------------------------------------- | ---------------------------------------------------------------- |
-| Reusable block (button, link, image, switcher)    | `app/src/components/ui/<Name>/`                                  |
-| Page frame (header, footer, burger, theme script) | `app/src/components/layout/<Name>/`                              |
-| Landing section                                   | `new-section` skill                                              |
-| Private child used by one component only          | flat in the parent's folder (`HeroSection/HeroMetricNumber.tsx`) |
-| Hook shared by components                         | `app/src/hooks/useThing.ts`                                      |
-| Hook used by one component                        | beside that component                                            |
-| Pure helper                                       | `app/src/lib/helpers/` (exported through its barrel)             |
+| It is                                             | Place                                                     |
+| ------------------------------------------------- | --------------------------------------------------------- |
+| Reusable block (button, link, image, switcher)    | `app/src/components/ui/<Name>/`                           |
+| Page frame (header, footer, burger, theme script) | `app/src/components/layout/<Name>/`                       |
+| Landing section                                   | `new-section` skill                                       |
+| Private child used by one component only          | own folder in the parent's (`CareerSection/CareerSteps/`) |
+| Hook shared by components                         | `app/src/hooks/useThing.ts`                               |
+| Hook used by one component                        | beside that component                                     |
+| Pure helper                                       | `app/src/lib/helpers/` (exported through its barrel)      |
 
-A private child is not re-exported. When a second component needs it, move it to `components/ui/`. Never name a folder
+A private child gets its own folder (component, module, `index.ts`) and is imported by that folder, only by its parent. When a second component needs it, move it to `components/ui/`. Never name a folder
 "widgets".
 
 ## Steps

@@ -64,9 +64,7 @@
   }
 
   &__role {
-    margin-bottom: var(--space-3);
-    font-size: var(--font-base);
-    color: var(--color-text-muted);
+    @include eyebrow;
   }
 
   &__fullname {

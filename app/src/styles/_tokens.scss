@@ -43,6 +43,7 @@
   --font-sans: var(--font-montserrat), system-ui, sans-serif;
 
   // Small text
+  --font-xs-extra: clamp(0.67rem, 0.5rem + 0.2vw, 0.75rem);
   --font-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
   --font-sm: clamp(0.8125rem, 0.75rem + 0.25vw, 0.875rem);
 
@@ -66,6 +67,8 @@
   --radius-md: 12px;
   --radius-lg: 20px;
   --radius-pill: 999px;
+
+  --marker-size: 0.75rem;
 
   --space-1: clamp(0.25rem, 0.25vw, 0.5rem);
   --space-2: clamp(0.5rem, 1vw, 0.75rem);

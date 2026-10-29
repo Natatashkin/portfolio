@@ -24,8 +24,10 @@ they cannot express.
   kind of barrel in `sanity-cms/schemaTypes/lib/helpers/index.ts`.
 - Consumers import by folder (`@/components/ui/Navigation`), never the inner file. Inside the folder, import types
   relatively. Route files in `app/` keep Next's names and are not re-exported.
-- A private client child sits flat in its parent's folder (`HeroSection/HeroMetricNumber.tsx`) and is not re-exported; when a
-  second component needs it, move it to `components/ui/`.
+- A private child sits in its own folder inside its parent's (`CareerSection/CareerSteps/` with its module and
+  `index.ts`) and is imported by that folder; it is not used outside the parent. When a second component needs it,
+  move it to `components/ui/`. A small client leaf with no styles of its own may stay flat
+  (`HeroSection/HeroMetricNumber.tsx`).
 - Hooks shared by components go in `hooks/` (`useThing.ts`); a hook used by one component stays beside it.
 - Server Components by default; `"use client"` only for interactivity or animation, as small leaf components.
 - Never name a folder "widgets".

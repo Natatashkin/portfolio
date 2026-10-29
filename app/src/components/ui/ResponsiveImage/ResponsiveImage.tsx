@@ -1,6 +1,6 @@
 import Image, { getImageProps } from 'next/image';
 import type { SanityImageSource } from '@sanity/image-url';
-import { MOBILE_MAX_WIDTH } from '@/lib/constants';
+import { MOBILE_QUERY } from '@/lib/constants';
 import { urlFor } from '@/lib/sanity/image';
 import { getDimensions } from './helpers';
 import styles from './ResponsiveImage.module.scss';
@@ -44,11 +44,7 @@ const ResponsiveImage = ({
   return (
     <picture className={className}>
       {mobileSrcSet && (
-        <source
-          media={`(max-width: ${MOBILE_MAX_WIDTH}px)`}
-          srcSet={mobileSrcSet}
-          sizes={sizes}
-        />
+        <source media={MOBILE_QUERY} srcSet={mobileSrcSet} sizes={sizes} />
       )}
       <Image
         className={styles.responsiveImage__img}

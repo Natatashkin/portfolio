@@ -131,3 +131,17 @@ The pointer-lit dot grid moves from `components/sections/HeroSection/` to `compo
 section uses it too (desktop `lg` up only); the convention is to move a private child to `components/ui/` when a second
 component needs it. The `HERO_GRID_*` constants become `DOT_GRID_*`. Behaviour is unchanged. Done as the first block of
 [features/career-section.md](features/career-section.md).
+
+## D17. Private child in its own folder; one layout rendered per viewport after hydration
+
+A private child gets its own folder inside the parent's (`CareerSection/CareerSteps/` with its own module and
+`index.ts`) and is imported by folder, like any component: the parent's module stays small and the child's styles have
+one owner. It is still not shared; a second user moves it to `components/ui/`.
+
+`CareerSteps` is needed in two places of the DOM (a column on mobile, an overlay on the cover on desktop). The server
+does not know the viewport, so it renders both variants and CSS hides one; `CareerSteps` (client leaf, `useIsMobile`
+over `useSyncExternalStore`, server snapshot `null`) then drops the variant that does not match, also after a resize.
+Reason: the author wanted no repeated ids and one list in the DOM for assistive tech. Trade-off: until hydration the
+markup is duplicated and the step data is serialised twice in the RSC payload. The mobile breakpoint in TypeScript is a
+single `MOBILE_QUERY` (`(max-width: 1023px)`, the complement of `DESKTOP_QUERY`, mirrors `lg`); `MOBILE_MAX_WIDTH` is
+gone.

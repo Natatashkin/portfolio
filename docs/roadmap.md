@@ -11,13 +11,14 @@
 - UI blocks: Button, LinkButton, Headline, RichText, ResponsiveImage, Container, InView ([features/ui-blocks.md](features/ui-blocks.md)). Logo, Navigation and SocialLinks are part of the header and footer.
 - Layout: Header, BurgerMenu, Footer. Lenis `SmoothScrollProvider` with GSAP loaded after idle ([features/smooth-scroll.md](features/smooth-scroll.md)).
 - `HeroSection` (with `HeroMetricNumber`) and the shared `DotGrid`.
+- `CareerSection` static layout, desktop and mobile (scroll reveal and pulsing dot pending, [features/career-section.md](features/career-section.md)).
 - Language switcher ([features/language-switcher.md](features/language-switcher.md)) in the desktop header and the burger menu.
 - Theme switcher: label shows the target theme, the chosen theme survives a language switch ([features/theme-switcher.md](features/theme-switcher.md)).
 
 ## Next
 
 1. Remaining sections in order of page flow, each with query, component, registration (see
-   [features/README.md](features/README.md)): career, whatIDo, playground, projects, experience, techStack, cta.
+   [features/README.md](features/README.md)): career (reveal and pulse left), whatIDo, playground, projects, experience, techStack, cta.
 2. Scroll animations per section (GSAP ScrollTrigger in client children; see the `scroll-animation` skill).
 3. Page metadata and SEO: title, description, canonical, hreflang (D2), Open Graph, `sitemap.ts`, `robots.ts`.
 4. Revalidate webhook (`api/revalidate`) and Studio webhook, see D4. Until it exists, edits reach the page after the

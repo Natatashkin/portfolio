@@ -7,7 +7,9 @@ export const PAGE_QUERY_TAGS = [
   'page',
   'technology',
   'skill',
-  'metric'
+  'metric',
+  'road',
+  'downloadDocument'
 ] as const;
 export const SITE_SETTING_QUERY_TAGS = ['site-settings'] as const;
 
@@ -97,6 +99,90 @@ export const PAGE_QUERY = defineQuery(`
               label[language == $locale][0].value != "" =>
               label[language == $locale][0].value,
             label[language == "en"][0].value
+          )
+        }
+      },
+      _type == "careerSection" => {
+        "eyebrow": select(
+          defined(eyebrow[language == $locale][0].value) &&
+            eyebrow[language == $locale][0].value != "" =>
+            eyebrow[language == $locale][0].value,
+          eyebrow[language == "en"][0].value
+        ),
+        "headline": select(
+          defined(headline[language == $locale][0].value) &&
+            count(headline[language == $locale][0].value) > 0 =>
+            headline[language == $locale][0].value,
+          headline[language == "en"][0].value
+        ),
+        "description": select(
+          defined(description[language == $locale][0].value) &&
+            count(description[language == $locale][0].value) > 0 =>
+            description[language == $locale][0].value,
+          description[language == "en"][0].value
+        ),
+        "steps": steps[defined(@->_id)]->{
+          _id,
+          "period": select(
+            defined(period[language == $locale][0].value) &&
+              period[language == $locale][0].value != "" =>
+              period[language == $locale][0].value,
+            period[language == "en"][0].value
+          ),
+          "title": select(
+            defined(title[language == $locale][0].value) &&
+              title[language == $locale][0].value != "" =>
+              title[language == $locale][0].value,
+            title[language == "en"][0].value
+          ),
+          "description": select(
+            defined(description[language == $locale][0].value) &&
+              description[language == $locale][0].value != "" =>
+              description[language == $locale][0].value,
+            description[language == "en"][0].value
+          )
+        },
+        "tagline": select(
+          defined(tagline[language == $locale][0].value) &&
+            tagline[language == $locale][0].value != "" =>
+            tagline[language == $locale][0].value,
+          tagline[language == "en"][0].value
+        ),
+        "cover": cover{
+          desktop,
+          mobile,
+          "alt": select(
+            defined(alt[language == $locale][0].value) &&
+              alt[language == $locale][0].value != "" =>
+              alt[language == $locale][0].value,
+            alt[language == "en"][0].value
+          )
+        },
+        "buttons": buttons[]{
+          _key,
+          linkType,
+          url,
+          hasAnchor,
+          anchor,
+          variant,
+          hasIcon,
+          "label": select(
+            defined(label[language == $locale][0].value) &&
+              label[language == $locale][0].value != "" =>
+              label[language == $locale][0].value,
+            label[language == "en"][0].value
+          ),
+          "fileUrl": select(
+            linkType == "download" && download.language == "uk" =>
+              download.document->files.uk.asset->url,
+            linkType == "download" && download.language == "en" =>
+              download.document->files.en.asset->url
+          ),
+          "fileName": select(
+            linkType == "download" && download.language == "uk" =>
+              download.document->files.uk.asset->originalFilename,
+            linkType == "download" && download.language == "en" =>
+              download.document->files.en.asset->originalFilename
           )
         }
       }

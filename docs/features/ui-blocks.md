@@ -168,8 +168,8 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
   purpose.
 - Accepted: `LinkButton.opensInNewTab` and `SocialLinks.opensInNewTab` hold the same text. Move it to a shared
   namespace if a third component needs it.
-- `MOBILE_MAX_WIDTH = 767` in `lib/constants.ts` is tied to the `md` breakpoint (768px) by a comment; the two values
-  stay separate because the SCSS variable cannot be read from TypeScript.
+- `MOBILE_QUERY` and `DESKTOP_QUERY` in `lib/constants.ts` are tied to the `lg` breakpoint (1024px) by a comment; the
+  values stay separate because the SCSS variable cannot be read from TypeScript.
 - `Button` stays in `components/ui` although only `ThemeSwitcher` uses it: it is generic and carries the variants.
 
 ## Tasks

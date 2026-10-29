@@ -1,4 +1,4 @@
-// Media queries used with `window.matchMedia()`.
+// Media queries used with `window.matchMedia()` and `<source media>`.
 
 export const DARK_QUERY = '(prefers-color-scheme: dark)';
 
@@ -11,10 +11,8 @@ export const POINTER_QUERY =
 // Matches the `lg` breakpoint in styles/_mixins.scss.
 export const DESKTOP_QUERY = '(min-width: 1024px)';
 
-// Breakpoints in pixels, for the places that cannot read the SCSS variables.
-
-// One pixel below the `md` breakpoint (768px) in styles/_mixins.scss.
-export const MOBILE_MAX_WIDTH = 767;
+// The complement of `DESKTOP_QUERY`: everything below the `lg` breakpoint.
+export const MOBILE_QUERY = '(max-width: 1023px)';
 
 // Storage keys.
 

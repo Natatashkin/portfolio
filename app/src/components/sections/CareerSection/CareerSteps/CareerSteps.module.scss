@@ -1,0 +1,174 @@
+@use 'mixins' as *;
+
+// A plain list by default. `--overlay` (up to four steps) turns it into cards laid over the cover.
+// Both variants are in the server HTML; the media queries below hide the wrong one until the client
+// keeps only the matching variant in the DOM.
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+
+  &--mobile {
+    @include media-up(lg) {
+      display: none;
+    }
+  }
+
+  &--desktop {
+    display: none;
+
+    @include media-up(lg) {
+      display: flex;
+    }
+  }
+
+  // Column inside `career__container`: the steps follow the DOM order top to bottom, zigzagging from the
+  // right towards the left around the centre of the road. Four cards, see `MAX_OVERLAY_STEPS`.
+  &--mobile.steps--overlay {
+    flex-direction: column;
+    gap: var(--space-20);
+    margin-bottom: var(--space-12);
+  }
+
+  // Cards laid over the cover in the media column.
+  &--desktop.steps--overlay {
+    @include media-up(lg) {
+      display: block;
+      position: absolute;
+      inset: 0;
+    }
+  }
+
+  &__item {
+    position: relative;
+    box-sizing: border-box;
+    padding: var(--space-2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+  }
+
+  &--overlay &__item {
+    background: color-mix(in srgb, var(--color-bg) 78%, transparent);
+    backdrop-filter: blur(6px);
+  }
+
+  // `--step-offset` moves the card centre away from the container centre, so the zigzag stays on the road
+  // at any width (at most a quarter of the width, which keeps a half-width card inside the container).
+  &--mobile.steps--overlay &__item {
+    --step-width: min(14.5rem, 50%);
+
+    width: var(--step-width);
+    margin-left: calc(50% - var(--step-width) / 2 + var(--step-offset));
+
+    &:nth-child(1) {
+      --step-offset: 28%;
+
+      @include media-up(md) {
+        --step-offset: 40%;
+      }
+    }
+
+    &:nth-child(2) {
+      --step-offset: 15%;
+      @include media-up(md) {
+        --step-offset: 35%;
+      }
+    }
+
+    &:nth-child(3) {
+      --step-offset: -20%;
+
+      @include media-up(md) {
+        --step-offset: 12%;
+      }
+    }
+
+    &:nth-child(4) {
+      --step-offset: 0%;
+    }
+  }
+
+  // Four cards, see `MAX_OVERLAY_STEPS`.
+  &--desktop.steps--overlay &__item {
+    position: absolute;
+    left: var(--step-x);
+    bottom: var(--step-y);
+    width: clamp(8rem, 21%, 15rem);
+
+    &:nth-child(1) {
+      --step-x: clamp(0.75rem, 0.5rem + 0.2vw, 1rem);
+      --step-y: clamp(4rem, 3.5vw, 5rem);
+    }
+
+    &:nth-child(2) {
+      --step-x: clamp(10rem, 14vw, 16rem);
+      --step-y: clamp(6rem, 5vw, 7rem);
+    }
+
+    &:nth-child(3) {
+      --step-x: clamp(19rem, 27vw, 35rem);
+      --step-y: clamp(10rem, 8vw, 11rem);
+    }
+
+    &:nth-child(4) {
+      --step-x: clamp(27.5rem, 42vw, 50rem);
+      --step-y: clamp(13rem, 12vw, 17rem);
+    }
+  }
+
+  &__period {
+    margin: 0 0 var(--space-1);
+    font-size: var(--font-xs-extra);
+    color: var(--color-accent-ink);
+  }
+
+  &__title {
+    margin: 0 0 var(--space-1);
+    font-size: var(--font-sm);
+    font-weight: 600;
+  }
+
+  &__text {
+    margin: 0;
+    font-size: var(--font-xs-extra);
+    color: var(--color-text-muted);
+  }
+
+  // Accent dot under the card with a thin line down to the road; only the cards have it.
+  &__marker {
+    --marker-line-mobile: var(--space-8);
+    --marker-line: var(--space-12);
+
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    width: var(--marker-size);
+    height: var(--marker-size);
+    margin: var(--space-1) 0 0 calc(var(--marker-size) / -2);
+    border-radius: 50%;
+    background: var(--color-accent);
+    box-shadow: 0 0 0 3px
+      color-mix(in srgb, var(--color-accent) 35%, transparent);
+
+    &::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      height: var(--marker-line);
+      border-left: 1px dashed var(--color-accent);
+
+      @include media-up(md) {
+        height: var(--marker-line-mobile);
+      }
+    }
+  }
+
+  &--overlay &__marker {
+    display: block;
+  }
+}
