@@ -37,7 +37,7 @@ Report real output, never assume a check passed.
 - **GROQ in `queries.ts`:** `pnpm typegen` in `app/` before `code-quality` (stale types fail the type check).
 - **Routes, data, config:** also `pnpm build` in `app/`.
 - **`sanity-cms/` schemas:** `pnpm format` and `pnpm build` in `sanity-cms/`, then `pnpm typegen` in `app/`.
-- **Visible or interactive UI:** the `ui-verify` skill (browser checks), on top of the checks above.
+- **Visible or interactive UI:** the browser checks from "UI verification" in `docs/conventions.md`, on top of the checks above.
 - **Docs only (`.md`):** Prettier on the changed files (below).
 
 Docs Prettier: `cd sanity-cms && pnpm exec prettier --write <files>` for files inside `sanity-cms/` (its own config);

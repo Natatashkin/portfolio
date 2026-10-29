@@ -20,7 +20,7 @@ feature spec from the task and syncs it with the code when the feature is done; 
 every block. The steps are encoded as project
 skills in `.claude/skills/`: `work-block` (one block from change to hand-off),
 `feature-spec` (write or update a spec in `features/`), `new-section` (a landing section end to end),
-`new-component` (folder, styles, strings, checks), `scroll-animation` (Lenis + GSAP motion), `ui-verify` (browser checks of a UI change) and `docs-sync` (audit docs against code).
+`new-component` (folder, styles, strings, checks), `scroll-animation` (Lenis + GSAP motion) and `docs-sync` (audit docs against code).
 
 ## Index
 

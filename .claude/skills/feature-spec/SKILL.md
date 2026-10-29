@@ -25,7 +25,7 @@ their line numbers go stale at the next edit.
   belongs in the agent's report, not in the document.
 - **No verification log.** Do not write "verified in Chrome", dates, viewport sizes or what the dev server showed. A
   ticked criterion means it was seen; add at most one clause for a limit a reader must know ("not tested with a real
-  screen reader"). How to check a UI change is the `ui-verify` skill.
+  screen reader"). How to check a UI change is in `docs/conventions.md` (UI verification).
 - **No history of the work.** No block-by-block narrative, "the earlier version…" or "before the fix". Why a choice
   was made is one line plus the reason in Decisions, or in `docs/decisions.md` when it affects other features.
 - **Say each thing once.** A deferred or unverified check is listed once, in Open questions, not repeated in every

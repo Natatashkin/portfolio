@@ -7,7 +7,7 @@ Sanity. The repo is shown to employers, so code and docs stay clean and position
 
 Specs in `docs/` are the source of truth. Read the relevant spec before coding; change the spec first when behavior
 changes. Index and workflow: `docs/README.md`. Decisions and their reasons: `docs/decisions.md`.
-Project skills in `.claude/skills/` carry the procedures: `work-block`, `feature-spec`, `new-section`, `new-component`, `scroll-animation`, `ui-verify`, `docs-sync`.
+Project skills in `.claude/skills/` carry the procedures: `work-block`, `feature-spec`, `new-section`, `new-component`, `scroll-animation`, `docs-sync`.
 
 ## Repository
 
@@ -38,6 +38,16 @@ Two independent packages with their own lockfiles (pnpm); no root workspace. Run
 - Animation (Lenis + GSAP): client-only, one Lenis instance, clean up every tween (`scroll-animation` skill), animate
   `transform`/`opacity` only, honor `prefers-reduced-motion`.
 - Details and rationale: `docs/conventions.md`.
+
+## Tools
+
+- **Design:** write UI code with the `frontend-design` skill in mind (clear aesthetic direction, no templated
+  defaults), within the existing tokens and design decisions in `docs/`.
+- **Library docs:** check current docs through Context7 (`mcp__context7__*`) before writing code against Next.js,
+  React, GSAP, Lenis, next-intl, Sanity and other libraries; do not rely on memory.
+- **UI checks:** done in the real browser with Playwright MCP (`mcp__playwright__*`); Chrome DevTools MCP
+  (`mcp__chrome-devtools__*`) only where needed (computed styles, media emulation, Lighthouse, performance).
+  Checklist and reporting: `docs/conventions.md` (UI verification).
 
 ## Out of scope
 

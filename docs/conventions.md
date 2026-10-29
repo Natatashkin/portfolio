@@ -116,3 +116,45 @@ Icons are never stored in Sanity. They are components in `components/icons/`, ma
 ## Comments
 
 Explain why, not what. No dead code. The repo is read by employers.
+
+## UI verification
+
+Ticking a spec criterion means it was seen in the browser, not that the code looks right. Applies to any block with a
+visible or interactive change (see `work-block`). Pick what the change can affect; do not run everything for a
+one-line style fix.
+
+**Tools.** Playwright MCP (`mcp__playwright__*`) is the default: navigation, resizing, snapshots, screenshots,
+console, network. Chrome DevTools MCP (`mcp__chrome-devtools__*`) only where Playwright falls short: computed styles,
+`prefers-reduced-motion` / color-scheme emulation, Lighthouse, performance traces. Load the tools in one ToolSearch
+call. If they are missing or fail after two or three attempts, stop and tell the author; never claim a browser check
+that did not run. Library docs come from Context7; UI code is written with the `frontend-design` skill in mind.
+
+**Setup.** `cd app && pnpm dev` (background), `http://localhost:3000`. Next 16 dev writes to `.next/dev`, so
+`next dev` and `next build` can run together; a second `next dev` will not start, so reuse the running one. Widths:
+about 390 px (mobile), 844 px (burger menu, below `lg` at 1024 px), 1400 px (desktop).
+
+**What to check.**
+
+- **Locales:** `/` (en) and `/uk`.
+- **Themes:** set `localStorage.theme` to `light`, `dark`, or remove it (system); reload. With the key removed there
+  is no `data-theme` attribute and the theme follows the browser preference.
+- **Console:** `browser_console_messages`; look for `hydrat`, `Warning`, `Error`.
+- **Accessibility tree:** `browser_snapshot`: order, names, only one copy of a duplicated control exposed (desktop
+  row and burger panel both exist; CSS hides the other). Visible text must be part of an `aria-label`.
+- **Keyboard:** tab order, visible focus, Escape closes the burger menu and returns focus to the toggle, Enter/Space
+  on controls.
+- **Soft locale switch:** click the language link, not a reload. A marker set on `window` must survive; the whole
+  `[locale]` layout remounts (D14), so check `<html lang>`, `data-theme`, `color-scheme`, the `theme-ready` class,
+  scroll lock, focus returning to the visible language switcher, and rebuilt animation state.
+- **No JavaScript:** `curl -s http://localhost:3000/` shows the content in the server HTML. That alone does not prove
+  it is visible: also check the CSS for elements hidden until JS runs (`opacity: 0`, `visibility: hidden`, initial
+  animation states).
+- **Reduced motion:** `browser_emulate_media` (Playwright) or `emulate` (chrome-devtools) with
+  `prefers-reduced-motion: reduce`. If it cannot be set, say so and check the code (`gsap.matchMedia`, the CSS media
+  query). Content must be fully visible, with no non-essential motion.
+- **Assets:** `browser_network_requests` for failed images or fonts when the change touches media.
+
+**Report** (in the author's language). Say which checks ran with the concrete result, and which did not and why. Tick
+a criterion only for what was observed; mark a code-only check as "from code, not checked in the browser". A real
+screen reader is never available: state announcements as "checked in the accessibility tree", not as heard. Record a
+defect as a finding with the repro (locale, theme, width, steps); do not fix it unprompted.
