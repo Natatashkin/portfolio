@@ -22,8 +22,8 @@
 2. Scroll animations for the remaining sections (GSAP ScrollTrigger in client children; see the `scroll-animation`
    skill; the career section is the reference).
 3. Page metadata and SEO: title, description, canonical, hreflang (D2), Open Graph, `sitemap.ts`, `robots.ts`.
-4. Revalidate webhook (`api/revalidate`) and Studio webhook, see D4. Until it exists, edits reach the page after the
-   hourly `revalidate`.
+4. Revalidate webhook: the route `api/revalidate` is built (D4). Left: set `SANITY_REVALIDATE_SECRET` in Vercel and
+   create the Sanity webhook that points at it. Until then, edits reach the page after the hourly `revalidate`.
 5. Draft preview via Draft Mode with a server-only read token (conventions: Security).
 6. Final 404 design; resolve the `__next_error__` shell issue (decision D7).
 7. Decide on security headers (decision D13).

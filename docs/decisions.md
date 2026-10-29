@@ -22,8 +22,9 @@ references and images. GROQ falls back to `en` when `uk` is empty; Studio valida
 
 Pages are SSG; the page fetch is tagged with every document type its query reads (`PAGE_QUERY_TAGS`), `revalidate =
 3600` is a safety net, and the Sanity client uses `useCdn: false` so Next's cache is the only staleness layer. The tags
-take effect only once the revalidate webhook exists. When a query starts dereferencing another type, extend
-`PAGE_QUERY_TAGS` and map the type to its tag in the webhook.
+are invalidated by the `api/revalidate` route, which a Sanity webhook calls on every change. When a query starts
+dereferencing another type, extend `PAGE_QUERY_TAGS` and the webhook filter; a type whose tag differs from its name
+needs an entry in the route's `TAG_BY_TYPE`.
 
 ## D5. Theme in `localStorage`, not a cookie
 

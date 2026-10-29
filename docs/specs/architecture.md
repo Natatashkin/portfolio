@@ -66,8 +66,20 @@ Outside `src/`: `messages/{en,uk}.json`, `scripts/check-sanity.mts` (connection 
 
 ## Planned (not built yet)
 
-Sanity webhook → secret-checked route handler → `revalidateTag`; draft preview via Draft Mode; page-level metadata
-(title, description, canonical, hreflang, Open Graph); static security headers. See [../roadmap.md](../roadmap.md).
+Draft preview via Draft Mode; page-level metadata (title, description, canonical, hreflang, Open Graph); static
+security headers. See [../roadmap.md](../roadmap.md).
+
+## Revalidation webhook
+
+`POST /api/revalidate` (`app/src/app/api/revalidate/route.ts`). A Sanity webhook sends the changed document; the route
+verifies the signature with `SANITY_REVALIDATE_SECRET` (`parseBody` from `next-sanity/webhook`), maps `_type` to a cache
+tag (`siteSettings` → `site-settings`, any other type is its own tag) and calls `revalidateTag(tag, { expire: 0 })`.
+A bad signature returns 401, an unparsable body or a missing `_type` 400, a missing secret 500. A signed webhook for
+an unknown type returns 200 with `{ revalidated: null }`, so Sanity does not retry it.
+
+Sanity webhook setup (dashboard → API → Webhooks): URL `https://<site>/api/revalidate`, trigger on create, update and
+delete, filter `_type in ["page","technology","skill","metric","road","downloadDocument","siteSettings"]`, projection
+`{_type}`, the same secret, dataset `production`.
 
 ## Environment variables (names only, see `app/.env.example`)
 
@@ -77,5 +89,5 @@ Sanity webhook → secret-checked route handler → `revalidateTag`; draft previ
 | `NEXT_PUBLIC_SANITY_DATASET`     | Sanity dataset (`production`)                    | used    |
 | `NEXT_PUBLIC_SANITY_API_VERSION` | Pinned Sanity API version date                   | used    |
 | `SANITY_API_READ_TOKEN`          | Server-only read token for drafts / preview      | planned |
-| `SANITY_REVALIDATE_SECRET`       | Secret for the revalidate webhook route          | planned |
+| `SANITY_REVALIDATE_SECRET`       | Secret for the revalidate webhook route          | used    |
 | `NEXT_PUBLIC_SITE_URL`           | Canonical site URL (metadata, hreflang, sitemap) | planned |
