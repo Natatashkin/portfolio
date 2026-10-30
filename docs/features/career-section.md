@@ -1,11 +1,40 @@
 # Career section
 
-Status: done, no open questions (not observed: the eyebrow-only section, a failed GSAP import; the frame-by-frame
-no-flash check was not done and is accepted by the author)
+Status: done, with a pending change to the button (see Change) until it is implemented. No other open questions (not
+observed: the eyebrow-only section, a failed GSAP import; the frame-by-frame no-flash check was not done and is
+accepted by the author)
+
+## Change: one `button` instead of `buttons[]`
+
+Now the section shows a `buttons[]` list, which holds the two CV downloads (EN and UK, D15). The CV downloads move to
+the [Experience section](experience-section.md). Career gets one optional `button` (a single `linkButton`, field-level
+`initialValue` `linkType: external`, variant `primary`, `linkType` stays editable). The data is re-entered by hand in Studio; no migration script.
+
+Order: the Career query and field change ships only after the author has re-entered the data in Studio; until that
+block the Career query keeps `buttons`. The requirements below that are marked unchecked belong to this change.
+
+- [ ] `careerSection` has one field `button` (`linkButton`, `initialValue` `linkType: external`, variant `primary`,
+      `linkType` editable) and no `buttons`.
+- [ ] The `careerSection` branch of `PAGE_QUERY` drops `buttons` with its D15 download resolution and projects `button`
+      like the other single-button sections: `linkType`, `url`, `hasAnchor`, `anchor`, `variant`, `hasIcon`, localized
+      label; no download fields.
+- [ ] `CareerSection` renders the single `button` through `LinkButton` inside `career__actions`; nothing renders when it
+      is empty. `CareerText` still staggers `career__actions` as one root element.
+- [ ] No CV-button code is left in `CareerSection` (no `buttons` array, no download or file logic).
+
+Tasks:
+
+1. Schema: field `button` in `sanity-cms/schemaTypes/sections/careerSection.ts`, replacing `buttons`; Studio build.
+2. Author re-enters the data in Studio (by hand).
+3. Query: the `careerSection` branch in `app/src/lib/sanity/queries.ts`; `pnpm typegen`.
+4. Component and types in `CareerSection/`: replace the buttons array and CV logic with one `LinkButton`; the
+   `career__actions` wrapper and the `CareerText` stagger target must still work with one root element.
+5. `pnpm format` and `pnpm code-quality` in `app/`; then update this spec (requirements, Design, Files) and drop the
+   Change section.
 
 ## Goal
 
-Show the author's career path ("My way"): an intro with a CV download and a short list of steps laid over a road photo,
+Show the author's career path ("My way"): an intro with one button and a short list of steps laid over a road photo,
 ending with a handwritten tagline. The section also makes the hero's dot grid a shared component.
 
 The overlay mode (cards on the cover, desktop diagonal, mobile zigzag, marker with its line to the road) is built and
@@ -13,7 +42,8 @@ must not change; later work adds only the reveal and the pulse to it.
 
 ## Requirements
 
-- [x] Renders `eyebrow`, `headline`, rich-text `description`, `buttons` (may be a CV download, D15), `steps` (`road`
+- [x] Renders `eyebrow`, `headline`, rich-text `description`, `buttons` (may be a CV download, D15; becomes one
+      `button`, see Change), `steps` (`road`
       references, in order; `period`, `title`, `description` per card), `tagline` and `cover`. Every field is optional;
       a missing one renders nothing, never an empty wrapper.
 - [x] Without a desktop cover asset no image renders, the steps fall back to the plain list and the text still renders.
@@ -51,9 +81,10 @@ must not change; later work adds only the reveal and the pulse to it.
 
 ## Design
 
-- **Schema and query:** exist, no change: `careerSection` and `road` in
-  [../specs/content-model.md](../specs/content-model.md); the `careerSection` branch of `PAGE_QUERY` filters dangling
-  step references and resolves download files (D15).
+- **Schema and query:** `careerSection` and `road` in [../specs/content-model.md](../specs/content-model.md); the
+  `careerSection` branch of `PAGE_QUERY` filters dangling step references and, today, resolves download files for
+  `buttons` (D15). The pending change (see Change) drops `buttons` with that resolution and projects `button` as
+  described there.
 - **Split:** `CareerSection` is a Server Component. `CareerText`, `CareerSteps` and `DotGrid` are client leaves.
   `CareerSteps` is rendered twice (`mobile`, `desktop`), keeps only the variant for the viewport after hydration and is
   CSS-hidden before it (D17).
@@ -75,8 +106,9 @@ must not change; later work adds only the reveal and the pulse to it.
   `onComplete` sets `data-revealed`, which starts the pulse.
 - **`CareerText`:** owns the `career__textBody` ref and takes its `className` from the section (it never imports the
   section's SCSS module); the section renders it only when headline, description or buttons exist. The stagger targets
-  are `ref.children`, so each part renders one root element (true for `Headline`, `RichText` and the actions `div`).
-- **Edge cases:** a card with no text is skipped; an empty `uk` value falls back to `en` in GROQ (D3); if every button
+  are `ref.children`, so each part renders one root element (true for `Headline`, `RichText` and the actions `div`;
+  with a single `button` the `career__actions` wrapper stays that one root).
+- **Edge cases:** a card with no text is skipped; an empty `uk` value falls back to `en` in GROQ (D3); if the button
   renders nothing, the empty `career__actions` is still staggered and takes a gap (accepted). Also accepted: a button
   at opacity 0 stays focusable; a line may lead its marker by the card's fade; the mobile segment end can be a few px
   off when card heights differ; dashes stretch while a line draws.
@@ -84,6 +116,8 @@ must not change; later work adds only the reveal and the pulse to it.
 ## Files
 
 - `app/src/components/sections/CareerSection/`: `CareerSection`, with private `CareerSteps/` and `CareerText/`.
+- For the pending change: `sanity-cms/schemaTypes/sections/careerSection.ts`, `app/src/lib/sanity/queries.ts`,
+  `app/src/sanity.types.ts` (generated), `CareerSection/` (component, types).
 - `app/src/components/ui/DotGrid/`: moved and renamed from `HeroSection/HeroGrid`; the hero imports it.
 - `app/src/hooks/useIsMobile.ts`: viewport subscription, `null` on the server.
 - `app/src/lib/constants.ts`, `styles/_tokens.scss`, `styles/_mixins.scss`, `app/[locale]/layout.tsx`: the new query
@@ -107,6 +141,7 @@ must not change; later work adds only the reveal and the pulse to it.
       done, the author accepted it. By design an item in the lower half of the viewport at GSAP load is hidden after it
       was visible; rare, accepted.
 - [x] `pnpm format`, `pnpm code-quality` and `pnpm build` pass in `app/`.
+- [ ] Career renders its single `button`; no CV-button code is left in it (the Change block above).
 
 ## Decisions
 
@@ -122,4 +157,5 @@ the continuous pulse, D19 Caveat as the handwriting accent, D20 the tagline need
   `--color-accent` is too pale on the light page background. Markers, lines and the pulse keep `--color-accent`.
 - On the photo the tagline is white with a bottom scrim (`--color-on-primary` turns dark in the dark theme).
 - `CareerText` owns the `career__textBody` ref and takes its class as a prop.
-- Two CV buttons (D15) in a row; no minimum height; `MOBILE_QUERY` mirrors `lg`; `useIsMobile` stays in `hooks/`.
+- Two CV buttons (D15) in a row today; they move to the Experience section and Career keeps one `button` (author
+  decision, see Change). No minimum height; `MOBILE_QUERY` mirrors `lg`; `useIsMobile` stays in `hooks/`.

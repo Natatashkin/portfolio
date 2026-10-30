@@ -9,6 +9,7 @@ export const PAGE_QUERY_TAGS = [
   'skill',
   'metric',
   'road',
+  'experience',
   'downloadDocument'
 ] as const;
 export const SITE_SETTING_QUERY_TAGS = ['site-settings'] as const;
@@ -157,6 +158,111 @@ export const PAGE_QUERY = defineQuery(`
               alt[language == $locale][0].value,
             alt[language == "en"][0].value
           )
+        },
+        "buttons": buttons[]{
+          _key,
+          linkType,
+          url,
+          hasAnchor,
+          anchor,
+          variant,
+          hasIcon,
+          "label": select(
+            defined(label[language == $locale][0].value) &&
+              label[language == $locale][0].value != "" =>
+              label[language == $locale][0].value,
+            label[language == "en"][0].value
+          ),
+          "fileUrl": select(
+            linkType == "download" && download.language == "uk" =>
+              download.document->files.uk.asset->url,
+            linkType == "download" && download.language == "en" =>
+              download.document->files.en.asset->url
+          ),
+          "fileName": select(
+            linkType == "download" && download.language == "uk" =>
+              download.document->files.uk.asset->originalFilename,
+            linkType == "download" && download.language == "en" =>
+              download.document->files.en.asset->originalFilename
+          )
+        }
+      },
+      _type == "experienceSection" => {
+        "eyebrow": select(
+          defined(eyebrow[language == $locale][0].value) &&
+            eyebrow[language == $locale][0].value != "" =>
+            eyebrow[language == $locale][0].value,
+          eyebrow[language == "en"][0].value
+        ),
+        "headline": select(
+          defined(headline[language == $locale][0].value) &&
+            count(headline[language == $locale][0].value) > 0 =>
+            headline[language == $locale][0].value,
+          headline[language == "en"][0].value
+        ),
+        "description": select(
+          defined(description[language == $locale][0].value) &&
+            count(description[language == $locale][0].value) > 0 =>
+            description[language == $locale][0].value,
+          description[language == "en"][0].value
+        ),
+        "experiences": experiences[defined(@->_id)]->{
+          _id,
+          periodStart,
+          periodEnd,
+          "logo": logo.asset->{
+            url,
+            "width": metadata.dimensions.width,
+            "height": metadata.dimensions.height
+          },
+          "company": select(
+            defined(company[language == $locale][0].value) &&
+              company[language == $locale][0].value != "" =>
+              company[language == $locale][0].value,
+            company[language == "en"][0].value
+          ),
+          "role": select(
+            defined(role[language == $locale][0].value) &&
+              role[language == $locale][0].value != "" =>
+              role[language == $locale][0].value,
+            role[language == "en"][0].value
+          ),
+          "companyDescription": select(
+            defined(companyDescription[language == $locale][0].value) &&
+              count(companyDescription[language == $locale][0].value) > 0 =>
+              companyDescription[language == $locale][0].value,
+            companyDescription[language == "en"][0].value
+          ),
+          "entries": entries[]{
+            _key,
+            "title": select(
+              defined(title[language == $locale][0].value) &&
+                title[language == $locale][0].value != "" =>
+                title[language == $locale][0].value,
+              title[language == "en"][0].value
+            ),
+            "description": select(
+              defined(description[language == $locale][0].value) &&
+                count(description[language == $locale][0].value) > 0 =>
+                description[language == $locale][0].value,
+              description[language == "en"][0].value
+            ),
+            "technologies": technologies[defined(@->_id)]->{
+              _id,
+              _type,
+              _type == "technology" => {
+                name
+              },
+              _type == "skill" => {
+                "title": select(
+                  defined(title[language == $locale][0].value) &&
+                    title[language == $locale][0].value != "" =>
+                    title[language == $locale][0].value,
+                  title[language == "en"][0].value
+                )
+              }
+            }
+          }
         },
         "buttons": buttons[]{
           _key,

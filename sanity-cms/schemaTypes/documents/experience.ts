@@ -38,6 +38,12 @@ export const experienceType = defineType({
       validation: requiredInAllLanguages,
     }),
     defineField({
+      name: 'logo',
+      type: 'image',
+      description:
+        'Company logo, uploaded at its display size. Decorative: the company name is shown next to it.',
+    }),
+    defineField({
       name: 'role',
       type: 'internationalizedArrayString',
       validation: requiredInAllLanguages,
@@ -109,9 +115,11 @@ export const experienceType = defineType({
       company: 'company',
       start: 'periodStart',
       end: 'periodEnd',
+      media: 'logo',
     },
-    prepare: ({company, start, end}) => ({
+    prepare: ({company, start, end, media}) => ({
       title: baseText(company),
+      media,
       subtitle: start && `${formatDate(start)} – ${end ? formatDate(end) : 'present'}`,
     }),
   },
