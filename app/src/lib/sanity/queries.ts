@@ -159,8 +159,7 @@ export const PAGE_QUERY = defineQuery(`
             alt[language == "en"][0].value
           )
         },
-        "buttons": buttons[]{
-          _key,
+        "button": button{
           linkType,
           url,
           hasAnchor,

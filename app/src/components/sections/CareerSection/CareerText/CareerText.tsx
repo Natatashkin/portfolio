@@ -6,7 +6,7 @@ import { NO_REDUCED_MOTION_QUERY, REDUCED_MOTION_QUERY } from '@/lib/constants';
 import { loadGsap } from '@/lib/motion/loadGsap';
 
 type CareerTextProps = {
-  // Headline, description and buttons; the eyebrow stays outside and is not animated.
+  // Headline, description and button; the eyebrow stays outside and is not animated.
   children: ReactNode;
   className?: string;
 };

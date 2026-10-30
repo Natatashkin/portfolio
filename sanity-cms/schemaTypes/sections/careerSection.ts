@@ -46,10 +46,16 @@ export const careerSectionType = defineType({
       group: 'media',
     }),
     defineField({
-      name: 'buttons',
-      type: 'array',
+      name: 'button',
+      type: 'linkButton',
       group: 'actions',
-      of: [defineArrayMember({type: 'linkButton'})],
+      // The link type stays editable. The object replaces the type's own defaults, so every key is repeated.
+      initialValue: {
+        linkType: 'external',
+        variant: 'primary',
+        hasIcon: false,
+        hasAnchor: false,
+      },
     }),
     defineField({
       name: 'anchorId',

@@ -22,15 +22,16 @@ const CareerSection = ({
   steps,
   tagline,
   cover,
-  buttons
+  button
 }: SectionOf<'careerSection'>) => {
   const cards = (steps ?? []).filter(
     ({ period, title, description: text }) => period || title || text
   );
   const hasCover = Boolean(cover?.desktop.asset);
   const isOverlay = hasCover && cards.length <= MAX_OVERLAY_STEPS;
-  const hasButtons = Boolean(buttons && buttons.length > 0);
-  const hasBody = Boolean(headline || description || hasButtons);
+  // `LinkButton` renders nothing without a label, so a labelless button must not leave an empty wrapper.
+  const hasButton = Boolean(button?.label);
+  const hasBody = Boolean(headline || description || hasButton);
   const hasText = Boolean(eyebrow || hasBody);
 
   return (
@@ -55,11 +56,9 @@ const CareerSection = ({
                       className={styles.career__description}
                     />
                   )}
-                  {hasButtons && (
+                  {button && hasButton && (
                     <div className={styles.career__actions}>
-                      {buttons?.map(({ _key, ...button }) => (
-                        <LinkButton key={_key} {...button} />
-                      ))}
+                      <LinkButton {...button} />
                     </div>
                   )}
                 </CareerText>

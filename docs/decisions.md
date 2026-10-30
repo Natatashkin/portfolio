@@ -89,8 +89,8 @@ React. Details: [features/language-switcher.md](features/language-switcher.md).
 ## D15. Download link in `linkButton`
 
 Downloadable files live in a `downloadDocument` collection ("Documents" in Studio) with one PDF per language (`en`
-required, `uk` optional), so a new CV needs no deploy. The Career section shows one button per language version
-(`buttons[]`), whatever the site locale, because a visitor does not think of switching the site language to get the
+required, `uk` optional), so a new CV needs no deploy. The Experience section shows one button per language version
+(`buttons[]`; the Career `button` is one link of any type, external by default), whatever the site locale, because a visitor does not think of switching the site language to get the
 other CV. `linkType` gets a third value, `download`, and the button holds a `document` reference plus the `language`
 version. GROQ reads `download.document->files[download.language].asset->url`, the app passes it through `safeHref`
 (D6) and appends `?dl=<filename>` (the asset's `originalFilename`, fallback `document.pdf`): the `download` attribute

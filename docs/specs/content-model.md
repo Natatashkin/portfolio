@@ -83,7 +83,7 @@ current position. Every document has the same shape, there are no conditional fi
 | Section             | Fields                                                                                                                                               |
 | ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `heroSection`       | `role`, `fullname` (loc), `headline`, `description`, `stack[]` → technology \| skill, `image`, `quote` (loc text), `metrics[]` → metric, `ctaButton` |
-| `careerSection`     | `eyebrow`, `headline`, `description`, `steps[]` → road, `tagline`, `cover`, `buttons[]` (linkButton)                                                 |
+| `careerSection`     | `eyebrow`, `headline`, `description`, `steps[]` → road, `tagline`, `cover`, `button` (linkButton)                                                    |
 | `whatIDoSection`    | `eyebrow`, `headline`, `description`, `skills[]` → skill, `button`                                                                                   |
 | `playgroundSection` | `eyebrow`, `headline`, `description`, `pieces[]` → piece, `button`                                                                                   |
 | `projectsSection`   | `eyebrow`, `headline`, `description`, `projects[]` → project, `button`                                                                               |
