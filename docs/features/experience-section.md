@@ -18,15 +18,16 @@ reuse the Career layout. The `ExperienceSection` component is built from scratch
       nothing, never an empty wrapper. No `experiences`: neither the container nor the grid column is rendered, the
       intro alone is a single column.
 - [ ] A company card shows: logo, company name, date range, role label (on all screen sizes), `companyDescription`,
-      technology tags, then one nested card per entry (`title`, bulleted `description`, its technologies). Entries are
-      not flattened into one list.
+      then one nested card per entry (`title`, its technology tags, bulleted `description`). Entries are not flattened
+      into one list.
 - [ ] Dates: `periodStart` and `periodEnd` as month and year in the page locale, in `<time datetime>`; an empty
       `periodEnd` renders the `messages` key `present` ("Present" in `en`, "До тепер" in `uk`).
-- [ ] Tags: the technologies and skills of all entries of a company, deduplicated by the referenced `_id`, in order of
-      first appearance. Text only (`name` / `title`); `iconKey` is ignored.
+- [ ] Tags: each entry shows its own `technologies` (technologies and skills) between its title and its description,
+      in the order of the references, with the shared `TagList` component (also used by the hero). Text only
+      (`name` / `title`); `iconKey` is ignored. The company card has no tags of its own.
 - [ ] Desktop (`lg` up): left column with the eyebrow, headline, description and CV buttons; right column with the
       cards on a vertical line. Each card has a marker on the line and the date range beside it (start on the first
-      line, end on the second). Company info on top, tags below, then the entry cards with title and bullet
+      line, end on the second). Company info on top, then the entry cards with title, tags and bullet
       description visible.
 - [ ] Desktop pin (`lg` up, viewport height at least the provisional minimum, no reduced motion): the left column
       scrolls with the page (no `position: sticky`, no pin). The right column is a viewport-height container pinned
@@ -111,8 +112,9 @@ reuse the Career layout. The `ExperienceSection` component is built from scratch
     (`container` > `track` > `<ol>`) around server-rendered card children; owns the refs, the pin and the reveal. The
     section puts the intro in the left column and omits the right column when there are no experiences.
   - `ExperienceEntry/` (client leaf): toggle state, heading, button, description.
-  - Date helper and tag deduplication: pure functions in the `ExperienceSection` folder (a file next to the
-    component, not in `lib/helpers`).
+  - `ui/TagList/`: the chip list promoted from the hero; used by the hero and by each entry.
+  - Helpers: `formatMonth` in `lib/helpers/dateFormatters.ts`, `countRichTextItems` in `lib/helpers/richText.ts`
+    (both through the `lib/helpers` barrel). The section keeps its types in `ExperienceSection/types.ts`.
 - **Entry toggle:** CSS and state only, no `useIsMobile` (it is `null` on the server, so desktop would flash a wrong
   state). Server and client render the same state, so there is no hydration flash. The description is a plain element
   with no `hidden`, `aria-hidden` or `inert`. The collapsed look is applied only inside a below-`lg` media query, keyed

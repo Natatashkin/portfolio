@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { ArrowIcon } from '@/components/icons';
+import { ArrowIcon, DownloadIcon } from '@/components/icons';
 import { Link } from '@/i18n/navigation';
 import { ANCHOR_PATTERN, DEFAULT_DOWNLOAD_FILENAME } from '@/lib/constants';
 import { safeHref, safePath } from '@/lib/helpers';
@@ -26,7 +26,7 @@ const LinkButton = ({
   const content = (
     <>
       {label}
-      {hasIcon && <ArrowIcon />}
+      {hasIcon && (linkType === 'download' ? <DownloadIcon /> : <ArrowIcon />)}
     </>
   );
 

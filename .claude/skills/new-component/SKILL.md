@@ -30,9 +30,12 @@ A private child gets its own folder (component, module, `index.ts`) and is impor
    A purely visual piece that only composes existing blocks does not.
 2. **Reuse before writing.** Look in `components/ui` (e.g. `Headline`, `RichText`, `LinkButton`, `ResponsiveImage`,
    `Container`, `Button`) and `styles/_mixins.scss` (e.g. `media-up`, `media-down`, `focus-ring`, `muted-control`,
-   `visually-hidden`). Do not add a mixin or helper for one use.
+   `visually-hidden`). Do not add a mixin or helper for one use. If the block you are about to write already exists
+   inside another component (a chip, a list, a card), do not write it a second time: promote the existing markup and
+   styles into a component in `components/ui/` and use it in both places.
 3. **Create the folder** with `PascalCase.tsx`, `PascalCase.module.scss`, `index.ts` and, only for non-trivial types,
-   `types.ts`. Copy the shape of `components/ui/LinkButton/`.
+   `types.ts`. Copy the shape of `components/ui/LinkButton/`. Shared and derived types go in the component's or section's `types.ts`, not in helper
+   files; a small props type used by one component may stay beside it.
    - `index.ts` re-exports only: `export { default } from './Name';` and `export type { NameProps } from './types';`.
      No logic, no `export *`. Folder-level barrels exist only for `components/icons` and `lib/helpers`.
    - Consumers import the folder (`@/components/ui/Name`), never the inner file; use `@/` instead of `../`. Inside the

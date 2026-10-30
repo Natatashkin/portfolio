@@ -4,8 +4,10 @@ import Headline from '@/components/ui/Headline';
 import LinkButton from '@/components/ui/LinkButton';
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import RichText from '@/components/ui/RichText';
+import TagList from '@/components/ui/TagList';
+import { toTagItems } from '@/lib/helpers';
 import type { SectionOf } from '@/lib/sanity/types';
-import HeroMetricNumber from './HeroMetricNumber';
+import HeroMetricNumber from './HeroMetricNumber/HeroMetricNumber';
 import styles from './HeroSection.module.scss';
 
 const HeroSection = ({
@@ -44,20 +46,7 @@ const HeroSection = ({
             <LinkButton {...ctaButton} />
           </div>
         )}
-        {stack && stack.length > 0 && (
-          <ul className={styles.hero__stack}>
-            {stack.map((item) => {
-              const label =
-                item._type === 'technology' ? item.name : item.title;
-
-              return label ? (
-                <li key={item._id} className={styles.hero__stackItem}>
-                  {label}
-                </li>
-              ) : null;
-            })}
-          </ul>
-        )}
+        <TagList className={styles.hero__stack} tags={toTagItems(stack)} />
         {image?.desktop.asset && (
           <figure className={styles.hero__image}>
             {/* `sizes` mirrors the widths of `.hero__picture` (50vw / 44vw / 33vw, max 400px). */}

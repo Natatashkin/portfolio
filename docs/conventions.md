@@ -15,12 +15,18 @@ they cannot express.
 ## Components
 
 - One folder per component: `PascalCase.tsx`, `PascalCase.module.scss`, `index.ts`, optional `types.ts` (only for
-  non-trivial types).
+  non-trivial types). Shared and derived types (items derived from TypeGen types, shapes used by more than one file) live in
+  the component or section `types.ts`, not in helper files; a section keeps one `types.ts` for itself and its private
+  children. A small props type used by one component may stay beside it.
+- A block that already exists in one component and is needed in a second is not written again: the existing markup
+  and styles are promoted into a component in `components/ui/` (`TagList`, taken from the hero) and both places use
+  it. Check the code for the block before creating a new one.
 - `index.ts` re-exports only: `export { default } from './Navigation'`, and public types by name
   (`export type { NavigationItem } from './types'`). No logic, no `export *`, no folder-level barrels,
   with two named exceptions: `components/icons/index.ts` (a set of uniform icons, imported as
   `import { ArrowIcon } from '@/components/icons'`) and `app/src/lib/helpers/index.ts` (imported as
-  `import { safeHref, safePath } from '@/lib/helpers'`). Both re-export by name only. The Studio has the same
+  `import { safeHref, safePath } from '@/lib/helpers'`). Both re-export by name only. Pure helpers are grouped by
+  topic in files there (`dateFormatters.ts`, `richText.ts`), not in a file named after one section. The Studio has the same
   kind of barrel in `sanity-cms/schemaTypes/lib/helpers/index.ts`.
 - Consumers import by folder (`@/components/ui/Navigation`), never the inner file. Inside the folder, import types
   relatively. Route files in `app/` keep Next's names and are not re-exported.
@@ -82,7 +88,7 @@ they cannot express.
 - Mixins stay minimal (breakpoints, focus ring, visually-hidden, `muted-control` shared by the theme and language
   switchers and the social links, `button-variants` / `button-variant-transparent` for `Button` and `LinkButton`).
   Breakpoints are SCSS variables.
-- BEM in camelCase: `.hero`, `.hero__stackItem`, `.linkButton--accent`; nest with `&__` / `&--`; no
+- BEM in camelCase: `.hero`, `.hero__stack`, `.linkButton--accent`; nest with `&__` / `&--`; no
   element-of-element chains.
 
 ## Data and i18n

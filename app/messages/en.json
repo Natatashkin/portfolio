@@ -28,5 +28,13 @@
   "SocialLinks": {
     "label": "Social links",
     "opensInNewTab": "opens in a new tab"
+  },
+  "ExperienceSection": {
+    "timeline": "Work experience",
+    "present": "Present",
+    "items": "{count, plural, one {# item} other {# items}}"
+  },
+  "RichText": {
+    "opensInNewTab": "opens in a new tab"
   }
 }

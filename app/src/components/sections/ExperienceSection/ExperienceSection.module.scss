@@ -1,0 +1,56 @@
+@use 'mixins' as *;
+
+// Mobile: one column, the intro and then the timeline. From `lg`: the intro on the left, the timeline on the right.
+.experience {
+  padding: var(--space-section) 0;
+
+  &__layout {
+    display: grid;
+    gap: var(--space-12);
+
+    @include media-up(lg) {
+      grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+      align-items: start;
+      column-gap: var(--space-16);
+
+      // Only one of the two parts exists: it takes the whole row.
+      &--single {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+  }
+
+  &__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+  }
+
+  // The gap to the headline comes from the column's `gap`, not from the eyebrow's own margin.
+  &__eyebrow {
+    @include eyebrow;
+
+    margin-bottom: 0;
+  }
+
+  &__headline {
+    margin: 0;
+    font-size: var(--font-h2);
+    font-weight: 400;
+  }
+
+  &__description {
+    color: var(--color-text-muted);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+  }
+
+  &__timeline {
+    min-width: 0;
+  }
+}

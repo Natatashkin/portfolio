@@ -18,6 +18,12 @@ export const DESKTOP_QUERY = '(min-width: 1024px)';
 // The complement of `DESKTOP_QUERY`: everything below the `lg` breakpoint.
 export const MOBILE_QUERY = '(max-width: 1023px)';
 
+// The Experience intro is pinned on a desktop viewport with no reduced-motion preference and at least this
+// tall. The height floor keeps the pin off short screens, where a held column would cover most of the view;
+// the intro's own height is checked at run time, because it depends on the text.
+const INTRO_PIN_MIN_HEIGHT_QUERY = '(min-height: 40rem)';
+export const INTRO_PIN_QUERY = `${DESKTOP_QUERY} and ${NO_REDUCED_MOTION_QUERY} and ${INTRO_PIN_MIN_HEIGHT_QUERY}`;
+
 // Storage keys.
 
 export const THEME_STORAGE_KEY = 'theme';
@@ -34,6 +40,9 @@ export const LOCALE_SWITCH_MAX_AGE_MS = 10_000;
 // Gives assistive tech time to register a freshly created or emptied live region before its text
 // changes, and the remounted layout time to settle before focus and hash are restored.
 export const AFTER_SWITCH_DELAY_MS = 150;
+
+// A resize of the window settles for this long before the pinned Experience intro is judged again.
+export const RESIZE_REFRESH_DELAY_MS = 150;
 
 // Caps how long loading GSAP waits for the browser to be idle.
 export const IDLE_TIMEOUT_MS = 2000;

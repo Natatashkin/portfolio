@@ -28,5 +28,13 @@
   "SocialLinks": {
     "label": "Соціальні мережі",
     "opensInNewTab": "відкривається в новій вкладці"
+  },
+  "ExperienceSection": {
+    "timeline": "Досвід роботи",
+    "present": "До тепер",
+    "items": "{count, plural, one {# пункт} few {# пункти} many {# пунктів} other {# пункту}}"
+  },
+  "RichText": {
+    "opensInNewTab": "відкривається в новій вкладці"
   }
 }

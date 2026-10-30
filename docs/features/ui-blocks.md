@@ -32,7 +32,7 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 - [ ] A download link carries a visually hidden "(download file)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.download`).
 - [x] `variant` is `primary` (default when empty or unknown), `secondary` or `accent`; classes `button--<variant>`.
-- [x] `hasIcon` appends `ArrowIcon` after the label; the icon is `aria-hidden` with `focusable="false"`.
+- [x] `hasIcon` appends an icon after the label: `DownloadIcon` for a download button, `ArrowIcon` for the others; the icon is `aria-hidden` with `focusable="false"`.
 - [x] Styles: tokens only (`--color-*`, `--space-*`, `--radius-pill`, `--font-base`), `focus-visible` uses the
       `focus-ring` mixin, hover is `opacity: 0.85` only inside `@media (hover: hover)`, and the transition is removed
       under `prefers-reduced-motion: reduce`.

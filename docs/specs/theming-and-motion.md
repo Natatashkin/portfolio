@@ -9,7 +9,7 @@
   the switchers and the social links, `button-variants` and `button-variant-transparent`). Breakpoints are SCSS
   variables because custom properties do not work in media queries. Modules load it with `@use 'mixins' as *;`
   (`sassOptions.loadPaths` points at `src/styles`).
-- BEM per module in camelCase: block `.hero`, element `.hero__stackItem`, modifier `.linkButton--accent`; no
+- BEM per module in camelCase: block `.hero`, element `.hero__stack`, modifier `.linkButton--accent`; no
   element-of-element chains.
 - Font: Montserrat for text (`next/font/google`, latin + cyrillic, `--font-montserrat`); Caveat as a handwriting accent
   where the design asks for it, never body text (`--font-caveat`, token `--font-handwritten`, weight 600, latin +

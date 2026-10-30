@@ -1,0 +1,122 @@
+@use 'mixins' as *;
+
+.entry {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-bg);
+
+  // Below `lg` the header is the row: the toggle's `::after` covers all of it, so a click anywhere
+  // on the row toggles. From `lg` the toggle is not displayed and the header is just the title.
+  &__header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+  }
+
+  // The dot with a halo marks a row that can open (the same glyph as the theme switcher); shown below `lg` only.
+  &__dot {
+    display: inline-flex;
+    flex: none;
+    font-size: var(--font-h3);
+    color: var(--color-text-muted);
+
+    @include media-up(lg) {
+      display: none;
+    }
+  }
+
+  &__arrow {
+    display: inline-flex;
+    flex: none;
+    font-size: var(--font-base);
+    color: var(--color-text-muted);
+    transition: transform var(--transition-base);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &[data-open='true'] &__arrow {
+    transform: rotate(90deg);
+  }
+
+  &__title {
+    flex: 1;
+    min-width: 0;
+    margin: 0;
+    font-size: var(--font-base);
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--color-text);
+  }
+
+  &__toggle {
+    display: inline-flex;
+    flex: none;
+    align-items: center;
+    gap: var(--space-2);
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    font-size: var(--font-sm);
+    color: var(--color-text-muted);
+    cursor: pointer;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: var(--radius-md);
+    }
+
+    &:focus-visible {
+      outline: none;
+
+      &::after {
+        @include focus-ring;
+      }
+    }
+
+    // The body is always open from `lg`, so there is nothing to control. `display: none` also
+    // takes the button out of the accessibility tree and the tab order. Without JS it could not work either.
+    @include media-up(lg) {
+      display: none;
+    }
+
+    @media (scripting: none) {
+      display: none;
+    }
+  }
+
+  // The number is what is seen; the screen-reader text adds the unit.
+  &__countLabel {
+    @include visually-hidden;
+  }
+
+  // The technologies, then the description.
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    padding: 0 var(--space-4) var(--space-4);
+  }
+
+  // A closed row hides its body with `display: none`, which also removes it from the tab order and
+  // the accessibility tree; the toggle is the control for it. Only below `lg`: from `lg` nothing collapses.
+  // Without JS there is no toggle, so the body stays open.
+  @include media-down(lg) {
+    &[data-open='false'] &__body {
+      display: none;
+    }
+
+    @media (scripting: none) {
+      &[data-open='false'] &__body {
+        display: block;
+      }
+    }
+  }
+}

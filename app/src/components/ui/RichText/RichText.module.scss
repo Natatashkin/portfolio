@@ -1,3 +1,5 @@
+@use 'mixins' as *;
+
 .richText {
   color: var(--color-text-muted);
   font-size: var(--font-base);
@@ -5,6 +7,8 @@
 
   &__paragraph {
     margin: 0;
+    // The global `p` rule sets a size; take the block's own, so a caller can scale the whole text.
+    font-size: inherit;
 
     & + & {
       margin-block-start: var(--space-4);
@@ -14,6 +18,20 @@
   &__list {
     margin: var(--space-4) 0 0;
     padding-inline-start: var(--space-6);
+    list-style: disc;
+
+    // Nothing above it to separate from.
+    &:first-child {
+      margin-top: 0;
+    }
+
+    > li {
+      padding-bottom: 0.5rem;
+    }
+  }
+
+  &__hidden {
+    @include visually-hidden;
   }
 
   &__link {

@@ -7,6 +7,9 @@ const importGsap = async () => {
     import('gsap/ScrollTrigger')
   ]);
   gsap.registerPlugin(ScrollTrigger);
+  // A touch device resizes its viewport as the address bar slides; measuring every trigger again on each
+  // of those resizes makes pinned content jump.
+  ScrollTrigger.config({ ignoreMobileResize: true });
 
   return { gsap, ScrollTrigger };
 };
