@@ -11,6 +11,10 @@ type Props = {
   experience: ExperienceItem;
 };
 
+// The logo tile is at most this wide (`--card-logo-size` at `lg`, in `ExperienceCard.module.scss`). Told to
+// `next/image`, so it serves a file for that size instead of one as wide as the uploaded original.
+const LOGO_SIZES = '56px';
+
 // One company: its date range and marker on the timeline rail, then the card. The outer `li` is never
 // animated; the wrapper inside it (date, marker and card) is what the reveal moves.
 const ExperienceCard = ({ experience }: Props) => {
@@ -45,25 +49,17 @@ const ExperienceCard = ({ experience }: Props) => {
           <div className={styles.card__header}>
             {logo && (
               <div className={styles.card__logo}>
-                {logo.width && logo.height ? (
-                  <Image
-                    className={styles.card__logoImage}
-                    src={logo.url}
-                    width={logo.width}
-                    height={logo.height}
-                    alt={company ?? ''}
-                    unoptimized={isSvg}
-                  />
-                ) : (
-                  <Image
-                    className={styles.card__logoImage}
-                    src={logo.url}
-                    fill
-                    sizes="56px"
-                    alt={company ?? ''}
-                    unoptimized={isSvg}
-                  />
-                )}
+                <Image
+                  className={styles.card__logoImage}
+                  src={logo.url}
+                  // Known dimensions give the aspect ratio; without them the image fills the fixed tile.
+                  {...(logo.width && logo.height
+                    ? { width: logo.width, height: logo.height }
+                    : { fill: true })}
+                  sizes={LOGO_SIZES}
+                  alt=""
+                  unoptimized={isSvg}
+                />
               </div>
             )}
             <div className={styles.card__info}>

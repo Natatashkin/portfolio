@@ -89,8 +89,8 @@ Done in the code.
 ## Open questions
 
 - D10 ([../decisions.md](../decisions.md)) accepts the `scrub`/`pin` trail of one frame. The career section is the
-  first ScrollTrigger user but uses no scrub or pin, so the trail is still not re-checked. Note: re-check it for the
-  first section that scrubs or pins.
+  first ScrollTrigger user (no scrub or pin); the Experience section is the second (reveal and an intro pin, no scrub).
+  The trail with that pin is still not re-checked.
 - Sections that animate check reduced motion themselves, because the provider loads no GSAP under that preference (see
   the `scroll-animation` skill): done in `CareerText` and `CareerSteps`, which return before `loadGsap()`.
 - Anchor navigation with Lenis (header links to section ids) is not specified. Proposal: check when a section with an

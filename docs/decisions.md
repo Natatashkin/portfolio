@@ -58,9 +58,10 @@ Modules use `@use 'mixins' as *;` through `sassOptions.loadPaths` (`src/styles`)
 `SmoothScrollProvider` is the only place Lenis is created; it runs its own `requestAnimationFrame` loop. GSAP and
 ScrollTrigger load dynamically (`loadGsap`) when the browser is idle, to keep them out of the first bundle, and
 `ScrollTrigger.update` is called from a `useLenis` callback. Lenis is not driven from `gsap.ticker`: the two clocks
-differ and `lenis.raf` would get a negative delta. Cost: a `scrub`/`pin` animation may trail Lenis by a frame. Under
-reduced motion Lenis stays mounted with `smoothWheel: false` and GSAP is not loaded; the tree must not change shape
-with the preference (it remounted the page on every load).
+differ and `lenis.raf` would get a negative delta. Cost: a `scrub`/`pin` animation may trail Lenis by a frame; the
+Experience section is the second GSAP user (reveal and an intro pin, no scrub), and the trail check for the pin is
+still pending. Under reduced motion Lenis stays mounted with `smoothWheel: false` and GSAP is not loaded; the tree must
+not change shape with the preference (it remounted the page on every load).
 
 ## D11. `linkButton` reading rules
 
@@ -90,8 +91,8 @@ React. Details: [features/language-switcher.md](features/language-switcher.md).
 
 Downloadable files live in a `downloadDocument` collection ("Documents" in Studio) with one PDF per language (`en`
 required, `uk` optional), so a new CV needs no deploy. The Experience section shows one button per language version
-(`buttons[]`; the Career `button` is one link of any type, external by default), whatever the site locale, because a visitor does not think of switching the site language to get the
-other CV. `linkType` gets a third value, `download`, and the button holds a `document` reference plus the `language`
+(`buttons[]`; the Career `button` is one link of any type, external by default), whatever the site locale, because a
+visitor does not think of switching the site language to get the other CV. `linkType` gets a third value, `download`, and the button holds a `document` reference plus the `language`
 version. GROQ reads `download.document->files[download.language].asset->url`, the app passes it through `safeHref`
 (D6) and appends `?dl=<filename>` (the asset's `originalFilename`, fallback `document.pdf`): the `download` attribute
 is ignored for a cross-origin CDN URL, and the Sanity CDN answers `?dl=` with `Content-Disposition: attachment`.
@@ -131,3 +132,23 @@ loaded on page load because the tagline is in the DOM; to be re-checked in produ
 
 The tagline shows only together with a cover or steps. Reason: it closes the road picture and the steps, so without them
 it has nothing to close.
+
+## D21. Experience: pin the left intro, the cards scroll
+
+The intro column is pinned (ScrollTrigger `pin`, no spacing, nothing animated) while the cards scroll normally. Rejected:
+pinning the cards column with a scrubbed track; the transformed track moves focused elements out of view and breaks
+find-in-page. Details: [features/experience-section.md](features/experience-section.md).
+
+## D22. Responsive Experience entry by CSS, not `useIsMobile`
+
+The open or collapsed state of an entry comes from a media query and `data-open`. Reason: `useIsMobile` is `null` on the
+server, so desktop would flash a wrong state, and CSS also works without JS.
+
+## D23. `TagList` promoted from the hero
+
+The hero's chip list moved to `components/ui/TagList` because the Experience entries need it too (same rule as D16).
+
+## D24. Web links in rich text open in a new tab
+
+`RichText` web links get `target="_blank"` and a visually hidden hint; mail and phone links stay in the page. Reason: a
+link in a company description leaves the portfolio, as external `LinkButton` links already do.

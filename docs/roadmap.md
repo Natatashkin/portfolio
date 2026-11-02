@@ -12,15 +12,17 @@
 - Layout: Header, BurgerMenu, Footer. Lenis `SmoothScrollProvider` with GSAP loaded after idle ([features/smooth-scroll.md](features/smooth-scroll.md)).
 - `HeroSection` (with `HeroMetricNumber`) and the shared `DotGrid`.
 - `CareerSection` complete: desktop and mobile layout, text and steps scroll reveal, plain-list fallback with markers and lines, pulsing last marker, handwritten tagline ([features/career-section.md](features/career-section.md)).
+- `ExperienceSection`: company timeline, entry toggle, card reveal, pinned intro, CV downloads, shared `TagList`
+  ([features/experience-section.md](features/experience-section.md)); the Lenis trail check for its pin is open.
 - Language switcher ([features/language-switcher.md](features/language-switcher.md)) in the desktop header and the burger menu.
 - Theme switcher: label shows the target theme, the chosen theme survives a language switch ([features/theme-switcher.md](features/theme-switcher.md)).
 
 ## Next
 
 1. Remaining sections in order of page flow, each with query, component, registration (see
-   [features/README.md](features/README.md)): whatIDo, playground, projects, experience, techStack, cta.
+   [features/README.md](features/README.md)): whatIDo, playground, projects, techStack, cta.
 2. Scroll animations for the remaining sections (GSAP ScrollTrigger in client children; see the `scroll-animation`
-   skill; the career section is the reference).
+   skill; the career and experience sections are the references).
 3. Page metadata and SEO: title, description, canonical, hreflang (D2), Open Graph, `sitemap.ts`, `robots.ts`.
 4. Revalidate webhook: the route `api/revalidate` is built (D4). Left: set `SANITY_REVALIDATE_SECRET` in Vercel and
    create the Sanity webhook that points at it. Until then, edits reach the page after the hourly `revalidate`.
@@ -29,11 +31,6 @@
 7. Decide on security headers (decision D13).
 8. Bring the header navigation back when work on the nested pages starts: it is hidden now and the code is commented
    out in `Header.tsx` ([features/header.md](features/header.md)).
-
-## Deferred checks
-
-The checks deferred by the author for done-with-caveats features are listed in the Open questions of their specs:
-[language-switcher.md](features/language-switcher.md), [theme-switcher.md](features/theme-switcher.md).
 
 ## Launch checklist
 

@@ -71,7 +71,7 @@ site).
 | `piece`                                       | `title`, `hint` (loc), `componentKey` (list; maps to a client demo)                                                                                                      |
 | `technology`                                  | `name`, `iconKey`                                                                                                                                                        |
 | `project`                                     | `title` (loc), `slug` (from `en` title), `summary` (loc richText), `image`, `technologies[]` → technology, `repoUrl`, `liveUrl`, `link` (linkButton)                     |
-| `experience`                                  | `company`, `role` (loc), `periodStart`, `periodEnd`, `companyDescription` (loc richText), `entries[]`                                                                    |
+| `experience`                                  | `company`, `logo` (image), `role` (loc), `periodStart`, `periodEnd`, `companyDescription` (loc richText), `entries[]`                                                    |
 
 `experience`: `company`, `role`, `periodStart` and `entries[]` (at least one) are required; `periodEnd` and
 `companyDescription` are optional. Dates are entered as `DD-MM-YYYY` and stored as ISO; an empty `periodEnd` means the
@@ -87,7 +87,7 @@ current position. Every document has the same shape, there are no conditional fi
 | `whatIDoSection`    | `eyebrow`, `headline`, `description`, `skills[]` → skill, `button`                                                                                   |
 | `playgroundSection` | `eyebrow`, `headline`, `description`, `pieces[]` → piece, `button`                                                                                   |
 | `projectsSection`   | `eyebrow`, `headline`, `description`, `projects[]` → project, `button`                                                                               |
-| `experienceSection` | `eyebrow`, `headline`, `description`, `experiences[]` → experience, `button`                                                                         |
+| `experienceSection` | `eyebrow`, `headline`, `description`, `experiences[]` → experience, `buttons[]` (linkButton), `anchorId`                                             |
 | `techStackSection`  | `eyebrow`, `headline`, `description`, `technologies[]` → technology, `moreLabel`                                                                     |
 | `ctaSection`        | `eyebrow`, `headline`, `description`, `tagline`, `button`                                                                                            |
 

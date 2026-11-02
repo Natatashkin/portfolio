@@ -26,10 +26,10 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
       matches `^[a-z]+(?:-[a-z]+)*$` (the Studio regex, copied by hand); otherwise it is dropped.
 - [x] External links carry a visually hidden "(opens in a new tab)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.opensInNewTab`); the string is the same as in `SocialLinks`.
-- [ ] `linkType: download`: renders `<a href download>` with the PDF URL of `download.document` in `download.language`,
+- [x] `linkType: download`: renders `<a href download>` with the PDF URL of `download.document` in `download.language`,
       after `safeHref`, with `?dl=<originalFilename>` (fallback `document.pdf`, `DEFAULT_DOWNLOAD_FILENAME`) appended; no `target="_blank"`. Renders nothing when there is no file or
       the URL is unsafe. Props gain `fileUrl` and `fileName` (resolved in GROQ, D15).
-- [ ] A download link carries a visually hidden "(download file)" after the content, from `messages/{en,uk}.json`
+- [x] A download link carries a visually hidden "(download file)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.download`).
 - [x] `variant` is `primary` (default when empty or unknown), `secondary` or `accent`; classes `button--<variant>`.
 - [x] `hasIcon` appends an icon after the label: `DownloadIcon` for a download button, `ArrowIcon` for the others; the icon is `aria-hidden` with `focusable="false"`.
@@ -64,11 +64,17 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 
 - [x] Props: `value` (TypeGen `RichText`), `className`. Renders a `<div class="richText">` around `PortableText`.
 - [x] Normal block is a `<p>`, bullet list a `<ul>`; paragraphs get spacing through the `& + &` rule.
-- [x] The `link` mark renders `<a>` only when `safeHref(value?.href)` passes (`rel="noopener noreferrer"`, no
-      `target`); otherwise the link text is rendered as plain text.
+- [x] The `link` mark renders `<a>` only when `safeHref(value?.href)` passes (`rel="noopener noreferrer"`); otherwise
+      the link text is rendered as plain text. An `https:` link gets `target="_blank"` and a visually hidden
+      "(opens in a new tab)" (`RichText.opensInNewTab`); mail and phone links stay in the page (D24).
 - [x] No `dangerouslySetInnerHTML`.
 - [x] `strong` and `em` (allowed by the schema) use the library defaults (`<strong>`, `<em>`); there is no custom
       component for them.
+
+### TagList (server)
+
+- [x] Props: `tags` (`{ id, label }[]`, built by `toTagItems`) and `className` for placement. Renders a `<ul>` of chips
+      (text only); nothing for an empty list. Used by the hero stack and the Experience entries.
 
 ### ResponsiveImage (server)
 
@@ -141,6 +147,8 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 - `app/src/components/ui/Button/`: `Button.tsx`, `.module.scss`, `types.ts` (`ButtonProps`, `ButtonVariant`), `index.ts`.
 - `app/src/components/ui/Headline/`: `Headline.tsx`, `.module.scss` (accent colour, shine keyframes), `index.ts`.
 - `app/src/components/ui/RichText/`: `RichText.tsx`, `.module.scss`, `index.ts`.
+- `app/src/components/ui/TagList/`: `TagList.tsx`, `.module.scss`, `types.ts`, `index.ts`.
+- `app/src/components/icons/`: `DownloadIcon` (download button), `ArrowIcon` (other buttons).
 - `app/src/components/ui/ResponsiveImage/`: `ResponsiveImage.tsx`, `helpers.ts` (`getDimensions`),
   `.module.scss`, `index.ts`.
 - `app/src/components/ui/Container/`: `Container.tsx`, `.module.scss`, `index.ts`.

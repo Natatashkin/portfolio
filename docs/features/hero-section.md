@@ -11,8 +11,8 @@ with a quote and key metrics. Also the reference implementation for every other 
 
 - [x] Role, full name as the page `h1`, headline with the `accent` highlight and a shine effect, rich-text description.
 - [x] CTA from `ctaButton` (`LinkButton`).
-- [x] Stack list from references to `technology` (shows `name`) or `skill` (shows `title`); items without a label are
-      skipped.
+- [x] Stack list from references to `technology` (shows `name`) or `skill` (shows `title`), rendered by the shared
+      `TagList` through `toTagItems`; items without a label are skipped.
 - [x] Portrait from `responsiveImage` (separate mobile crop, falls back to desktop), loaded with `priority`; quote as
       the figure caption. The desktop asset gates the whole figure: without it neither the image nor the quote renders.
 - [x] Metrics (from `metric` references): the value fades in once half of it is on screen (one-shot), staggered by

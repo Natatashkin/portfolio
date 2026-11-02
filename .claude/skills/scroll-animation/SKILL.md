@@ -72,8 +72,11 @@ no-preference)', ...)` callback from step 4, and the content stays in its static
 ## Traps
 
 - A `scrub` or `pin` animation may trail Lenis by one frame; this is the accepted cost of D10. The career section
-  uses neither (one-shot reveals), so the trail has not been re-checked yet: re-check it on the first `scrub` or
-  `pin`. If the trail is visible, record a new decision in `docs/decisions.md`; do not quietly switch the clock.
+  uses neither; the Experience section pins its intro without scrub, and the trail has not been re-checked yet:
+  re-check it there and on any new `scrub` or `pin`. If the trail is visible, record a new decision in
+  `docs/decisions.md`; do not quietly switch the clock.
+- Pin without taking space: `pinSpacing: false` on a column in a grid row, trigger on the row, `end` as a function
+  (`bottom <offset + column height>px`); keep `grid-area` and margins off the pinned element, GSAP's spacer copies its box.
 - A tween started from a ScrollTrigger callback (`onEnter`) is created after the `matchMedia` callback returned, so
   `mm.revert()` does not own it: kill it, and clear its inline styles, in the cleanup the callback returns.
 - Create the trigger first and hide the element only if it has not been reached (`progress === 0` and `onEnter` has
