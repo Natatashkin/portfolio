@@ -70,8 +70,8 @@ read only when `hasAnchor` is true, because Studio does not clear it when the to
 
 ## D12. Pre-launch indexing off
 
-Root metadata sets `robots: noindex`. Remove it at launch together with switching the Vercel Production Branch of both
-projects from `dev` to `main`.
+Root metadata sets `robots: noindex`. Remove it at launch. The Vercel Production Branch of both projects is already
+`main`, so the site stays unindexed until this flag is removed.
 
 ## D13. Security headers (undecided)
 

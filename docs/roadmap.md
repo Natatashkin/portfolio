@@ -16,6 +16,7 @@
   ([features/experience-section.md](features/experience-section.md)); the Lenis trail check for its pin is open.
 - Language switcher ([features/language-switcher.md](features/language-switcher.md)) in the desktop header and the burger menu.
 - Theme switcher: label shows the target theme, the chosen theme survives a language switch ([features/theme-switcher.md](features/theme-switcher.md)).
+- Production Branch of both Vercel projects (Studio, app) is `main`; `dev` is the working branch and builds as Preview.
 
 ## Next
 
@@ -36,7 +37,6 @@
 
 - Remove `robots: noindex` from the root metadata.
 - Add hreflang `<head>` tags (D2); not implemented yet (Page metadata and SEO).
-- Switch Production Branch of both Vercel projects from `dev` to `main`.
 - `sanity schema deploy` if a tool needs the cloud schema.
 - Replace the `projects/` and `cases/` stub routes with real pages or remove them. With real pages, header anchor
   items on non-home pages must link to `/#<url>` (see [features/header.md](features/header.md)).
