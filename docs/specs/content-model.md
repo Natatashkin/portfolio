@@ -52,6 +52,7 @@ ignored for the other two types. See
 | `siteSettings.socialLinks[].url` | Required. `https`, `mailto` or `tel`                                                                                                                                           |
 | `page.slug`                      | Required. Generated from the internal `title`; `home` is the landing                                                                                                           |
 | `project.slug`                   | Required. Generated from the `en` (base) entry of the localized `title` via a source function                                                                                  |
+| `project` required fields        | `title` and `summary` in every language; `image`; `technologies` (at least one). `buttons` is optional                                                                         |
 | `piece.componentKey`             | One of `animatedCard`, `formValidation`, `themeSwitcher`, `responsiveDesign`                                                                                                   |
 | `technology.name`                | Required                                                                                                                                                                       |
 
@@ -70,7 +71,7 @@ site).
 | `skill`                                       | `title` (loc), `iconKey`                                                                                                                                                 |
 | `piece`                                       | `title`, `hint` (loc), `componentKey` (list; maps to a client demo)                                                                                                      |
 | `technology`                                  | `name`, `iconKey`                                                                                                                                                        |
-| `project`                                     | `title` (loc), `slug` (from `en` title), `summary` (loc richText), `image`, `technologies[]` → technology, `repoUrl`, `liveUrl`, `link` (linkButton)                     |
+| `project`                                     | `title` (loc), `slug` (from `en` title), `summary` (loc richText), `image`, `technologies[]` → technology, `buttons[]` (linkButton, optional)                            |
 | `experience`                                  | `company`, `logo` (image), `role` (loc), `periodStart`, `periodEnd`, `companyDescription` (loc richText), `entries[]`                                                    |
 
 `experience`: `company`, `role`, `periodStart` and `entries[]` (at least one) are required; `periodEnd` and

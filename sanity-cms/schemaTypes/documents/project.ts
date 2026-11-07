@@ -26,10 +26,12 @@ export const projectType = defineType({
     defineField({
       name: 'summary',
       type: 'internationalizedArrayRichText',
+      validation: requiredInAllLanguages,
     }),
     defineField({
       name: 'image',
       type: 'responsiveImage',
+      validation: (rule) => rule.required(),
     }),
     defineField({
       name: 'technologies',
@@ -37,25 +39,15 @@ export const projectType = defineType({
       of: [
         defineArrayMember({
           type: 'reference',
-          to: [{type: 'technology'}],
+          to: [{type: 'technology'}, {type: 'skill'}],
         }),
       ],
+      validation: (rule) => rule.required().min(1),
     }),
     defineField({
-      name: 'repoUrl',
-      title: 'Repository URL',
-      type: 'url',
-      validation: (rule) => rule.uri({scheme: ['https']}),
-    }),
-    defineField({
-      name: 'liveUrl',
-      title: 'Live URL',
-      type: 'url',
-      validation: (rule) => rule.uri({scheme: ['https']}),
-    }),
-    defineField({
-      name: 'link',
-      type: 'linkButton',
+      name: 'buttons',
+      type: 'array',
+      of: [defineArrayMember({type: 'linkButton'})],
     }),
   ],
   preview: {

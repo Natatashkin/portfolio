@@ -337,27 +337,17 @@ export type Project = {
   title?: InternationalizedArrayString;
   slug: Slug;
   summary?: InternationalizedArrayRichText;
-  image?: ResponsiveImage;
-  technologies?: Array<
+  image: ResponsiveImage;
+  technologies: Array<
     {
       _key: string;
     } & TechnologyReference
   >;
-  repoUrl?: string;
-  liveUrl?: string;
-  link?: LinkButton;
-};
-
-export type LinkButton = {
-  _type: 'linkButton';
-  label?: InternationalizedArrayString;
-  linkType?: 'internal' | 'external' | 'download';
-  url?: string;
-  download?: Download;
-  hasAnchor?: boolean;
-  anchor?: string;
-  variant?: 'primary' | 'secondary' | 'accent';
-  hasIcon?: boolean;
+  buttons?: Array<
+    {
+      _key: string;
+    } & LinkButton
+  >;
 };
 
 export type ResponsiveImage = {
@@ -430,6 +420,18 @@ export type Page = {
       _type: 'image';
     };
   };
+};
+
+export type LinkButton = {
+  _type: 'linkButton';
+  label?: InternationalizedArrayString;
+  linkType?: 'internal' | 'external' | 'download';
+  url?: string;
+  download?: Download;
+  hasAnchor?: boolean;
+  anchor?: string;
+  variant?: 'primary' | 'secondary' | 'accent';
+  hasIcon?: boolean;
 };
 
 export type InternationalizedArrayHeadline = Array<
@@ -679,10 +681,10 @@ export type AllSanitySchemaTypes =
   | SanityImageCrop
   | SanityImageHotspot
   | Project
-  | LinkButton
   | ResponsiveImage
   | Slug
   | Page
+  | LinkButton
   | InternationalizedArrayHeadline
   | SiteSettings
   | SanityFileAssetReference
