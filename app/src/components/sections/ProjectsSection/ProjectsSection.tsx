@@ -53,7 +53,8 @@ const ProjectsSection = ({
         )}
         {button?.label && (
           <div className={styles.projects__actions}>
-            <LinkButton {...button} />
+            {/* TEMPORARY: `#` until the `projects` page exists; remove `url` to use the Studio link again. */}
+            <LinkButton {...button} url="#" />
           </div>
         )}
       </Container>
