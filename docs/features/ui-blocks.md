@@ -24,6 +24,9 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
       visible label. On an external link it replaces the hidden "opens in a new tab" text, so it is used on internal
       links only (About on a project card).
 - [x] Renders nothing without `label` or `url`, or when the link does not pass the safety check.
+- [ ] TEMPORARY: `url === '#'` renders a plain `<a href="#">` instead of going through `safePath`, so the project
+      details links stay on the page until their page exists. To be removed (see
+      [projects-section.md](projects-section.md)).
 - [x] `linkType: external`: `url` goes through `safeHref`; the `<a>` gets `target="_blank"` and
       `rel="noopener noreferrer"`.
 - [x] Any other `linkType` is treated as internal: `url` goes through `safePath`, the result is rendered with the

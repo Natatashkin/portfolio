@@ -40,7 +40,9 @@ const ProjectCard = ({ project }: Props) => {
           <div className={styles.card__overlay}>
             <LinkButton
               linkType="internal"
-              url={`projects/${slug}`}
+              // url={`projects/${slug}`}
+              // TEMPORARY: `#` until the page `projects/[slug]` exists.
+              url="#"
               label={t('about')}
               // Three cards, three "About" links: the name says which project.
               ariaLabel={t('aboutProject', { title })}
@@ -52,7 +54,12 @@ const ProjectCard = ({ project }: Props) => {
       <div className={styles.card__header}>
         <h3 className={styles.card__title}>
           {detailsPath ? (
-            <Link className={styles.card__titleLink} href={detailsPath}>
+            <Link
+              className={styles.card__titleLink}
+              // href={detailsPath}
+              // TEMPORARY: `#` until the page `projects/[slug]` exists.
+              href="#"
+            >
               {title}
             </Link>
           ) : (

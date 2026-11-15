@@ -106,6 +106,16 @@ const LinkButton = ({
     ) : null;
   }
 
+  // TEMPORARY: `#` is a placeholder for a page that does not exist yet (the project details). Remove it
+  // together with the `#` in `ProjectCard`.
+  if (url === '#') {
+    return (
+      <a className={className} href="#" aria-label={ariaLabel}>
+        {content}
+      </a>
+    );
+  }
+
   const path = safePath(url);
   const hash =
     hasAnchor && anchor && ANCHOR_PATTERN.test(anchor) ? `#${anchor}` : '';

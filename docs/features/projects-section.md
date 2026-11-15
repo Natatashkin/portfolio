@@ -27,7 +27,7 @@ Design source: [../layouts/Projects.png](../layouts/Projects.png).
       `--richText-item-gap` to 0, so paragraphs and list items do not push a line out of the clamp.
 - [x] The card is not a link: the title, About, Live and GitHub are separate controls, so no interactive element
       nests in another.
-- [x] The title (`h3`) is a locale-aware `Link` to `projects/<slug>` on every device (`safePath`; plain text when
+- [x] The title (`h3`) is a locale-aware `Link` to `projects/<slug>` on every device (target behaviour; TEMPORARILY `#`, see Open questions) (`safePath`; plain text when
       the path is unsafe). The shared `focused-underline` mixin gives it the accent underline that grows from the centre in both
       directions on `focus-visible`, as on the theme and language switchers (no focus ring, the outline stays
       transparent so forced-colors mode still draws it). The card adds the same growth on hover, only under
@@ -111,7 +111,10 @@ Done in the code.
 ## Open questions
 
 - The route `/[locale]/projects/[slug]` does not exist (case pages are out of scope, see
-  [../specs/product.md](../specs/product.md)), so the title and About land on the not-found page. Decided: leave it
-  until the launch decision on the `projects/` stub routes (see [../roadmap.md](../roadmap.md)).
+  [../specs/product.md](../specs/product.md)), so the title and About are TEMPORARILY pointed at `#` (they stay on the page) until the page is built, in
+  `ProjectCard.tsx` (the `href` of the title `Link` and the `url` of About; the real lines are commented out next to them, `detailsPath` is still computed and only checked for truthiness) and in a
+  `url === '#'` branch of `LinkButton.tsx`. The About and title lines and the `LinkButton` branch carry a `TEMPORARY` comment and are removed together with the
+  launch decision on the `projects/` stub routes (see [../roadmap.md](../roadmap.md)). Until then the requirements
+  above about `projects/<slug>` describe the target behaviour, not the current one.
 - `pnpm build` has not been run.
 - The `uk` headline falls back to `en` in the current dataset; the author fills the `uk` value in Studio.
