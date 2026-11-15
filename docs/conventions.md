@@ -85,8 +85,8 @@ they cannot express.
 ## SCSS
 
 - Colors, spacing and radii are CSS custom properties from `_tokens.scss`; never hard-code them.
-- Mixins stay minimal (breakpoints, focus ring, visually-hidden, `muted-control` shared by the theme and language
-  switchers and the social links, `button-variants` / `button-variant-transparent` for `Button` and `LinkButton`).
+- Mixins stay minimal (breakpoints, focus ring, visually-hidden, `focused-underline` (the centre-growing focus underline, also used by the
+  card title link), `muted-control` shared by the theme and language switchers and the social links, `button-variants` / `button-variant-transparent` for `Button` and `LinkButton`).
   Breakpoints are SCSS variables.
 - BEM in camelCase: `.hero`, `.hero__stack`, `.linkButton--accent`; nest with `&__` / `&--`; no
   element-of-element chains.
@@ -104,7 +104,7 @@ they cannot express.
 ## Icons
 
 Icons are never stored in Sanity. They are components in `components/icons/`, mapped from the free-string `iconKey`
-(and the `hasIcon` flag on `linkButton`); an unknown key renders no icon and never throws.
+(and the `hasIcon` flag on `linkButton`); an unknown key renders no icon and never throws. Exception: `linkButton.iconKey` is a closed list (`arrowRight`, `arrowTopRigh`, `github`), and a missing or unknown value falls back to the arrow.
 
 ## Security
 

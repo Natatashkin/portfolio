@@ -1,0 +1,55 @@
+@use 'mixins' as *;
+
+.projects {
+  padding: var(--space-section) 0;
+
+  &__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-6);
+    margin-bottom: var(--space-12);
+  }
+
+  // The gap to the headline comes from the column's `gap`, not from the eyebrow's own margin.
+  &__eyebrow {
+    @include eyebrow;
+
+    margin-bottom: 0;
+  }
+
+  &__headline {
+    margin: 0;
+    font-size: var(--font-h2);
+    font-weight: 400;
+  }
+
+  &__description {
+    color: var(--color-text-muted);
+  }
+
+  // One column on mobile, two from `md`, three from `lg`. `minmax(0, 1fr)` lets a long word shrink instead of
+  // pushing the page wider.
+  &__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include media-up(md) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    @include media-up(lg) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  // The grid and this row share the container, so the button sits on the left edge of the first card.
+  &__actions {
+    display: flex;
+    margin-top: var(--space-8);
+  }
+}

@@ -14,6 +14,8 @@
 - `CareerSection` complete: desktop and mobile layout, text and steps scroll reveal, plain-list fallback with markers and lines, pulsing last marker, handwritten tagline ([features/career-section.md](features/career-section.md)).
 - `ExperienceSection`: company timeline, entry toggle, card reveal, pinned intro, CV downloads, shared `TagList`
   ([features/experience-section.md](features/experience-section.md)); the Lenis trail check for its pin is open.
+- `ProjectsSection`: project cards with About overlay, Live/GitHub buttons, tech stack
+  ([features/projects-section.md](features/projects-section.md)); the `projects/<slug>` page behind About is not built, so the title and About link to `#` for now.
 - Language switcher ([features/language-switcher.md](features/language-switcher.md)) in the desktop header and the burger menu.
 - Theme switcher: label shows the target theme, the chosen theme survives a language switch ([features/theme-switcher.md](features/theme-switcher.md)).
 - Production Branch of both Vercel projects (Studio, app) is `main`; `dev` is the working branch and builds as Preview.
@@ -21,7 +23,7 @@
 ## Next
 
 1. Remaining sections in order of page flow, each with query, component, registration (see
-   [features/README.md](features/README.md)): whatIDo, playground, projects, techStack, cta.
+   [features/README.md](features/README.md)): whatIDo, playground, techStack, cta.
 2. Scroll animations for the remaining sections (GSAP ScrollTrigger in client children; see the `scroll-animation`
    skill; the career and experience sections are the references).
 3. Page metadata and SEO: title, description, canonical, hreflang (D2), Open Graph, `sitemap.ts`, `robots.ts`.
@@ -38,6 +40,8 @@
 - Remove `robots: noindex` from the root metadata.
 - Add hreflang `<head>` tags (D2); not implemented yet (Page metadata and SEO).
 - `sanity schema deploy` if a tool needs the cloud schema.
+- Restore the project details links: the `TEMPORARY` `#` in `ProjectCard.tsx` and `LinkButton.tsx` (see
+  [features/projects-section.md](features/projects-section.md)).
 - Replace the `projects/` and `cases/` stub routes with real pages or remove them. With real pages, header anchor
   items on non-home pages must link to `/#<url>` (see [features/header.md](features/header.md)).
 - Add the production domain to the Sanity CORS origins; allow the production site as the Studio preview origin.

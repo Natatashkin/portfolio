@@ -14,7 +14,7 @@
   --color-secondary: #f0f0f3;
   --color-on-secondary: #0b0b0f;
   --color-accent: #4fd8a4;
-  --color-on-accent: #0b0b0f;
+  --color-on-accent: #ffffff;
   --color-accent-ink: #08805a;
   --color-accent-shine: #4fd8a4;
 }
@@ -48,10 +48,19 @@
   // Tint laid over a photo to keep that light text readable.
   --color-photo-scrim: #000000;
 
+  --blur: 5px;
+
   // Small text
   --font-xs-extra: clamp(0.67rem, 0.5rem + 0.2vw, 0.75rem);
   --font-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);
   --font-sm: clamp(0.8125rem, 0.75rem + 0.25vw, 0.875rem);
+
+  // A `TagList` chip: one line of text plus padding and the 1px border, so its height is known. Layouts
+  // that reserve room for rows of chips (the project card) read it from here.
+  --chip-line-height: 1.5;
+  --chip-height: calc(
+    var(--chip-line-height) * var(--font-sm) + 2 * var(--space-1) + 2px
+  );
 
   // Body
   --font-base: clamp(1rem, 0.9rem + 0.3vw, 1.125rem);

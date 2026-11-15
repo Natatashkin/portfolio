@@ -11,9 +11,17 @@ const LINK_TYPES = [
   {title: 'Download', value: 'download'},
 ] as const
 
+// `arrowTopRigh` is the stored value as specified (sic); the frontend maps the same key.
+const ICON_KEYS = [
+  {title: 'Arrow right', value: 'arrowRight'},
+  {title: 'Arrow top right', value: 'arrowTopRigh'},
+  {title: 'GitHub', value: 'github'},
+] as const
+
 type LinkButtonValue = {
   linkType?: (typeof LINK_TYPES)[number]['value']
   hasAnchor?: boolean
+  hasIcon?: boolean
 }
 
 // Sanity passes the parent object untyped; read it through one helper.
@@ -174,6 +182,10 @@ export const linkButtonType = defineType({
             title: 'Accent',
             value: 'accent',
           },
+          {
+            title: 'Outlined',
+            value: 'outlined',
+          },
         ],
         layout: 'radio',
         direction: 'horizontal',
@@ -183,6 +195,18 @@ export const linkButtonType = defineType({
       name: 'hasIcon',
       title: 'Show icon',
       type: 'boolean',
+      hidden: ({parent}) => isDownload(parent),
+    }),
+    // Optional: buttons saved before this field existed have no `iconKey`, and the frontend falls back to `arrowRight`.
+    defineField({
+      name: 'iconKey',
+      title: 'Icon',
+      type: 'string',
+      options: {
+        list: [...ICON_KEYS],
+      },
+      initialValue: 'arrowRight',
+      hidden: ({parent}) => isDownload(parent) || linkButtonOf(parent)?.hasIcon === false,
     }),
   ],
   preview: {

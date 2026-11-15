@@ -152,3 +152,10 @@ The hero's chip list moved to `components/ui/TagList` because the Experience ent
 
 `RichText` web links get `target="_blank"` and a visually hidden hint; mail and phone links stay in the page. Reason: a
 link in a company description leaves the portfolio, as external `LinkButton` links already do.
+
+## D25. Project card blur is a `filter` transition
+
+The preview blur on hover is a CSS `filter` transition, an exception to "animate `transform` and `opacity` only". Reason:
+the design asks for a blur; it is one small picture per card, the overlay and the button animate `opacity` only, nothing
+changes layout, and the transition is removed under `prefers-reduced-motion`. Details:
+[features/projects-section.md](features/projects-section.md).

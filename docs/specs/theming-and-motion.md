@@ -5,7 +5,7 @@
 - SCSS Modules (`sass`). Design tokens are CSS custom properties in `styles/_tokens.scss`: bg, surface, border, text,
   text-muted, primary, secondary, accent (+ on-colors, accent-ink, accent-shine), fonts, radius, spacing. Colors are
   defined only in `_tokens.scss`; modules use `var(--color-*)`.
-- `styles/_mixins.scss` is a Sass partial kept minimal (breakpoints, focus ring, visually-hidden, `muted-control` for
+- `styles/_mixins.scss` is a Sass partial kept minimal (breakpoints, focus ring, visually-hidden, `focused-underline`, `muted-control` for
   the switchers and the social links, `button-variants` and `button-variant-transparent`). Breakpoints are SCSS
   variables because custom properties do not work in media queries. Modules load it with `@use 'mixins' as *;`
   (`sassOptions.loadPaths` points at `src/styles`).
@@ -46,7 +46,7 @@ Procedure and traps: the `scroll-animation` skill (`.claude/skills/scroll-animat
   are applied after GSAP is ready, and first-screen motion is CSS.
 - Clean up every tween and ScrollTrigger: `gsap.matchMedia` / `gsap.context` with `revert()` in an effect cleanup (the
   pattern in the `scroll-animation` skill), or `useGSAP` where tweens are created synchronously.
-- Animate `transform` and `opacity` only; never layout properties.
+- Animate `transform` and `opacity` only; never layout properties. One exception: the project card blur (`filter`, D25).
 - `prefers-reduced-motion`: no Lenis smoothing and no non-essential motion (`gsap.matchMedia` for GSAP code).
   The provider keeps `ReactLenis` mounted (the tree shape must not change) and loads no GSAP, so a section that
   awaits `loadGsap` itself must check the preference.

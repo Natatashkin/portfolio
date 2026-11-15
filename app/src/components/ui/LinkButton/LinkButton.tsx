@@ -1,10 +1,29 @@
+import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
-import { ArrowIcon, DownloadIcon } from '@/components/icons';
+import {
+  ArrowIcon,
+  ArrowTopRightIcon,
+  DownloadIcon,
+  GithubIcon
+} from '@/components/icons';
 import { Link } from '@/i18n/navigation';
 import { ANCHOR_PATTERN, DEFAULT_DOWNLOAD_FILENAME } from '@/lib/constants';
 import { safeHref, safePath } from '@/lib/helpers';
 import styles from './LinkButton.module.scss';
 import type { LinkButtonProps } from './types';
+
+// `arrowTopRigh` is the key as stored by the Studio schema (sic).
+// A missing or unknown key (documents saved before `iconKey` existed) falls back to the arrow.
+const renderIcon = (iconKey?: LinkButtonProps['iconKey']) => {
+  switch (iconKey) {
+    case 'arrowTopRigh':
+      return <ArrowTopRightIcon />;
+    case 'github':
+      return <GithubIcon />;
+    default:
+      return <ArrowIcon />;
+  }
+};
 
 const LinkButton = ({
   label,
@@ -13,7 +32,10 @@ const LinkButton = ({
   hasAnchor,
   anchor,
   variant,
+  size = 'default',
+  ariaLabel,
   hasIcon,
+  iconKey,
   fileUrl,
   fileName
 }: LinkButtonProps) => {
@@ -22,11 +44,20 @@ const LinkButton = ({
   if (!label) return null;
 
   const variantClass = variant ? styles[`button--${variant}`] : undefined;
-  const className = `${styles.button} ${variantClass ?? styles['button--primary']}`;
+  const className = clsx(
+    styles.button,
+    variantClass ?? styles['button--primary'],
+    size === 'compact' && styles['button--sizeCompact']
+  );
   const content = (
     <>
       {label}
-      {hasIcon && (linkType === 'download' ? <DownloadIcon /> : <ArrowIcon />)}
+      {/* A download always shows its own icon: the editor cannot pick one, so `hasIcon` / `iconKey` are ignored. */}
+      {linkType === 'download' ? (
+        <DownloadIcon />
+      ) : (
+        hasIcon && renderIcon(iconKey)
+      )}
     </>
   );
 
@@ -44,7 +75,12 @@ const LinkButton = ({
     downloadUrl.searchParams.set('dl', fileName || DEFAULT_DOWNLOAD_FILENAME);
 
     return (
-      <a className={className} href={downloadUrl.toString()} download>
+      <a
+        className={className}
+        href={downloadUrl.toString()}
+        aria-label={ariaLabel}
+        download
+      >
         {content}
         <span className={styles.button__hidden}>{t('download')}</span>
       </a>
@@ -60,6 +96,7 @@ const LinkButton = ({
       <a
         className={className}
         href={href}
+        aria-label={ariaLabel}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -69,12 +106,22 @@ const LinkButton = ({
     ) : null;
   }
 
+  // TEMPORARY: `#` is a placeholder for a page that does not exist yet (the project details). Remove it
+  // together with the `#` in `ProjectCard`.
+  if (url === '#') {
+    return (
+      <a className={className} href="#" aria-label={ariaLabel}>
+        {content}
+      </a>
+    );
+  }
+
   const path = safePath(url);
   const hash =
     hasAnchor && anchor && ANCHOR_PATTERN.test(anchor) ? `#${anchor}` : '';
 
   return path ? (
-    <Link className={className} href={`${path}${hash}`}>
+    <Link className={className} href={`${path}${hash}`} aria-label={ariaLabel}>
       {content}
     </Link>
   ) : null;

@@ -29,6 +29,12 @@
 
   @include button-variants;
 
+  // A smaller pill for a button that sits beside other content (a project card).
+  &--sizeCompact {
+    padding: var(--space-1) var(--space-4);
+    font-size: var(--font-sm);
+  }
+
   &__hidden {
     @include visually-hidden;
   }

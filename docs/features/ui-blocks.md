@@ -16,9 +16,17 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 ### LinkButton (server)
 
 - [x] Props are built from the Studio schema type `LinkButton` (TypeGen) and not from any section: `linkType`, `url`,
-      `hasAnchor`, `anchor`, `variant`, `hasIcon` (each may be `null`, as GROQ returns empty fields), plus `label`
+      `hasAnchor`, `anchor`, `variant`, `hasIcon`, `iconKey` (each may be `null`, as GROQ returns empty fields), plus `label`
       (the localized string resolved in GROQ), `fileUrl` and `fileName` (`LinkButton/types.ts`).
+- [x] `size` is `default` or `compact` (class `button--sizeCompact`: smaller padding and `--font-sm`), for buttons that
+      sit beside other content, such as the Live and GitHub pills of a project card.
+- [x] `ariaLabel`, when set, goes to the `<a>` in all three branches (download, external, internal) and must contain the
+      visible label. On an external link it replaces the hidden "opens in a new tab" text, so it is used on internal
+      links only (About on a project card).
 - [x] Renders nothing without `label` or `url`, or when the link does not pass the safety check.
+- [ ] TEMPORARY: `url === '#'` renders a plain `<a href="#">` instead of going through `safePath`, so the project
+      details links stay on the page until their page exists. To be removed (see
+      [projects-section.md](projects-section.md)).
 - [x] `linkType: external`: `url` goes through `safeHref`; the `<a>` gets `target="_blank"` and
       `rel="noopener noreferrer"`.
 - [x] Any other `linkType` is treated as internal: `url` goes through `safePath`, the result is rendered with the
@@ -31,8 +39,10 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
       the URL is unsafe. Props gain `fileUrl` and `fileName` (resolved in GROQ, D15).
 - [x] A download link carries a visually hidden "(download file)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.download`).
-- [x] `variant` is `primary` (default when empty or unknown), `secondary` or `accent`; classes `button--<variant>`.
-- [x] `hasIcon` appends an icon after the label: `DownloadIcon` for a download button, `ArrowIcon` for the others; the icon is `aria-hidden` with `focusable="false"`.
+- [x] `variant` is `primary` (default when empty or unknown), `secondary`, `accent` or `outlined`; classes `button--<variant>`. `outlined` has a transparent background, `--color-text-muted` text
+      and a 2px border of the same colour at 45% opacity (an inset `box-shadow`, so the size matches the filled variants).
+- [x] A download button always shows `DownloadIcon`; the editor cannot choose it and `hasIcon` / `iconKey` are ignored (both fields are hidden in Studio for `download`).
+- [x] For the other link types `hasIcon` appends an icon chosen by `iconKey`: `arrowRight` (`ArrowIcon`), `arrowTopRigh` (`ArrowTopRightIcon`, the spelling is the stored value) or `github` (`GithubIcon`). A missing or unknown `iconKey` falls back to `ArrowIcon`. Icons are `aria-hidden` with `focusable="false"`.
 - [x] Styles: tokens only (`--color-*`, `--space-*`, `--radius-pill`, `--font-base`), `focus-visible` uses the
       `focus-ring` mixin, hover is `opacity: 0.85` only inside `@media (hover: hover)`, and the transition is removed
       under `prefers-reduced-motion: reduce`.
@@ -63,7 +73,8 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 ### RichText (server)
 
 - [x] Props: `value` (TypeGen `RichText`), `className`. Renders a `<div class="richText">` around `PortableText`.
-- [x] Normal block is a `<p>`, bullet list a `<ul>`; paragraphs get spacing through the `& + &` rule.
+- [x] Normal block is a `<p>`, bullet list a `<ul>`; paragraphs get spacing through the `& + &` rule. The gap between blocks and list items can be set by the caller with
+      `--richText-gap` and `--richText-item-gap` (defaults `--space-4` and `0.5rem`).
 - [x] The `link` mark renders `<a>` only when `safeHref(value?.href)` passes (`rel="noopener noreferrer"`); otherwise
       the link text is rendered as plain text. An `https:` link gets `target="_blank"` and a visually hidden
       "(opens in a new tab)" (`RichText.opensInNewTab`); mail and phone links stay in the page (D24).
@@ -74,7 +85,9 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 ### TagList (server)
 
 - [x] Props: `tags` (`{ id, label }[]`, built by `toTagItems`) and `className` for placement. Renders a `<ul>` of chips
-      (text only); nothing for an empty list. Used by the hero stack and the Experience entries.
+      (text only); nothing for an empty list. Used by the hero stack, the Experience entries and the project cards. A chip
+      is one line (`--chip-line-height`) plus padding and border; its height is the `--chip-height` token in
+      `_tokens.scss`, so a layout can reserve room for rows of chips.
 
 ### ResponsiveImage (server)
 
@@ -167,7 +180,7 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 
 - The `transparent` `Button` variant (`--color-text`, no border or outline, so it reads as plain text) is the intended
   look for the theme switcher.
-- The CMS colour variants (`primary`, `secondary`, `accent`) of `LinkButton` and `Button` live in one mixin,
+- The CMS colour variants (`primary`, `secondary`, `accent`, `outlined`) of `LinkButton` and `Button` live in one mixin,
   `button-variants` in `styles/_mixins.scss`. `transparent` is its own mixin, `button-variant-transparent`, included
   only by `Button`, so `LinkButton` has no `transparent` class and an unknown `variant` still falls back to `primary`.
   The hover treatment stays separate (`opacity` vs `filter`).

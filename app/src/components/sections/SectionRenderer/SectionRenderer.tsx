@@ -1,6 +1,7 @@
 import CareerSection from '@/components/sections/CareerSection';
 import ExperienceSection from '@/components/sections/ExperienceSection';
 import HeroSection from '@/components/sections/HeroSection';
+import ProjectsSection from '@/components/sections/ProjectsSection';
 import type { Section } from '@/lib/sanity/types';
 
 type Props = { sections: Section[] };
@@ -16,6 +17,8 @@ const SectionRenderer = ({ sections }: Props) =>
         return <CareerSection key={section._key} {...section} />;
       case 'experienceSection':
         return <ExperienceSection key={section._key} {...section} />;
+      case 'projectsSection':
+        return <ProjectsSection key={section._key} {...section} />;
       default:
         return null;
     }

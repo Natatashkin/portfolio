@@ -34,6 +34,10 @@
     "present": "До тепер",
     "items": "{count, plural, one {# пункт} few {# пункти} many {# пунктів} other {# пункту}}"
   },
+  "ProjectsSection": {
+    "about": "Детальніше",
+    "aboutProject": "Детальніше: {title}"
+  },
   "RichText": {
     "opensInNewTab": "відкривається в новій вкладці"
   }
