@@ -49,7 +49,7 @@ $breakpoints: (
   }
 
   &--accent {
-    background: var(--color-accent);
+    background: var(--color-accent-ink);
     color: var(--color-on-accent);
   }
 
@@ -70,6 +70,28 @@ $breakpoints: (
   }
 }
 
+@mixin focused-underline {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0;
+    height: 2px;
+    background: var(--color-accent-ink);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform var(--transition-base);
+  }
+
+  &:focus-visible {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+
+    &::after {
+      transform: scaleX(1);
+    }
+  }
+}
+
 // Muted text that turns full strength on hover and keyboard focus: the look shared by the theme and
 // language switchers and the social links. Keyboard focus draws an underline that grows from the centre in both directions
 // (`transform` only). The outline stays but is transparent, so forced-colors mode still shows it.
@@ -85,29 +107,11 @@ $breakpoints: (
     color var(--transition-base),
     filter var(--transition-base);
 
-  &::after {
-    content: '';
-    position: absolute;
-    inset: auto 0 0;
-    height: 2px;
-    background: var(--color-accent-ink);
-    transform: scaleX(0);
-    transform-origin: center;
-    transition: transform var(--transition-base);
-  }
+  @include focused-underline;
 
   &:hover,
   &:focus-visible {
     color: var(--color-text);
-  }
-
-  &:focus-visible {
-    outline: 2px solid transparent;
-    outline-offset: 2px;
-
-    &::after {
-      transform: scaleX(1);
-    }
   }
 
   @media (prefers-reduced-motion: reduce) {

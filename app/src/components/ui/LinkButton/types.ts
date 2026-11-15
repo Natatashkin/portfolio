@@ -15,6 +15,11 @@ type LinkButtonField =
 export type LinkButtonProps = {
   [Key in LinkButtonField]?: NonNullable<LinkButton[Key]> | null;
 } & {
+  // `compact` is a smaller pill for places where the button sits beside other content (a card).
+  size?: 'default' | 'compact';
+  // Replaces the accessible name, which must still contain the visible label (WCAG 2.5.3). On an external
+  // link it also replaces the hidden "opens in a new tab" hint, so use it on internal links.
+  ariaLabel?: string;
   label?: string | null;
   fileUrl?: string | null;
   fileName?: string | null;

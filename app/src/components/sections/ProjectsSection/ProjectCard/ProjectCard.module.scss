@@ -1,0 +1,170 @@
+@use 'mixins' as *;
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background: var(--color-surface);
+
+  // The preview. A fixed ratio reserves the space before the image loads, so nothing shifts. The blur is
+  // on the picture alone; `overflow: hidden` keeps the blurred edges inside the rounded frame. The image is
+  // never scaled or moved.
+  &__media {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+    background: var(--color-bg);
+  }
+
+  &__picture {
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: filter var(--transition-base);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-position: top center;
+    }
+  }
+
+  // Covers the preview, invisible and click-through until the preview is hovered or the button is focused.
+  // The scrim darkens the picture so the white button reads on a light screenshot. Not displayed at all
+  // without hover or below `md` (see the block below): there the title is the link.
+  &__overlay {
+    // The outlined `LinkButton` takes its colour from this token: white on a photo in both themes.
+    --color-text-muted: var(--color-on-photo);
+
+    position: absolute;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: color-mix(in srgb, var(--color-photo-scrim) 35%, transparent);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-base);
+
+    // Only the button takes clicks; the rest of the overlay stays click-through.
+    a {
+      pointer-events: auto;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  // The blur and the About button exist only with a pointer that can hover and from `md`. On touch devices
+  // and on narrow screens there is no blur and no button; the title is the link there.
+  @media (hover: hover) {
+    @include media-up(md) {
+      &__overlay {
+        display: flex;
+      }
+
+      // Keyboard focus reveals the same state as the pointer.
+      &__media:hover,
+      &__media:focus-within {
+        .card__picture {
+          filter: blur(var(--blur));
+        }
+
+        .card__overlay {
+          opacity: 1;
+        }
+      }
+    }
+  }
+
+  &__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-h3);
+    font-weight: 600;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  // The link inherits the title look; a pointer or the keyboard adds the growing underline.
+  &__titleLink {
+    color: inherit;
+    text-decoration: none;
+    position: relative;
+    @include focused-underline;
+
+    // The same growing underline on hover, for pointer devices only.
+    @media (hover: hover) {
+      &:hover::after {
+        transform: scaleX(1);
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+  }
+
+  // At most four lines, cut with an ellipsis. From `md` the block always takes exactly four lines, so a
+  // short text leaves empty space below it and the dividers of side-by-side cards line up. On mobile the
+  // cards are stacked, so a short text keeps its natural height.
+  &__summary {
+    --summary-lines: 4;
+    --summary-line-height: 1.5;
+    // No space between paragraphs or list items: they would push a line out of the clamp.
+    --richText-gap: 0;
+    --richText-item-gap: 0;
+
+    display: -webkit-box;
+    overflow: hidden;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+    line-height: var(--summary-line-height);
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: var(--summary-lines);
+    line-clamp: var(--summary-lines);
+
+    @include media-up(md) {
+      height: calc(var(--summary-lines) * var(--summary-line-height) * 1em);
+    }
+  }
+
+  // Pushed to the bottom of the card, so the dividers line up across cards of different content.
+  &__stack {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    margin-top: auto;
+    padding-top: var(--space-4);
+    border-top: 1px solid var(--color-border);
+  }
+
+  // Room for two rows of chips (`--chip-height` from the tokens); a shorter list leaves the second row empty.
+  &__tags {
+    align-content: flex-start;
+
+    @include media-up(md) {
+      min-height: calc(2 * var(--chip-height) + var(--space-1));
+    }
+  }
+}

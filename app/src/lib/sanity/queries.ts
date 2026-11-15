@@ -10,6 +10,7 @@ export const PAGE_QUERY_TAGS = [
   'metric',
   'road',
   'experience',
+  'project',
   'downloadDocument'
 ] as const;
 export const SITE_SETTING_QUERY_TAGS = ['site-settings'] as const;
@@ -185,6 +186,94 @@ export const PAGE_QUERY = defineQuery(`
               download.document->files.uk.asset->originalFilename,
             linkType == "download" && download.language == "en" =>
               download.document->files.en.asset->originalFilename
+          )
+        }
+      },
+      _type == "projectsSection" => {
+        "eyebrow": select(
+          defined(eyebrow[language == $locale][0].value) &&
+            eyebrow[language == $locale][0].value != "" =>
+            eyebrow[language == $locale][0].value,
+          eyebrow[language == "en"][0].value
+        ),
+        "headline": select(
+          defined(headline[language == $locale][0].value) &&
+            count(headline[language == $locale][0].value) > 0 =>
+            headline[language == $locale][0].value,
+          headline[language == "en"][0].value
+        ),
+        "description": select(
+          defined(description[language == $locale][0].value) &&
+            count(description[language == $locale][0].value) > 0 =>
+            description[language == $locale][0].value,
+          description[language == "en"][0].value
+        ),
+        "projects": projects[defined(@->_id)]->{
+          _id,
+          "slug": slug.current,
+          "title": select(
+            defined(title[language == $locale][0].value) &&
+              title[language == $locale][0].value != "" =>
+              title[language == $locale][0].value,
+            title[language == "en"][0].value
+          ),
+          "summary": select(
+            defined(summary[language == $locale][0].value) &&
+              count(summary[language == $locale][0].value) > 0 =>
+              summary[language == $locale][0].value,
+            summary[language == "en"][0].value
+          ),
+          "image": image{
+            desktop,
+            mobile,
+            "alt": select(
+              defined(alt[language == $locale][0].value) &&
+                alt[language == $locale][0].value != "" =>
+                alt[language == $locale][0].value,
+              alt[language == "en"][0].value
+            )
+          },
+          "technologies": technologies[defined(@->_id)]->{
+            _id,
+            _type,
+            _type == "technology" => {
+              name
+            },
+            _type == "skill" => {
+              "title": select(
+                defined(title[language == $locale][0].value) &&
+                  title[language == $locale][0].value != "" =>
+                  title[language == $locale][0].value,
+                title[language == "en"][0].value
+              )
+            }
+          },
+          "buttons": buttons[]{
+            _key,
+            linkType,
+            url,
+            iconKey,
+            "label": select(
+              defined(label[language == $locale][0].value) &&
+                label[language == $locale][0].value != "" =>
+                label[language == $locale][0].value,
+              label[language == "en"][0].value
+            )
+          }
+        },
+        "button": button{
+          linkType,
+          url,
+          hasAnchor,
+          anchor,
+          variant,
+          hasIcon,
+          iconKey,
+          "label": select(
+            defined(label[language == $locale][0].value) &&
+              label[language == $locale][0].value != "" =>
+              label[language == $locale][0].value,
+            label[language == "en"][0].value
           )
         }
       },

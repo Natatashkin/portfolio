@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useTranslations } from 'next-intl';
 import {
   ArrowIcon,
@@ -31,6 +32,8 @@ const LinkButton = ({
   hasAnchor,
   anchor,
   variant,
+  size = 'default',
+  ariaLabel,
   hasIcon,
   iconKey,
   fileUrl,
@@ -41,7 +44,11 @@ const LinkButton = ({
   if (!label) return null;
 
   const variantClass = variant ? styles[`button--${variant}`] : undefined;
-  const className = `${styles.button} ${variantClass ?? styles['button--primary']}`;
+  const className = clsx(
+    styles.button,
+    variantClass ?? styles['button--primary'],
+    size === 'compact' && styles['button--sizeCompact']
+  );
   const content = (
     <>
       {label}
@@ -68,7 +75,12 @@ const LinkButton = ({
     downloadUrl.searchParams.set('dl', fileName || DEFAULT_DOWNLOAD_FILENAME);
 
     return (
-      <a className={className} href={downloadUrl.toString()} download>
+      <a
+        className={className}
+        href={downloadUrl.toString()}
+        aria-label={ariaLabel}
+        download
+      >
         {content}
         <span className={styles.button__hidden}>{t('download')}</span>
       </a>
@@ -84,6 +96,7 @@ const LinkButton = ({
       <a
         className={className}
         href={href}
+        aria-label={ariaLabel}
         target="_blank"
         rel="noopener noreferrer"
       >
@@ -98,7 +111,7 @@ const LinkButton = ({
     hasAnchor && anchor && ANCHOR_PATTERN.test(anchor) ? `#${anchor}` : '';
 
   return path ? (
-    <Link className={className} href={`${path}${hash}`}>
+    <Link className={className} href={`${path}${hash}`} aria-label={ariaLabel}>
       {content}
     </Link>
   ) : null;
