@@ -104,7 +104,7 @@ they cannot express.
 ## Icons
 
 Icons are never stored in Sanity. They are components in `components/icons/`, mapped from the free-string `iconKey`
-(and the `hasIcon` flag on `linkButton`); an unknown key renders no icon and never throws.
+(and the `hasIcon` flag on `linkButton`); an unknown key renders no icon and never throws. Exception: `linkButton.iconKey` is a closed list (`arrowRight`, `arrowTopRigh`, `github`), and a missing or unknown value falls back to the arrow.
 
 ## Security
 

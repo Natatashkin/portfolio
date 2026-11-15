@@ -1,10 +1,28 @@
 import { useTranslations } from 'next-intl';
-import { ArrowIcon, DownloadIcon } from '@/components/icons';
+import {
+  ArrowIcon,
+  ArrowTopRightIcon,
+  DownloadIcon,
+  GithubIcon
+} from '@/components/icons';
 import { Link } from '@/i18n/navigation';
 import { ANCHOR_PATTERN, DEFAULT_DOWNLOAD_FILENAME } from '@/lib/constants';
 import { safeHref, safePath } from '@/lib/helpers';
 import styles from './LinkButton.module.scss';
 import type { LinkButtonProps } from './types';
+
+// `arrowTopRigh` is the key as stored by the Studio schema (sic).
+// A missing or unknown key (documents saved before `iconKey` existed) falls back to the arrow.
+const renderIcon = (iconKey?: LinkButtonProps['iconKey']) => {
+  switch (iconKey) {
+    case 'arrowTopRigh':
+      return <ArrowTopRightIcon />;
+    case 'github':
+      return <GithubIcon />;
+    default:
+      return <ArrowIcon />;
+  }
+};
 
 const LinkButton = ({
   label,
@@ -14,6 +32,7 @@ const LinkButton = ({
   anchor,
   variant,
   hasIcon,
+  iconKey,
   fileUrl,
   fileName
 }: LinkButtonProps) => {
@@ -26,7 +45,12 @@ const LinkButton = ({
   const content = (
     <>
       {label}
-      {hasIcon && (linkType === 'download' ? <DownloadIcon /> : <ArrowIcon />)}
+      {/* A download always shows its own icon: the editor cannot pick one, so `hasIcon` / `iconKey` are ignored. */}
+      {linkType === 'download' ? (
+        <DownloadIcon />
+      ) : (
+        hasIcon && renderIcon(iconKey)
+      )}
     </>
   );
 

@@ -85,6 +85,7 @@ export const PAGE_QUERY = defineQuery(`
           anchor,
           variant,
           hasIcon,
+          iconKey,
           "label": select(
             defined(label[language == $locale][0].value) &&
               label[language == $locale][0].value != "" =>
@@ -166,6 +167,7 @@ export const PAGE_QUERY = defineQuery(`
           anchor,
           variant,
           hasIcon,
+          iconKey,
           "label": select(
             defined(label[language == $locale][0].value) &&
               label[language == $locale][0].value != "" =>
@@ -271,6 +273,7 @@ export const PAGE_QUERY = defineQuery(`
           anchor,
           variant,
           hasIcon,
+          iconKey,
           "label": select(
             defined(label[language == $locale][0].value) &&
               label[language == $locale][0].value != "" =>

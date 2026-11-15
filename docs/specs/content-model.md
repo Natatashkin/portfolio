@@ -10,7 +10,7 @@ Source of truth: `sanity-cms/schemaTypes/`. This spec mirrors it; change the sch
 - Required loc fields must be filled in every language; the `en` fallback is only a safety net.
 - Every section has field groups `content`, `media`, `actions`, `settings`; `settings` holds `anchorId`, used by
   navigation and in-page anchors.
-- `iconKey` and `componentKey` are free strings; the app falls back to no icon / no demo for an unknown key.
+- `iconKey` and `componentKey` are free strings; the app falls back to no icon / no demo for an unknown key. Exception: `linkButton.iconKey` is a closed list and falls back to the arrow.
 
 How schemas are written (helpers, registration, tiles) is in
 [../conventions.md](../conventions.md#sanity-schemas); link safety is in
@@ -18,12 +18,12 @@ How schemas are written (helpers, registration, tiles) is in
 
 ## Blocks (object types)
 
-| Block             | Fields                                                                                                                                                              |
-| ----------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `linkButton`      | `label` (loc string), `linkType` (internal \| external \| download), `url`, `download` {`document` (→ downloadDocument), `files` {`en`, `uk`}, one PDF per language | \| uk)} (`download` only), `hasAnchor`, `anchor`, `variant` (primary \| secondary \| accent), `hasIcon` |
-| `responsiveImage` | `desktop` (required, hotspot), `mobile` (optional, falls back to desktop), `alt` (loc string)                                                                       |
-| `richText`        | Portable Text: normal style, bullets, `strong`, `em`, link annotation (`href`)                                                                                      |
-| `headline`        | Portable Text: one normal block, decorator `accent`, no lists or links                                                                                              |
+| Block             | Fields                                                                                                                                                                                                                                                                 |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `linkButton`      | `label` (loc string), `linkType` (internal \| external \| download), `url`, `download` {`document` (→ downloadDocument), `language` (en \| uk)} (`download` only), `hasAnchor`, `anchor`, `variant` (primary \| secondary \| accent), `hasIcon`, `iconKey` (arrowRight | arrowTopRigh | github; shown unless `hasIcon` is false; optional); both hidden for `download`, which always shows the download icon | \| arrowTopRigh \| github; shown unless `hasIcon` is false; optional) |
+| `responsiveImage` | `desktop` (required, hotspot), `mobile` (optional, falls back to desktop), `alt` (loc string)                                                                                                                                                                          |
+| `richText`        | Portable Text: normal style, bullets, `strong`, `em`, link annotation (`href`)                                                                                                                                                                                         |
+| `headline`        | Portable Text: one normal block, decorator `accent`, no lists or links                                                                                                                                                                                                 |
 
 `linkButton` defaults for every new button: `linkType: internal`, `variant: primary`, `hasIcon: false`,
 `hasAnchor: false`.
