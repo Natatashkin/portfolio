@@ -12,7 +12,7 @@ Design source: [../layouts/Projects.png](../layouts/Projects.png).
 ## Requirements
 
 - [x] Renders `eyebrow`, `headline`, rich-text `description`, the `projects` cards in reference order and a closing
-      `button` ("All Projects"). Every part is optional and leaves no empty wrapper. The section renders nothing
+      `button` ("All Projects"; TEMPORARILY its `url` is overridden with `#`, see Open questions). Every part is optional and leaves no empty wrapper. The section renders nothing
       without an intro and without cards.
 - [x] A card needs a `title` and a `slug`; otherwise it is skipped. Dangling project references are dropped in the
       query.
@@ -85,9 +85,10 @@ Design source: [../layouts/Projects.png](../layouts/Projects.png).
 - [x] Hover blur, keyboard focus plus Enter on About, and reduced motion work; on touch there is no overlay and a
       tap on the title navigates.
 - [x] Layouts at 1400, 1040, 800, 700 and 390 px hold.
-- [ ] Light theme, `/en`, and the focus ring of About over the scrim in the light theme.
+- [x] Light theme, `/en`, and the focus ring of About over the scrim in the light theme (checked by the author).
 - [x] Empty or unexpected CMS data does not throw.
-- [ ] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`; Studio builds.
+- [x] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`.
+- [x] Studio builds (`pnpm build` in `sanity-cms/`; the schema is unchanged).
 
 ## Decisions
 
@@ -116,5 +117,9 @@ Done in the code.
   `url === '#'` branch of `LinkButton.tsx`. The About and title lines and the `LinkButton` branch carry a `TEMPORARY` comment and are removed together with the
   launch decision on the `projects/` stub routes (see [../roadmap.md](../roadmap.md)). Until then the requirements
   above about `projects/<slug>` describe the target behaviour, not the current one.
-- `pnpm build` has not been run.
+- The closing "All Projects" button is TEMPORARILY `<LinkButton {...button} url="#" />` in `ProjectsSection.tsx`: the
+  `url` from Studio (the `projects` list page) is overridden, so the button stays on the page until that page exists.
+  The line carries a `TEMPORARY` comment. It works only because the Studio `linkType` is `internal`
+  (the `#` branch of `LinkButton` is skipped for `external`). Restore it together with the other `#` placeholders
+  above: remove `url="#"` and the button uses its CMS `url` again.
 - The `uk` headline falls back to `en` in the current dataset; the author fills the `uk` value in Studio.
