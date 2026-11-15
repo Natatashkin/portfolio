@@ -18,6 +18,11 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 - [x] Props are built from the Studio schema type `LinkButton` (TypeGen) and not from any section: `linkType`, `url`,
       `hasAnchor`, `anchor`, `variant`, `hasIcon`, `iconKey` (each may be `null`, as GROQ returns empty fields), plus `label`
       (the localized string resolved in GROQ), `fileUrl` and `fileName` (`LinkButton/types.ts`).
+- [x] `size` is `default` or `compact` (class `button--sizeCompact`: smaller padding and `--font-sm`), for buttons that
+      sit beside other content, such as the Live and GitHub pills of a project card.
+- [x] `ariaLabel`, when set, goes to the `<a>` in all three branches (download, external, internal) and must contain the
+      visible label. On an external link it replaces the hidden "opens in a new tab" text, so it is used on internal
+      links only (About on a project card).
 - [x] Renders nothing without `label` or `url`, or when the link does not pass the safety check.
 - [x] `linkType: external`: `url` goes through `safeHref`; the `<a>` gets `target="_blank"` and
       `rel="noopener noreferrer"`.
@@ -65,7 +70,8 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 ### RichText (server)
 
 - [x] Props: `value` (TypeGen `RichText`), `className`. Renders a `<div class="richText">` around `PortableText`.
-- [x] Normal block is a `<p>`, bullet list a `<ul>`; paragraphs get spacing through the `& + &` rule.
+- [x] Normal block is a `<p>`, bullet list a `<ul>`; paragraphs get spacing through the `& + &` rule. The gap between blocks and list items can be set by the caller with
+      `--richText-gap` and `--richText-item-gap` (defaults `--space-4` and `0.5rem`).
 - [x] The `link` mark renders `<a>` only when `safeHref(value?.href)` passes (`rel="noopener noreferrer"`); otherwise
       the link text is rendered as plain text. An `https:` link gets `target="_blank"` and a visually hidden
       "(opens in a new tab)" (`RichText.opensInNewTab`); mail and phone links stay in the page (D24).
@@ -76,7 +82,9 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 ### TagList (server)
 
 - [x] Props: `tags` (`{ id, label }[]`, built by `toTagItems`) and `className` for placement. Renders a `<ul>` of chips
-      (text only); nothing for an empty list. Used by the hero stack and the Experience entries.
+      (text only); nothing for an empty list. Used by the hero stack, the Experience entries and the project cards. A chip
+      is one line (`--chip-line-height`) plus padding and border; its height is the `--chip-height` token in
+      `_tokens.scss`, so a layout can reserve room for rows of chips.
 
 ### ResponsiveImage (server)
 
