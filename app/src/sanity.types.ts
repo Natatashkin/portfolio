@@ -426,7 +426,7 @@ export type LinkButton = {
   download?: Download;
   hasAnchor?: boolean;
   anchor?: string;
-  variant?: 'primary' | 'secondary' | 'accent';
+  variant?: 'primary' | 'secondary' | 'accent' | 'outlined';
   hasIcon?: boolean;
   iconKey?: 'arrowRight' | 'arrowTopRigh' | 'github';
 };
@@ -743,7 +743,7 @@ export type PAGE_QUERY_RESULT = {
           url: string | null;
           hasAnchor: boolean | null;
           anchor: string | null;
-          variant: 'accent' | 'primary' | 'secondary' | null;
+          variant: 'accent' | 'outlined' | 'primary' | 'secondary' | null;
           hasIcon: boolean | null;
           iconKey: 'arrowRight' | 'arrowTopRigh' | 'github' | null;
           label: string | null;
@@ -799,7 +799,7 @@ export type PAGE_QUERY_RESULT = {
           url: string | null;
           hasAnchor: boolean | null;
           anchor: string | null;
-          variant: 'accent' | 'primary' | 'secondary' | null;
+          variant: 'accent' | 'outlined' | 'primary' | 'secondary' | null;
           hasIcon: boolean | null;
           iconKey: 'arrowRight' | 'arrowTopRigh' | 'github' | null;
           label: string | null;
@@ -852,7 +852,7 @@ export type PAGE_QUERY_RESULT = {
           url: string | null;
           hasAnchor: boolean | null;
           anchor: string | null;
-          variant: 'accent' | 'primary' | 'secondary' | null;
+          variant: 'accent' | 'outlined' | 'primary' | 'secondary' | null;
           hasIcon: boolean | null;
           iconKey: 'arrowRight' | 'arrowTopRigh' | 'github' | null;
           label: string | null;

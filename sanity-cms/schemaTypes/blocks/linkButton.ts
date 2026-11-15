@@ -182,6 +182,10 @@ export const linkButtonType = defineType({
             title: 'Accent',
             value: 'accent',
           },
+          {
+            title: 'Outlined',
+            value: 'outlined',
+          },
         ],
         layout: 'radio',
         direction: 'horizontal',

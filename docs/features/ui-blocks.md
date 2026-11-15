@@ -16,7 +16,7 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 ### LinkButton (server)
 
 - [x] Props are built from the Studio schema type `LinkButton` (TypeGen) and not from any section: `linkType`, `url`,
-      `hasAnchor`, `anchor`, `variant`, `hasIcon` (each may be `null`, as GROQ returns empty fields), plus `label`
+      `hasAnchor`, `anchor`, `variant`, `hasIcon`, `iconKey` (each may be `null`, as GROQ returns empty fields), plus `label`
       (the localized string resolved in GROQ), `fileUrl` and `fileName` (`LinkButton/types.ts`).
 - [x] Renders nothing without `label` or `url`, or when the link does not pass the safety check.
 - [x] `linkType: external`: `url` goes through `safeHref`; the `<a>` gets `target="_blank"` and
@@ -31,8 +31,10 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
       the URL is unsafe. Props gain `fileUrl` and `fileName` (resolved in GROQ, D15).
 - [x] A download link carries a visually hidden "(download file)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.download`).
-- [x] `variant` is `primary` (default when empty or unknown), `secondary` or `accent`; classes `button--<variant>`.
-- [x] `hasIcon` appends an icon after the label: `DownloadIcon` for a download button, `ArrowIcon` for the others; the icon is `aria-hidden` with `focusable="false"`.
+- [x] `variant` is `primary` (default when empty or unknown), `secondary`, `accent` or `outlined`; classes `button--<variant>`. `outlined` has a transparent background, `--color-text-muted` text
+      and a 2px border of the same colour at 45% opacity (an inset `box-shadow`, so the size matches the filled variants).
+- [x] A download button always shows `DownloadIcon`; the editor cannot choose it and `hasIcon` / `iconKey` are ignored (both fields are hidden in Studio for `download`).
+- [x] For the other link types `hasIcon` appends an icon chosen by `iconKey`: `arrowRight` (`ArrowIcon`), `arrowTopRigh` (`ArrowTopRightIcon`, the spelling is the stored value) or `github` (`GithubIcon`). A missing or unknown `iconKey` falls back to `ArrowIcon`. Icons are `aria-hidden` with `focusable="false"`.
 - [x] Styles: tokens only (`--color-*`, `--space-*`, `--radius-pill`, `--font-base`), `focus-visible` uses the
       `focus-ring` mixin, hover is `opacity: 0.85` only inside `@media (hover: hover)`, and the transition is removed
       under `prefers-reduced-motion: reduce`.
@@ -167,7 +169,7 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 
 - The `transparent` `Button` variant (`--color-text`, no border or outline, so it reads as plain text) is the intended
   look for the theme switcher.
-- The CMS colour variants (`primary`, `secondary`, `accent`) of `LinkButton` and `Button` live in one mixin,
+- The CMS colour variants (`primary`, `secondary`, `accent`, `outlined`) of `LinkButton` and `Button` live in one mixin,
   `button-variants` in `styles/_mixins.scss`. `transparent` is its own mixin, `button-variant-transparent`, included
   only by `Button`, so `LinkButton` has no `transparent` class and an unknown `variant` still falls back to `primary`.
   The hover treatment stays separate (`opacity` vs `filter`).
