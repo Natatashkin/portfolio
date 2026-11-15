@@ -28,9 +28,10 @@ Design source: [../layouts/Projects.png](../layouts/Projects.png).
 - [x] The card is not a link: the title, About, Live and GitHub are separate controls, so no interactive element
       nests in another.
 - [x] The title (`h3`) is a locale-aware `Link` to `projects/<slug>` on every device (`safePath`; plain text when
-      the path is unsafe). An accent underline grows from the centre in both directions (`underline-grow` mixin) on hover, only under
-      `hover: hover`, and on `focus-visible`; there is no focus ring, the underline is the indicator (the outline stays
-      transparent so forced-colors mode still draws it).
+      the path is unsafe). The shared `focused-underline` mixin gives it the accent underline that grows from the centre in both
+      directions on `focus-visible`, as on the theme and language switchers (no focus ring, the outline stays
+      transparent so forced-colors mode still draws it). The card adds the same growth on hover, only under
+      `hover: hover`, with its own `:hover::after` rule and no new mixin.
 - [x] Live and GitHub come from the project's `buttons[]`. The kind is read from `iconKey === 'github'`, never from
       the array position: GitHub renders `outlined`, every other button `accent` (the CMS `variant` is overridden to
       match the design). They are always external links (`linkType` is forced, see Decisions), compact size, with an

@@ -5,7 +5,7 @@
 - SCSS Modules (`sass`). Design tokens are CSS custom properties in `styles/_tokens.scss`: bg, surface, border, text,
   text-muted, primary, secondary, accent (+ on-colors, accent-ink, accent-shine), fonts, radius, spacing. Colors are
   defined only in `_tokens.scss`; modules use `var(--color-*)`.
-- `styles/_mixins.scss` is a Sass partial kept minimal (breakpoints, focus ring, visually-hidden, `muted-control` for
+- `styles/_mixins.scss` is a Sass partial kept minimal (breakpoints, focus ring, visually-hidden, `focused-underline`, `muted-control` for
   the switchers and the social links, `button-variants` and `button-variant-transparent`). Breakpoints are SCSS
   variables because custom properties do not work in media queries. Modules load it with `@use 'mixins' as *;`
   (`sassOptions.loadPaths` points at `src/styles`).
