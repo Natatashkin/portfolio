@@ -30,7 +30,7 @@ How schemas are written (helpers, registration, tiles) is in
 
 `linkButton` reading rules: external `url` is rendered only if it passes `safeHref` (otherwise no button,
 see [../conventions.md](../conventions.md#security)); internal is a slash-less path (`about`, `projects/sub`), the
-app adds the leading `/` and the locale prefix. `anchor` is read only when `hasAnchor` is true (Studio does not clear
+app adds the leading `/` and the locale prefix; the path `home` is the home page `/` (planned, [projects-page](../features/projects-page.md)). `anchor` is read only when `hasAnchor` is true (Studio does not clear
 it when the toggle is turned off). `download` renders `download.document->files[download.language].asset->url` as a download link,
 whatever the site locale is; if the reference is broken or the document has no file in that language, no button
 (deliberately silent). The app always keys off `linkType`, never off which fields are filled: Studio hides the fields
@@ -58,8 +58,8 @@ ignored for the other two types. See
 
 ## Documents
 
-Every document below except `siteSettings` and `page` also carries a hidden `orderRank` (Studio drag-and-drop order only, not queried by the
-site).
+Every document below except `siteSettings` and `page` also carries a hidden `orderRank` (Studio drag-and-drop order). The site does not read it, except
+`project` on the projects page, which is ordered by it ([../decisions.md](../decisions.md#d26-projects-list-page-in-scope-ordered-by-orderrank)).
 
 | Document                                      | Fields                                                                                                                                                                   |
 | --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -90,7 +90,10 @@ current position. Every document has the same shape, there are no conditional fi
 | `projectsSection`   | `eyebrow`, `headline`, `description`, `projects[]` → project, `button`                                                                               |
 | `experienceSection` | `eyebrow`, `headline`, `description`, `experiences[]` → experience, `buttons[]` (linkButton), `anchorId`                                             |
 | `techStackSection`  | `eyebrow`, `headline`, `description`, `technologies[]` → technology, `moreLabel`                                                                     |
-| `ctaSection`        | `eyebrow`, `headline`, `description`, `tagline`, `button`                                                                                            |
+| `ctaSection`        | `eyebrow`, `headline`, `description`, `buttons[]` (linkButton)                                                                                       |
+
+Planned: `ctaSection` changes from `tagline` + `button` to the shape above
+([../features/projects-page.md](../features/projects-page.md), D28).
 
 Text fields in sections are loc unless noted. Plain (non-localized) strings: `heroSection.role`, `siteSettings.siteName`,
 `technology.name`, `metric.value`. Implementation status per section:

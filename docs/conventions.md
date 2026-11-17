@@ -68,8 +68,8 @@ they cannot express.
 - Content documents (`project`, `experience`, `skill`, `piece`, `road`, `metric`, `technology`, `downloadDocument`) are drag-and-drop
   orderable inside their collection in the Studio: each has `orderRankField({type})` and `orderRankOrdering`, and
   `structure.ts` lists them with `orderableDocumentListDeskItem` (`@sanity/orderable-document-list`). Keep `CONTENT_TYPES`
-  in `structure.ts` in sync with the schemas that carry the field. Studio-only: queries do not sort by `orderRank`; the
-  site order comes from the section references.
+  in `structure.ts` in sync with the schemas that carry the field. Queries do not sort by `orderRank` (the site order comes from
+  the section references), except the projects page list, which does ([decisions.md](decisions.md#d26-projects-list-page-in-scope-ordered-by-orderrank)).
 - Field reference: [specs/content-model.md](specs/content-model.md).
 
 ## Naming

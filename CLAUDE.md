@@ -51,7 +51,7 @@ Two independent packages with their own lockfiles (pnpm); no root workspace. Run
 
 ## Out of scope
 
-No state libraries, CSS frameworks, other CMS or database, case pages, external API integrations, plain `button`
+No state libraries, CSS frameworks, other CMS or database, project details pages, external API integrations, plain `button`
 block, or features outside `docs/specs/content-model.md`. No unneeded abstractions or tooling.
 
 ## Working rules

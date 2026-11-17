@@ -111,11 +111,12 @@ Done in the code.
 
 ## Open questions
 
-- The route `/[locale]/projects/[slug]` does not exist (case pages are out of scope, see
-  [../specs/product.md](../specs/product.md)), so the title and About are TEMPORARILY pointed at `#` (they stay on the page) until the page is built, in
+- The route `/[locale]/projects/[slug]` does not exist (project details pages are out of scope, see
+  [../specs/product.md](../specs/product.md); the `/projects` list page is planned in [projects-page.md](projects-page.md),
+  which also moves `ProjectCard` to `components/ui/`), so the title and About are TEMPORARILY pointed at `#` (they stay on the page) until the page is built, in
   `ProjectCard.tsx` (the `href` of the title `Link` and the `url` of About; the real lines are commented out next to them, `detailsPath` is still computed and only checked for truthiness) and in a
   `url === '#'` branch of `LinkButton.tsx`. The About and title lines and the `LinkButton` branch carry a `TEMPORARY` comment and are removed together with the
-  launch decision on the `projects/` stub routes (see [../roadmap.md](../roadmap.md)). Until then the requirements
+  launch decision on the project details pages (see [../roadmap.md](../roadmap.md)). Until then the requirements
   above about `projects/<slug>` describe the target behaviour, not the current one.
 - The closing "All Projects" button is TEMPORARILY `<LinkButton {...button} url="#" />` in `ProjectsSection.tsx`: the
   `url` from Studio (the `projects` list page) is overridden, so the button stays on the page until that page exists.

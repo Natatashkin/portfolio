@@ -19,7 +19,7 @@ TypeGen (`pnpm typegen` in `app/` runs the Studio's `typegen`).
 
 ```
 proxy.ts                  next-intl proxy (Next 16 name for middleware)
-app/[locale]/             layout (root layout), page, not-found, [...rest] catch-all, projects/, cases/ stubs
+app/[locale]/             layout (root layout), page, not-found, [...rest] catch-all, projects/ (list page planned, features/projects-page.md; now a stub), cases/ stub
 components/
   ui/                     reusable blocks (Button, LinkButton, ResponsiveImage, RichText, Headline, ...)
   sections/               one component per Sanity section + SectionRenderer

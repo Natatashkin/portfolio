@@ -15,24 +15,25 @@
 - `ExperienceSection`: company timeline, entry toggle, card reveal, pinned intro, CV downloads, shared `TagList`
   ([features/experience-section.md](features/experience-section.md)); the Lenis trail check for its pin is open.
 - `ProjectsSection`: project cards with About overlay, Live/GitHub buttons, tech stack
-  ([features/projects-section.md](features/projects-section.md)); the `projects/<slug>` page behind About is not built, so the title, About and the "All Projects" button link to `#` for now.
+  ([features/projects-section.md](features/projects-section.md)); the `projects/<slug>` page behind About is not built, so the title and About link to `#` for now, as does the "All Projects" button (the `/projects` list page is planned).
 - Language switcher ([features/language-switcher.md](features/language-switcher.md)) in the desktop header and the burger menu.
 - Theme switcher: label shows the target theme, the chosen theme survives a language switch ([features/theme-switcher.md](features/theme-switcher.md)).
 - Production Branch of both Vercel projects (Studio, app) is `main`; `dev` is the working branch and builds as Preview.
 
 ## Next
 
-1. Remaining sections in order of page flow, each with query, component, registration (see
-   [features/README.md](features/README.md)): whatIDo, playground, techStack, cta.
-2. Scroll animations for the remaining sections (GSAP ScrollTrigger in client children; see the `scroll-animation`
+1. Projects page at `/projects` (list, URL filter, "Under NDA" `ctaSection`): [features/projects-page.md](features/projects-page.md), draft.
+2. Remaining sections in order of page flow, each with query, component, registration (see
+   [features/README.md](features/README.md)): whatIDo, playground, techStack (cta comes with the projects page).
+3. Scroll animations for the remaining sections (GSAP ScrollTrigger in client children; see the `scroll-animation`
    skill; the career and experience sections are the references).
-3. Page metadata and SEO: title, description, canonical, hreflang (D2), Open Graph, `sitemap.ts`, `robots.ts`.
-4. Revalidate webhook: the route `api/revalidate` is built (D4). Left: set `SANITY_REVALIDATE_SECRET` in Vercel and
+4. Page metadata and SEO: title, description, canonical, hreflang (D2), Open Graph, `sitemap.ts`, `robots.ts`.
+5. Revalidate webhook: the route `api/revalidate` is built (D4). Left: set `SANITY_REVALIDATE_SECRET` in Vercel and
    create the Sanity webhook that points at it. Until then, edits reach the page after the hourly `revalidate`.
-5. Draft preview via Draft Mode with a server-only read token (conventions: Security).
-6. Final 404 design; resolve the `__next_error__` shell issue (decision D7).
-7. Decide on security headers (decision D13).
-8. Bring the header navigation back when work on the nested pages starts: it is hidden now and the code is commented
+6. Draft preview via Draft Mode with a server-only read token (conventions: Security).
+7. Final 404 design; resolve the `__next_error__` shell issue (decision D7).
+8. Decide on security headers (decision D13).
+9. Bring the header navigation back when work on the nested pages starts: it is hidden now and the code is commented
    out in `Header.tsx` ([features/header.md](features/header.md)).
 
 ## Launch checklist
@@ -43,7 +44,7 @@
 - Restore the project details and "All Projects" links: the `TEMPORARY` `#` in `ProjectCard.tsx` (title and About), the
   `url="#"` on the closing button in `ProjectsSection.tsx` and the `#` branch in `LinkButton.tsx` (see
   [features/projects-section.md](features/projects-section.md)).
-- Replace the `projects/` and `cases/` stub routes with real pages or remove them. With real pages, header anchor
+- The `projects/` list page is planned ([features/projects-page.md](features/projects-page.md)); replace the `cases/` stub with a real page or remove it. With real pages, header anchor
   items on non-home pages must link to `/#<url>` (see [features/header.md](features/header.md)).
 - Add the production domain to the Sanity CORS origins; allow the production site as the Studio preview origin.
 - Clean READMEs reviewed; `pnpm code-quality` and `pnpm build` green in `app/`, Studio builds.

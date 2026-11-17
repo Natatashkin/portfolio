@@ -22,15 +22,16 @@ starts; features built before the spec-driven workflow are marked "done (documen
 
 ## Planned
 
-| Feature               | Notes                                                                                 |
-| --------------------- | ------------------------------------------------------------------------------------- |
-| What I do section     |                                                                                       |
-| Playground section    | Needs a `componentKey` → demo map                                                     |
-| Tech stack section    |                                                                                       |
-| CTA section           |                                                                                       |
-| Page metadata and SEO | Title, description, canonical, hreflang (required before launch), Open Graph, sitemap |
-| Revalidate webhook    | Secret-checked route handler → `revalidateTag`                                        |
-| Draft preview         | Draft Mode, server-only read token                                                    |
+| Feature               | Notes                                                                                         |
+| --------------------- | --------------------------------------------------------------------------------------------- |
+| Projects page         | `/projects` list, URL filter, "Under NDA" CTA; approved: [projects-page.md](projects-page.md) |
+| What I do section     |                                                                                               |
+| Playground section    | Needs a `componentKey` → demo map                                                             |
+| Tech stack section    |                                                                                               |
+| CTA section           | First built in [projects-page.md](projects-page.md) (task 6)                                  |
+| Page metadata and SEO | Title, description, canonical, hreflang (required before launch), Open Graph, sitemap         |
+| Revalidate webhook    | Secret-checked route handler → `revalidateTag`                                                |
+| Draft preview         | Draft Mode, server-only read token                                                            |
 
 Metrics are part of the hero; there is no separate metrics section. Schemas for all planned sections already exist ([../specs/content-model.md](../specs/content-model.md)); each planned section
 still needs a query branch, a component and its `SectionRenderer` case. Section rules:

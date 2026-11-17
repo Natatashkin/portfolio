@@ -54,7 +54,8 @@ The site is available in English and Ukrainian with clean URLs, and unknown path
 - `app/messages/en.json`, `app/messages/uk.json`: interface strings.
 - `app/src/app/[locale]/layout.tsx`: `hasLocale`, `generateStaticParams`, `<html lang>`, provider.
 - `app/src/app/[locale]/not-found.tsx`, `[locale]/[...rest]/page.tsx`: localized 404.
-- `app/src/app/[locale]/projects/page.tsx`, `cases/page.tsx`: placeholders.
+- `app/src/app/[locale]/projects/page.tsx`, `cases/page.tsx`: placeholders; `projects/page.tsx` becomes the
+  projects list page ([projects-page.md](projects-page.md)), `cases` stays a placeholder.
 
 ## Acceptance criteria
 
@@ -74,5 +75,6 @@ Done in the code.
   behavior only.
 - `not-found.tsx` renders `<main>` without `id="main-content"`, unlike the other pages. If the skip link targets
   `#main-content`, it does nothing on the 404 page. Proposed: add the id.
-- `projects` and `cases` titles are hard-coded English strings, not in `messages/`. Proposed: leave until the pages
-  are designed. Case pages are out of scope in `CLAUDE.md`, so `cases` should be removed or renamed.
+- `projects` and `cases` titles are hard-coded English strings, not in `messages/`. The `projects` page is replaced
+  by [projects-page.md](projects-page.md) (strings in `messages`). Project details pages are out of scope, so `cases`
+  should be removed or renamed.

@@ -61,7 +61,8 @@ the behaviour once it is restored.
 ## Decisions
 
 - Anchor items keep linking to `#<url>` on every page while `/projects` and `/cases` are placeholders. When real
-  pages appear, anchors on non-home pages switch to `/#<url>` (home + anchor).
+  pages appear, anchors on non-home pages switch to `/#<url>` (home + anchor). The `/projects` list page is planned
+  ([projects-page.md](projects-page.md)); it leaves the header unchanged, so anchors stay `#<url>` there.
 - The header stays `position: absolute` (not sticky): the author's design decision.
 
 ## Open questions

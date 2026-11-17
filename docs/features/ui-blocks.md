@@ -32,6 +32,8 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 - [x] Any other `linkType` is treated as internal: `url` goes through `safePath`, the result is rendered with the
       locale-aware `Link` from `@/i18n/navigation`. `#anchor` is appended only when `hasAnchor` is set and `anchor`
       matches `^[a-z]+(?:-[a-z]+)*$` (the Studio regex, copied by hand); otherwise it is dropped.
+- [ ] Planned: an internal `url` of `home` resolves to `/` (the home page slug), so a button can target a home anchor
+      from another page ([projects-page.md](projects-page.md), D27).
 - [x] External links carry a visually hidden "(opens in a new tab)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.opensInNewTab`); the string is the same as in `SocialLinks`.
 - [x] `linkType: download`: renders `<a href download>` with the PDF URL of `download.document` in `download.language`,
@@ -161,6 +163,8 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 - `app/src/components/ui/Headline/`: `Headline.tsx`, `.module.scss` (accent colour, shine keyframes), `index.ts`.
 - `app/src/components/ui/RichText/`: `RichText.tsx`, `.module.scss`, `index.ts`.
 - `app/src/components/ui/TagList/`: `TagList.tsx`, `.module.scss`, `types.ts`, `index.ts`.
+- Planned: `ProjectCard` moves here from `sections/ProjectsSection/` because two pages share it
+  ([projects-page.md](projects-page.md)).
 - `app/src/components/icons/`: `DownloadIcon` (download button), `ArrowIcon` (other buttons).
 - `app/src/components/ui/ResponsiveImage/`: `ResponsiveImage.tsx`, `helpers.ts` (`getDimensions`),
   `.module.scss`, `index.ts`.

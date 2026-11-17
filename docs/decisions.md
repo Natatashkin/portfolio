@@ -159,3 +159,20 @@ The preview blur on hover is a CSS `filter` transition, an exception to "animate
 the design asks for a blur; it is one small picture per card, the overlay and the button animate `opacity` only, nothing
 changes layout, and the transition is removed under `prefers-reduced-motion`. Details:
 [features/projects-section.md](features/projects-section.md).
+
+## D26. Projects list page in scope, ordered by `orderRank`
+
+`/projects` moves into scope; the details page `projects/[slug]` stays out, so project links stay `#`. Its list is
+ordered by the project's `orderRank` (the author already sorts projects in Studio; a numeric field would duplicate
+it), the one place the site reads `orderRank`. Details: [features/projects-page.md](features/projects-page.md).
+
+## D27. Internal `linkButton` path `home` means `/`
+
+Studio cannot store an empty path and `home` is already the home page slug, so a button on another page can target a
+home anchor. Details: [features/projects-page.md](features/projects-page.md).
+
+## D28. `ctaSection` holds `buttons[]`, not one `button`
+
+Same shape as `experienceSection`, so one block can carry two actions ("Work experience", "Download CV"); the unused
+`tagline` is removed. The block is reusable on any `page` document. Details:
+[features/projects-page.md](features/projects-page.md).

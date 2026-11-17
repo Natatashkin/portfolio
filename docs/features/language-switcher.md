@@ -162,5 +162,5 @@ Deferred checks:
 - Landing on the section by `#hash`: the hash is restored in the URL and `scrollIntoView` is in the code, but it is
   untested because no section has an anchor id yet; how Lenis handles it is also unchecked.
 - The target URL from the current pathname on a second page (`/projects` <-> `/uk/projects`): deferred until such a
-  page exists.
+  page exists (planned: [projects-page.md](projects-page.md)).
 - The announcement after a full document load and with a real screen reader: deferred.
