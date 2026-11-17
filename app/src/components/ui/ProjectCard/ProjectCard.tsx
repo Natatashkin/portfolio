@@ -1,5 +1,4 @@
 import { useTranslations } from 'next-intl';
-import type { ProjectCardItem } from '@/components/sections/ProjectsSection/types';
 import LinkButton from '@/components/ui/LinkButton';
 import ResponsiveImage from '@/components/ui/ResponsiveImage';
 import RichText from '@/components/ui/RichText';
@@ -7,6 +6,7 @@ import TagList from '@/components/ui/TagList';
 import { Link } from '@/i18n/navigation';
 import { safePath, toTagItems } from '@/lib/helpers';
 import styles from './ProjectCard.module.scss';
+import type { ProjectCardItem } from './types';
 
 type Props = {
   project: ProjectCardItem;
@@ -18,7 +18,7 @@ const IMAGE_SIZES = '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw';
 // The card is not a link: the title, the preview's About button (pointer devices only), Live and GitHub
 // are separate controls, so no interactive element is nested in another.
 const ProjectCard = ({ project }: Props) => {
-  const t = useTranslations('ProjectsSection');
+  const t = useTranslations('ProjectCard');
   const { title, slug, summary, image, technologies, buttons } = project;
   const tags = toTagItems(technologies);
   const detailsPath = safePath(`projects/${slug}`);

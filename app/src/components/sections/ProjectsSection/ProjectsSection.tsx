@@ -1,11 +1,13 @@
 import Container from '@/components/ui/Container';
 import Headline from '@/components/ui/Headline';
 import LinkButton from '@/components/ui/LinkButton';
+import ProjectCard, {
+  type ProjectCardItem,
+  type ProjectItem
+} from '@/components/ui/ProjectCard';
 import RichText from '@/components/ui/RichText';
 import type { SectionOf } from '@/lib/sanity/types';
-import ProjectCard from './ProjectCard';
 import styles from './ProjectsSection.module.scss';
-import type { ProjectCardItem, ProjectItem } from './types';
 
 const hasTitleAndSlug = (project: ProjectItem): project is ProjectCardItem =>
   Boolean(project.title && project.slug);

@@ -34,7 +34,7 @@
     "present": "До тепер",
     "items": "{count, plural, one {# пункт} few {# пункти} many {# пунктів} other {# пункту}}"
   },
-  "ProjectsSection": {
+  "ProjectCard": {
     "about": "Детальніше",
     "aboutProject": "Детальніше: {title}"
   },

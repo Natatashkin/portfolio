@@ -34,7 +34,7 @@
     "present": "Present",
     "items": "{count, plural, one {# item} other {# items}}"
   },
-  "ProjectsSection": {
+  "ProjectCard": {
     "about": "About",
     "aboutProject": "About: {title}"
   },
