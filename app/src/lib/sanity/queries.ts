@@ -14,6 +14,7 @@ export const PAGE_QUERY_TAGS = [
   'downloadDocument'
 ] as const;
 export const SITE_SETTING_QUERY_TAGS = ['site-settings'] as const;
+export const PROJECTS_QUERY_TAGS = ['project', 'technology', 'skill'] as const;
 
 // Localized fields are written out literally: TypeGen reads queries
 // statically and cannot infer types through interpolated strings.
@@ -383,6 +384,68 @@ export const PAGE_QUERY = defineQuery(`
           )
         }
       }
+    }
+  }
+`);
+
+// Projects page list: every project with a slug, in the Studio drag-and-drop
+// order. Same projection as the `projectsSection` branch, plus `filterLabel`:
+// a locale-independent label (technology `name`, skill `en` title) the filter
+// key is built from, so a shared filtered link works in both locales.
+export const PROJECTS_QUERY = defineQuery(`
+  *[_type == "project" && defined(slug.current)] | order(orderRank asc){
+    _id,
+    "slug": slug.current,
+    "title": select(
+      defined(title[language == $locale][0].value) &&
+        title[language == $locale][0].value != "" =>
+        title[language == $locale][0].value,
+      title[language == "en"][0].value
+    ),
+    "summary": select(
+      defined(summary[language == $locale][0].value) &&
+        count(summary[language == $locale][0].value) > 0 =>
+        summary[language == $locale][0].value,
+      summary[language == "en"][0].value
+    ),
+    "image": image{
+      desktop,
+      mobile,
+      "alt": select(
+        defined(alt[language == $locale][0].value) &&
+          alt[language == $locale][0].value != "" =>
+          alt[language == $locale][0].value,
+        alt[language == "en"][0].value
+      )
+    },
+    "technologies": technologies[defined(@->_id)]->{
+      _id,
+      _type,
+      _type == "technology" => {
+        name,
+        "filterLabel": name
+      },
+      _type == "skill" => {
+        "title": select(
+          defined(title[language == $locale][0].value) &&
+            title[language == $locale][0].value != "" =>
+            title[language == $locale][0].value,
+          title[language == "en"][0].value
+        ),
+        "filterLabel": title[language == "en"][0].value
+      }
+    },
+    "buttons": buttons[]{
+      _key,
+      linkType,
+      url,
+      iconKey,
+      "label": select(
+        defined(label[language == $locale][0].value) &&
+          label[language == $locale][0].value != "" =>
+          label[language == $locale][0].value,
+        label[language == "en"][0].value
+      )
     }
   }
 `);
