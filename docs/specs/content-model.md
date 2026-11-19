@@ -30,7 +30,7 @@ How schemas are written (helpers, registration, tiles) is in
 
 `linkButton` reading rules: external `url` is rendered only if it passes `safeHref` (otherwise no button,
 see [../conventions.md](../conventions.md#security)); internal is a slash-less path (`about`, `projects/sub`), the
-app adds the leading `/` and the locale prefix; the path `home` is the home page `/` (planned, [projects-page](../features/projects-page.md)). `anchor` is read only when `hasAnchor` is true (Studio does not clear
+app adds the leading `/` and the locale prefix; the path `home` is the home page `/` (planned, [cta-section](../features/cta-section.md)). `anchor` is read only when `hasAnchor` is true (Studio does not clear
 it when the toggle is turned off). `download` renders `download.document->files[download.language].asset->url` as a download link,
 whatever the site locale is; if the reference is broken or the document has no file in that language, no button
 (deliberately silent). The app always keys off `linkType`, never off which fields are filled: Studio hides the fields
@@ -40,39 +40,40 @@ ignored for the other two types. See
 
 ## Validation rules (Studio)
 
-| Field                            | Rule                                                                                                                                                                           |
-| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `linkButton.download`            | Visible only for `download`; `document` (reference to a `downloadDocument`) and `language` (`en` or `uk`) are both required                                                    |
-| `downloadDocument.title`         | Required (internal name)                                                                                                                                                       |
-| `downloadDocument.files`         | `en` required, `uk` optional; the upload picker accepts PDF only (`accept`)                                                                                                    |
-| `linkButton.url`                 | Hidden for `download`. Otherwise required. External: valid URL with `https`, `mailto` or `tel`. Internal: `^[a-z0-9]+(?:[-/][a-z0-9]+)*$` (case-insensitive), no leading slash |
-| `linkButton.anchor`              | Visible and required only when `hasAnchor`. Letters and hyphens: `^[a-z]+(?:-[a-z]+)*$` (case-insensitive), no `#`, no digits                                                  |
-| `<section>.anchorId`             | Optional. `^[a-z0-9-]+$` (digits allowed, unlike `linkButton.anchor`)                                                                                                          |
-| `siteSettings.navigation[].url`  | Required. Lowercase letters only: `^[a-z]+$`                                                                                                                                   |
-| `siteSettings.socialLinks[].url` | Required. `https`, `mailto` or `tel`                                                                                                                                           |
-| `page.slug`                      | Required. Generated from the internal `title`; `home` is the landing                                                                                                           |
-| `project.slug`                   | Required. Generated from the `en` (base) entry of the localized `title` via a source function                                                                                  |
-| `project` required fields        | `title` and `summary` in every language; `image`; `technologies` (at least one). `buttons` is optional                                                                         |
-| `piece.componentKey`             | One of `animatedCard`, `formValidation`, `themeSwitcher`, `responsiveDesign`                                                                                                   |
-| `technology.name`                | Required                                                                                                                                                                       |
+| Field                            | Rule                                                                                                                                                                                                  |
+| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `linkButton.download`            | Visible only for `download`; `document` (reference to a `downloadDocument`) and `language` (`en` or `uk`) are both required                                                                           |
+| `downloadDocument.title`         | Required (internal name)                                                                                                                                                                              |
+| `downloadDocument.files`         | `en` required, `uk` optional; the upload picker accepts PDF only (`accept`)                                                                                                                           |
+| `linkButton.url`                 | Hidden for `download`. Otherwise required. External: valid URL with `https`, `mailto` or `tel`. Internal: `^[a-z0-9]+(?:[-/][a-z0-9]+)*$` (case-insensitive), no leading slash                        |
+| `linkButton.anchor`              | Visible and required only when `hasAnchor`. Letters and hyphens: `^[a-z]+(?:-[a-z]+)*$` (case-insensitive), no `#`, no digits                                                                         |
+| `<section>.anchorId`             | Optional. `^[a-z0-9-]+$` (digits allowed, unlike `linkButton.anchor`)                                                                                                                                 |
+| `siteSettings.navigation[].url`  | Required. Lowercase letters only: `^[a-z]+$`                                                                                                                                                          |
+| `siteSettings.socialLinks[].url` | Required. `https`, `mailto` or `tel`                                                                                                                                                                  |
+| `page.slug`                      | Required. Generated from the internal `title`; `home` is the landing                                                                                                                                  |
+| `project.slug`                   | Required. Generated from the `en` (base) entry of the localized `title` via a source function                                                                                                         |
+| `project` required fields        | `title` and `summary` in every language; `image`; `technologies` (at least one). `buttons` is optional                                                                                                |
+| Hidden fields                    | Sanity validates hidden fields too. `requiredInAllLanguages` and `responsiveImage.desktop` skip when the field or an ancestor is hidden (`context.hidden`), so a hidden field never blocks publishing |
+| `piece.componentKey`             | One of `animatedCard`, `formValidation`, `themeSwitcher`, `responsiveDesign`                                                                                                                          |
+| `technology.name`                | Required                                                                                                                                                                                              |
 
 ## Documents
 
 Every document below except `siteSettings` and `page` also carries a hidden `orderRank` (Studio drag-and-drop order). The site does not read it, except
 `project` on the projects page, which is ordered by it ([../decisions.md](../decisions.md#d26-projects-list-page-in-scope-ordered-by-orderrank)).
 
-| Document                                      | Fields                                                                                                                                                                   |
-| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `siteSettings` (singleton, id `siteSettings`) | `siteName`, `name` (loc), `navigation[]` {`label` loc, `isAnchor`, `url`}, `socialLinks[]` {`label`, `url`}, `location` (loc), `copyright` (loc), `backToTopLabel` (loc) |
-| `downloadDocument` ("Documents" in Studio)    | `title` (internal name, e.g. "CV"), `files` {`en`, `uk`}, one PDF per language                                                                                           |
-| `page`                                        | `title` (internal), `slug` (`home` = landing), `sections[]`, `seo` {`title` loc, `description` loc text, `ogImage`}                                                      |
-| `metric`                                      | `value` (string, e.g. "4+"), `label` (loc)                                                                                                                               |
-| `road`                                        | `period` (loc string), `title` (loc string), `description` (loc text, optional); `period` and `title` are required                                                       |
-| `skill`                                       | `title` (loc), `iconKey`                                                                                                                                                 |
-| `piece`                                       | `title`, `hint` (loc), `componentKey` (list; maps to a client demo)                                                                                                      |
-| `technology`                                  | `name`, `iconKey`                                                                                                                                                        |
-| `project`                                     | `title` (loc), `slug` (from `en` title), `summary` (loc richText), `image`, `technologies[]` → technology, `buttons[]` (linkButton, optional)                            |
-| `experience`                                  | `company`, `logo` (image), `role` (loc), `periodStart`, `periodEnd`, `companyDescription` (loc richText), `entries[]`                                                    |
+| Document                                      | Fields                                                                                                                                                                                                                   |
+| --------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `siteSettings` (singleton, id `siteSettings`) | `siteName`, `name` (loc), `navigation[]` {`label` loc, `isAnchor`, `url`}, `socialLinks[]` {`label`, `url`}, `location` (loc), `copyright` (loc), `backToTopLabel` (loc)                                                 |
+| `downloadDocument` ("Documents" in Studio)    | `title` (internal name, e.g. "CV"), `files` {`en`, `uk`}, one PDF per language                                                                                                                                           |
+| `page`                                        | `title` (internal), `slug` (`home` = landing), `description` (loc richText, optional page intro, e.g. the `/projects` lead; not `seo.description`), `sections[]`, `seo` {`title` loc, `description` loc text, `ogImage`} |
+| `metric`                                      | `value` (string, e.g. "4+"), `label` (loc)                                                                                                                                                                               |
+| `road`                                        | `period` (loc string), `title` (loc string), `description` (loc text, optional); `period` and `title` are required                                                                                                       |
+| `skill`                                       | `title` (loc), `iconKey`                                                                                                                                                                                                 |
+| `piece`                                       | `title`, `hint` (loc), `componentKey` (list; maps to a client demo)                                                                                                                                                      |
+| `technology`                                  | `name`, `iconKey`                                                                                                                                                                                                        |
+| `project`                                     | `title` (loc), `slug` (from `en` title), `summary` (loc richText), `image`, `technologies[]` → technology, `buttons[]` (linkButton, optional)                                                                            |
+| `experience`                                  | `company`, `logo` (image), `role` (loc), `periodStart`, `periodEnd`, `companyDescription` (loc richText), `entries[]`                                                                                                    |
 
 `experience`: `company`, `role`, `periodStart` and `entries[]` (at least one) are required; `periodEnd` and
 `companyDescription` are optional. Dates are entered as `DD-MM-YYYY` and stored as ISO; an empty `periodEnd` means the
@@ -81,19 +82,21 @@ current position. Every document has the same shape, there are no conditional fi
 
 ## Sections (`page.sections`)
 
-| Section             | Fields                                                                                                                                               |
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `heroSection`       | `role`, `fullname` (loc), `headline`, `description`, `stack[]` → technology \| skill, `image`, `quote` (loc text), `metrics[]` → metric, `ctaButton` |
-| `careerSection`     | `eyebrow`, `headline`, `description`, `steps[]` → road, `tagline`, `cover`, `button` (linkButton)                                                    |
-| `whatIDoSection`    | `eyebrow`, `headline`, `description`, `skills[]` → skill, `button`                                                                                   |
-| `playgroundSection` | `eyebrow`, `headline`, `description`, `pieces[]` → piece, `button`                                                                                   |
-| `projectsSection`   | `eyebrow`, `headline`, `description`, `projects[]` → project, `button`                                                                               |
-| `experienceSection` | `eyebrow`, `headline`, `description`, `experiences[]` → experience, `buttons[]` (linkButton), `anchorId`                                             |
-| `techStackSection`  | `eyebrow`, `headline`, `description`, `technologies[]` → technology, `moreLabel`                                                                     |
-| `ctaSection`        | `eyebrow`, `headline`, `description`, `buttons[]` (linkButton)                                                                                       |
+| Section             | Fields                                                                                                                                                               |
+| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `heroSection`       | `role`, `fullname` (loc), `headline`, `description`, `stack[]` → technology \| skill, `image`, `quote` (loc text), `metrics[]` → metric, `ctaButton`                 |
+| `careerSection`     | `eyebrow`, `headline`, `description`, `steps[]` → road, `tagline`, `cover`, `button` (linkButton)                                                                    |
+| `whatIDoSection`    | `eyebrow`, `headline`, `description`, `skills[]` → skill, `button`                                                                                                   |
+| `playgroundSection` | `eyebrow`, `headline`, `description`, `pieces[]` → piece, `button`                                                                                                   |
+| `projectsSection`   | `eyebrow`, `headline`, `description`, `projects[]` → project, `button`                                                                                               |
+| `experienceSection` | `eyebrow`, `headline`, `description`, `experiences[]` → experience, `buttons[]` (linkButton), `anchorId`                                                             |
+| `techStackSection`  | `eyebrow`, `headline`, `description`, `technologies[]` → technology, `moreLabel`                                                                                     |
+| `ctaSection`        | `eyebrow` (optional), `headline`, `description`, `hasBackground`, `cover` (responsiveImage), `buttons[]` (linkButton, optional), `layout`, `isFullWidth`, `anchorId` |
 
-Planned: `ctaSection` changes from `tagline` + `button` to the shape above
-([../features/projects-page.md](../features/projects-page.md), D28).
+`ctaSection`: `layout` is a select `row` (default) \| `column` \| `column-centered`. `cover` is shown only when
+`hasBackground` is true and Studio keeps its value when hidden, so the frontend renders it only when `hasBackground` is
+true. Existing content may lack the new values: a missing `hasBackground` or `isFullWidth` means false, a missing
+`layout` means `row`. Reasons: [../decisions.md](../decisions.md#d28-ctasection-holds-buttons-not-one-button).
 
 Text fields in sections are loc unless noted. Plain (non-localized) strings: `heroSection.role`, `siteSettings.siteName`,
 `technology.name`, `metric.value`. Implementation status per section:

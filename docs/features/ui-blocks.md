@@ -33,7 +33,7 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
       locale-aware `Link` from `@/i18n/navigation`. `#anchor` is appended only when `hasAnchor` is set and `anchor`
       matches `^[a-z]+(?:-[a-z]+)*$` (the Studio regex, copied by hand); otherwise it is dropped.
 - [ ] Planned: an internal `url` of `home` resolves to `/` (the home page slug), so a button can target a home anchor
-      from another page ([projects-page.md](projects-page.md), D27).
+      from another page ([cta-section.md](cta-section.md), D27).
 - [x] External links carry a visually hidden "(opens in a new tab)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.opensInNewTab`); the string is the same as in `SocialLinks`.
 - [x] `linkType: download`: renders `<a href download>` with the PDF URL of `download.document` in `download.language`,

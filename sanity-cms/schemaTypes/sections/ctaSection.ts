@@ -1,6 +1,13 @@
 import {LaunchIcon} from '@sanity/icons/Launch'
-import {defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
 import {sectionGroups, sectionPreview} from '../lib/sectionFields'
+
+type CtaSectionValue = {
+  hasBackground?: boolean
+}
+
+// Sanity passes the parent object untyped; read it through one helper.
+const ctaSectionOf = (parent: unknown) => parent as CtaSectionValue | undefined
 
 export const ctaSectionType = defineType({
   name: 'ctaSection',
@@ -24,15 +31,51 @@ export const ctaSectionType = defineType({
       type: 'internationalizedArrayRichText',
       group: 'content',
     }),
+    // Optional: sections saved before these fields existed have no value, and the frontend treats a missing
+    // `hasBackground` and `isFullWidth` as false and a missing `layout` as `row`.
     defineField({
-      name: 'tagline',
-      type: 'internationalizedArrayString',
-      group: 'content',
+      name: 'hasBackground',
+      title: 'Show background',
+      type: 'boolean',
+      group: 'media',
+      initialValue: false,
     }),
     defineField({
-      name: 'button',
-      type: 'linkButton',
+      name: 'cover',
+      type: 'responsiveImage',
+      group: 'media',
+      hidden: ({parent}) => !ctaSectionOf(parent)?.hasBackground,
+    }),
+    defineField({
+      name: 'buttons',
+      type: 'array',
       group: 'actions',
+      of: [defineArrayMember({type: 'linkButton'})],
+    }),
+    defineField({
+      name: 'layout',
+      type: 'string',
+      group: 'settings',
+      options: {
+        list: [
+          {
+            title: 'Row',
+            value: 'row',
+          },
+          {
+            title: 'Column, centered',
+            value: 'column-centered',
+          },
+        ],
+      },
+      initialValue: 'row',
+    }),
+    defineField({
+      name: 'isFullWidth',
+      title: 'Full width',
+      type: 'boolean',
+      group: 'settings',
+      initialValue: false,
     }),
     defineField({
       name: 'anchorId',

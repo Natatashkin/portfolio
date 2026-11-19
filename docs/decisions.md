@@ -169,10 +169,22 @@ it), the one place the site reads `orderRank`. Details: [features/projects-page.
 ## D27. Internal `linkButton` path `home` means `/`
 
 Studio cannot store an empty path and `home` is already the home page slug, so a button on another page can target a
-home anchor. Details: [features/projects-page.md](features/projects-page.md).
+home anchor. Details: [features/cta-section.md](features/cta-section.md).
 
 ## D28. `ctaSection` holds `buttons[]`, not one `button`
 
 Same shape as `experienceSection`, so one block can carry two actions ("Work experience", "Download CV"); the unused
 `tagline` is removed. The block is reusable on any `page` document. Details:
-[features/projects-page.md](features/projects-page.md).
+[features/cta-section.md](features/cta-section.md).
+
+Layout and background: `layout` (`row` | `column` | `column-centered`) is a select, since three options fit a
+dropdown and the section settings stay compact. `hasBackground` sits in Media next to `cover`, which is optional and
+shown only when it is on, so a CTA without a picture needs no image. `eyebrow` and `buttons[]` are optional, so a CTA
+can be text only.
+
+## D29. Hidden fields skip required validation
+
+Sanity validates hidden fields too, so a hidden CTA `cover` would block publishing. `requiredInAllLanguages` and
+`responsiveImage.desktop` return valid when `context.hidden` is set (the field or an ancestor is hidden). It applies to
+every hidden field that uses these rules. The value of a hidden field is kept, so the frontend decides what to render
+(`cover` only when `hasBackground` is true). Details: [features/cta-section.md](features/cta-section.md).

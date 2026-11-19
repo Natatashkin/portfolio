@@ -5,14 +5,14 @@ Status: approved
 ## Goal
 
 A page at `/projects` (`/uk/projects`) that lists every public project as a card, with a technology filter kept in
-the URL (`?filter=`) so a filtered view can be shared, and an "Under NDA" call-to-action that points to the work
-experience and the CV. The details page `projects/[slug]`, the header, sitemap, hreflang, Open Graph and animation on
+the URL (`?filter=`) so a filtered view can be shared, followed by any sections the author adds to the page in
+Sanity. The details page `projects/[slug]`, the header, sitemap, hreflang, Open Graph and animation on
 this page are out of scope.
 
 ## Requirements
 
 - [ ] Order: breadcrumbs `Home / Projects` → `h1` and subtitle → filter → project counter → card grid → the page's
-      sections from Sanity ("Under NDA"). Header and footer come from the locale layout unchanged.
+      sections from Sanity. Header and footer come from the locale layout unchanged.
 - [ ] Breadcrumbs: `nav` with an accessible name and an `ol`; `Home` is a locale-aware link, `Projects` is plain text
       with `aria-current="page"`.
 - [ ] Grid, breakpoints and card alignment are the same as in the home projects section.
@@ -31,11 +31,11 @@ this page are out of scope.
       projects: the message only.
 - [ ] Mobile: the filter is one row with horizontal scroll, edge to edge, no visible scrollbar; a focused chip
       scrolls into view.
-- [ ] Headings: `h1` → a visually hidden `h2` above the grid (localized, e.g. "Project list") → the card `h3`s; the
-      CTA headline is an `h2`. No level is skipped.
-- [ ] "Under NDA" is a `ctaSection` in the `page` document with slug `projects`: eyebrow, headline, description and
-      `buttons[]`. Here: "Work experience" (internal, `url` `home`, anchor of the experience section) and "Download
-      CV" (download from the Documents collection). Without that document the page renders without the section.
+- [ ] Headings: `h1` → a visually hidden `h2` above the grid (localized, e.g. "Project list") → the card `h3`s; a
+      section headline after the grid is an `h2`. No level is skipped.
+- [ ] The page renders the sections of the `page` document with slug `projects` through `SectionRenderer` after the
+      grid. Any section type the author adds in Studio works, as on home; the page does not depend on a particular
+      one. Without that document, or with no sections, the page renders without them.
 - [ ] Without JavaScript all projects are visible; the filter is a progressive enhancement.
 - [ ] `generateMetadata`: localized `title` and `description` for `en` and `uk`; the layout's pre-launch
       `noindex` stays.
@@ -46,15 +46,15 @@ this page are out of scope.
 
 - **Schema:**
   - `project` is unchanged; its hidden `orderRank` (`@sanity/orderable-document-list`) holds the Studio order.
-  - `ctaSection` (planned, no content yet): the single `button` becomes `buttons[]` of `linkButton`, as in
-    `experienceSection`; the unused `tagline` field is removed.
+  - `page` gets an optional `description` (loc richText): the page intro, e.g. the `/projects` lead, distinct from
+    `seo.description`. The page query and UI do not read it yet.
 - **Query:**
   - `PROJECTS_QUERY` in `app/src/lib/sanity/queries.ts`: projects with a slug, ordered by `orderRank`, with the same
     project projection as the `projectsSection` branch; each technology and skill also returns a locale-independent
     filter label (technology `name`, skill `en` title). Tags `project`, `technology`, `skill`. Fetcher
     `fetchProjects`, type from TypeGen. The title check stays in code.
-  - `PAGE_QUERY` gets the `ctaSection` branch (`buttons[]` with the download fields, as in `experienceSection`); the
-    page reads its sections with `fetchPage('projects', locale)`.
+  - The page reads its sections with `fetchPage('projects', locale)` and the existing `PAGE_QUERY`; a section type
+    without a query branch or a `SectionRenderer` case is skipped, as on home.
 - **UI:**
   - Route `app/src/app/[locale]/projects/page.tsx` replaces the stub: Server Component, same `revalidate` as home,
     `generateMetadata` via `getTranslations`, sections through `SectionRenderer` after the grid. It does not read
@@ -70,24 +70,20 @@ this page are out of scope.
     both). The key is a slug of the locale-independent label (`Next.js` → `nextjs`) from a helper in `lib/helpers`.
     Options with the same label merge into one chip; a label that gives an empty key is skipped.
   - `ProjectCard` comes from `components/ui/ProjectCard/` (moved from `sections/ProjectsSection/ProjectCard/`).
-  - `LinkButton`: an internal `url` of `home` resolves to `/` ([D27](../decisions.md)).
-  - `CtaSection` in `components/sections/` with its `SectionRenderer` case, reusable on any page.
   - Page-private components in `components/projects/`: `Breadcrumbs` (server), `ProjectsBrowser` (client: filter,
     counter, grid, empty state), `TechFilter` (client child).
-  - Look: pill-shaped filter chips, the active one in the accent colour; the CTA is a bordered panel with an accent
-    and an outlined button. Colours, fonts and spacing come from the existing tokens. The hidden `h2` uses the
-    `visually-hidden` mixin; page strings are in `messages` (`ProjectsPage`).
+  - Look: pill-shaped filter chips, the active one in the accent colour. Colours, fonts and spacing come from the
+    existing tokens. The hidden `h2` uses the `visually-hidden` mixin; page strings are in `messages` (`ProjectsPage`).
 - **Edge cases:** no projects; no matches; no `projects` page document; a project without image, buttons or
   technologies; an empty `uk` field; an unknown `?filter=`; long titles and labels; a single option.
 - **Known limits (out of scope):** header anchors render as `#<id>` and do nothing on `/projects`.
 
 ## Files
 
-- `sanity-cms/schemaTypes/sections/ctaSection.ts`.
+- `sanity-cms/schemaTypes/documents/page.ts` (`description`).
 - `app/src/lib/sanity/queries.ts`, `app/src/lib/sanity/api/fetchProjects.ts`, `app/src/sanity.types.ts`.
 - `app/src/app/[locale]/projects/page.tsx`.
 - `app/src/components/ui/ProjectCard/` (moved) and `app/src/components/sections/ProjectsSection/` (import).
-- `app/src/components/ui/LinkButton/` (`home` path), `app/src/components/sections/CtaSection/`, `SectionRenderer`.
 - `app/src/components/projects/{Breadcrumbs,ProjectsBrowser,TechFilter}/`.
 - `app/src/lib/helpers/` (filter key helper), `app/messages/{en,uk}.json` (`ProjectsPage`).
 - Docs: `CLAUDE.md` (Out of scope), `specs/product.md`, `specs/content-model.md`, `conventions.md`, `features/ui-blocks.md`, `decisions.md`,
@@ -100,21 +96,22 @@ this page are out of scope.
 - [ ] The home projects section and every existing `LinkButton` behave as before.
 - [ ] Filter, shared URL (also across locales), unknown key, empty state and Back behave as required; the footer
       does not jump on a filter change.
-- [ ] The CTA shows both buttons; "Work experience" lands on the home experience section in the current locale,
-      "Download CV" serves the file of the current locale.
-- [ ] Keyboard order and visible focus through breadcrumbs, chips, card controls and CTA buttons.
+- [ ] With the author's `projects` page content, its sections render after the grid in both locales; without the
+      document the page renders without them.
+- [ ] Keyboard order and visible focus through breadcrumbs, chips and card controls.
 - [ ] Empty or unexpected CMS data does not throw.
 - [ ] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`; the route is
       static in the build output. Studio builds (`pnpm build` in `sanity-cms/`).
 
 ## Decisions
 
-- The list page moves into scope; the details page stays out, so project links and "All Projects" stay `#`
+- The list page moves into scope; the details page stays out, so the card links to `projects/<slug>` stay `#`
   ([D26](../decisions.md)).
 - The card is reused unchanged and moves to `ui/` because two pages share it (as `TagList` in D23); a hidden `h2`
   keeps the heading order instead of a prop on the card.
-- "Under NDA" is content, so it is a reusable `ctaSection` on a `page` document, not `messages` (D28).
-- `home` means `/` and the order comes from `orderRank`: reasons in D27 and D26.
+- Content after the grid is the `projects` page's own sections, so the author composes it in Studio from any section
+  type; the page is not tied to one.
+- The order comes from `orderRank` (D26).
 - The filter key is locale-independent, so a shared link works in both locales; the parameter is `filter`, since it
   covers skills too.
 - Client-side filtering on a static page: no dynamic rendering for one query parameter; the brief unfiltered view on
@@ -128,9 +125,8 @@ this page are out of scope.
 4. Page shell: route, metadata, breadcrumbs, heading, full grid. Done when both locales render and the route is
    static.
 5. Filter, counter, empty state, minimum height, mobile row. Done when the filter criteria pass in the browser.
-6. CTA section: re-check that no content uses `ctaSection`, then schema (`buttons[]`, no `tagline`), query branch,
-   `CtaSection`, `SectionRenderer` case, `home` path in `LinkButton`, sections on the page. Done when Studio builds
-   and, after the author adds the `projects` page in Studio, both buttons work in both locales.
+6. Sections on the page: render `fetchPage('projects')` sections through `SectionRenderer`. Done when, after the
+   author adds the `projects` page in Studio, its sections render in both locales.
 7. Sync: `docs-writer` updates the specs to the code. Done when the author marks the feature `done`.
 
 ## Open questions

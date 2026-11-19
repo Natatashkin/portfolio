@@ -35,6 +35,11 @@ export const pageType = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'description',
+      type: 'internationalizedArrayRichText',
+      group: 'content',
+    }),
+    defineField({
       name: 'sections',
       type: 'array',
       group: 'content',

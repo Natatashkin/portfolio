@@ -49,9 +49,10 @@ function hasContent(value: unknown): boolean {
   return false
 }
 
-/** Requires a value in every language. */
+/** Requires a value in every language. Skipped while the field or one of its ancestors is hidden. */
 export function requiredInAllLanguages(rule: Rule) {
-  return rule.custom((items: unknown) => {
+  return rule.custom((items: unknown, context) => {
+    if (context.hidden) return true
     const localized = Array.isArray(items) ? items.filter(isLocalizedItem) : []
     const errors = LANGUAGES.flatMap(({id}) => {
       const item = localized.find((candidate) => candidate.language === id)

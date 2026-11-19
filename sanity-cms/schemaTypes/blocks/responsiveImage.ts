@@ -12,7 +12,9 @@ export const responsiveImageType = defineType({
       name: 'desktop',
       type: 'image',
       options: {hotspot: true},
-      validation: (rule) => rule.required(),
+      // Sanity validates hidden fields too; a hidden image (e.g. a CTA cover without background) must not block publish.
+      validation: (rule) =>
+        rule.custom((value, context) => (context.hidden || value?.asset ? true : 'Required')),
     }),
     defineField({
       name: 'mobile',
