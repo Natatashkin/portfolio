@@ -61,6 +61,12 @@ export const PAGE_QUERY = defineQuery(`
         title[language == $locale][0].value,
       title[language == "en"][0].value
     ),
+    "description": select(
+      defined(description[language == $locale][0].value) &&
+        count(description[language == $locale][0].value) > 0 =>
+        description[language == $locale][0].value,
+      description[language == "en"][0].value
+    ),
     sections[]{
       _key,
       _type,

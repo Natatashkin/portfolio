@@ -1,0 +1,46 @@
+@use 'mixins' as *;
+
+.results {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+
+  // One line tall even while empty, so the list below does not move when the number appears.
+  &__count {
+    min-height: 1.5em;
+    margin: 0;
+    color: var(--color-text-muted);
+    font-size: var(--font-sm);
+  }
+
+  // The reserve and the content share one grid cell; the cell is as tall as the taller of the two.
+  &__list {
+    display: grid;
+    transition: opacity var(--transition-base);
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+  }
+
+  &__reserve,
+  &__content {
+    grid-area: 1 / 1;
+    min-width: 0;
+  }
+
+  &__reserve {
+    @include project-grid;
+
+    visibility: hidden;
+  }
+
+  &__grid {
+    @include project-grid;
+  }
+
+  // While a filter change is pending (Filter's `data-pending`), the old results dim.
+  &:has([data-pending]) &__list {
+    opacity: 0.5;
+  }
+}

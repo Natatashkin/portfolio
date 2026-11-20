@@ -1,16 +1,11 @@
 import Container from '@/components/ui/Container';
 import Headline from '@/components/ui/Headline';
 import LinkButton from '@/components/ui/LinkButton';
-import ProjectCard, {
-  type ProjectCardItem,
-  type ProjectItem
-} from '@/components/ui/ProjectCard';
+import ProjectCard from '@/components/ui/ProjectCard';
 import RichText from '@/components/ui/RichText';
+import { isProjectCardItem } from '@/lib/helpers';
 import type { SectionOf } from '@/lib/sanity/types';
 import styles from './ProjectsSection.module.scss';
-
-const hasTitleAndSlug = (project: ProjectItem): project is ProjectCardItem =>
-  Boolean(project.title && project.slug);
 
 const ProjectsSection = ({
   anchorId,
@@ -20,8 +15,7 @@ const ProjectsSection = ({
   projects,
   button
 }: SectionOf<'projectsSection'>) => {
-  // A card needs a title and a slug: the title names it, the slug is the link to its page.
-  const cards = (projects ?? []).filter(hasTitleAndSlug);
+  const cards = (projects ?? []).filter(isProjectCardItem);
   const hasIntro = Boolean(eyebrow || headline || description);
 
   if (!hasIntro && cards.length === 0) return null;
@@ -55,8 +49,7 @@ const ProjectsSection = ({
         )}
         {button?.label && (
           <div className={styles.projects__actions}>
-            {/* TEMPORARY: `#` until the `projects` page exists; remove `url` to use the Studio link again. */}
-            <LinkButton {...button} url="#" />
+            <LinkButton {...button} />
           </div>
         )}
       </Container>

@@ -1,5 +1,5 @@
 import { cacheLife, cacheTag } from 'next/cache';
-import type { routing } from '@/i18n/routing';
+import type { Locale } from 'next-intl';
 import { client } from '@/lib/sanity/client';
 import {
   PROJECTS_QUERY,
@@ -7,8 +7,6 @@ import {
   QUERY_REVALIDATE_SECONDS
 } from '@/lib/sanity/queries';
 import type { ProjectItem } from '@/lib/sanity/types';
-
-type Locale = (typeof routing.locales)[number];
 
 // `filters` is part of the cache key, so it must already be normalized (valid slugs, deduplicated, in option
 // order): an arbitrary URL then maps to an existing entry instead of creating a new one.

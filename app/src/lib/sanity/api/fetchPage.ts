@@ -1,13 +1,11 @@
 import { cacheLife, cacheTag } from 'next/cache';
-import type { routing } from '@/i18n/routing';
+import type { Locale } from 'next-intl';
 import { client } from '@/lib/sanity/client';
 import {
   PAGE_QUERY,
   PAGE_QUERY_TAGS,
   QUERY_REVALIDATE_SECONDS
 } from '@/lib/sanity/queries';
-
-type Locale = (typeof routing.locales)[number];
 
 export const fetchPage = async (slug: string, locale: Locale) => {
   'use cache';

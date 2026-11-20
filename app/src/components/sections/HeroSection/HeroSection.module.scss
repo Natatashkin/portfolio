@@ -4,7 +4,7 @@
   display: grid;
   box-sizing: border-box;
   min-height: 100dvh;
-  --hero-padding-top: 8rem;
+  --hero-padding-top: var(--header-offset);
 
   padding: var(--hero-padding-top) 0 var(--space-section);
   overflow-x: clip;

@@ -46,6 +46,14 @@
     "label": "Breadcrumbs"
   },
   "Filter": {
-    "all": "All"
+    "all": "All",
+    "reset": "Reset filters"
+  },
+  "ProjectsResults": {
+    "filterLabel": "Filter projects by technology",
+    "count": "{count, plural, one {# project} other {# projects}}"
+  },
+  "ProjectsList": {
+    "empty": "No projects match these filters."
   }
 }

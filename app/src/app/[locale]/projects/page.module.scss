@@ -1,0 +1,24 @@
+// The content starts below the header, which is laid over the page (like the hero).
+.page {
+  padding-top: var(--header-offset);
+
+  &__intro {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-4);
+    margin-bottom: var(--space-10);
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-h1);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  &__description {
+    max-width: 48rem;
+    color: var(--color-text-muted);
+  }
+}

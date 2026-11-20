@@ -50,6 +50,9 @@
 
   --blur: 5px;
 
+  // The header is laid over the top of every page (position: absolute); a page starts its content below it.
+  --header-offset: 8rem;
+
   // Small text
   --font-xs-extra: clamp(0.67rem, 0.5rem + 0.2vw, 0.75rem);
   --font-xs: clamp(0.75rem, 0.7rem + 0.2vw, 0.875rem);

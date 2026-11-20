@@ -24,37 +24,14 @@
   }
 
   &__chip {
+    font: inherit;
+
+    @include chip;
+
     flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    min-height: 44px;
-    padding: var(--space-1) var(--space-4);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-pill);
     background: transparent;
     color: var(--color-text-muted);
-    font: inherit;
-    font-size: var(--font-sm);
     cursor: pointer;
-    transition:
-      background-color var(--transition-base),
-      border-color var(--transition-base),
-      color var(--transition-base);
-
-    @media (hover: hover) {
-      &:hover {
-        border-color: var(--color-text-muted);
-        color: var(--color-text);
-      }
-    }
-
-    &:focus-visible {
-      @include focus-ring;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-    }
 
     // `aria-pressed` carries the state for assistive technology; the class only paints it.
     &--active {

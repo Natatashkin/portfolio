@@ -46,7 +46,8 @@
     color: var(--color-text-muted);
   }
 
+  // The page the visitor is on, in the accent colour.
   &__current {
-    color: var(--color-text);
+    color: var(--color-accent-ink);
   }
 }
