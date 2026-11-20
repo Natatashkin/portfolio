@@ -1,6 +1,7 @@
 import {CodeIcon} from '@sanity/icons/Code'
 import {defineField, defineType} from 'sanity'
 import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
+import {filterSlugField} from '../lib/filterSlug'
 
 export const technologyType = defineType({
   name: 'technology',
@@ -27,6 +28,7 @@ export const technologyType = defineType({
       type: 'string',
       validation: (rule) => rule.required(),
     }),
+    filterSlugField('name'),
     defineField({
       name: 'iconKey',
       type: 'string',

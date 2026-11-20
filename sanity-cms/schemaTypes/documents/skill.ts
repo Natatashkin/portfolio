@@ -1,6 +1,7 @@
 import {BulbOutlineIcon} from '@sanity/icons/BulbOutline'
 import {defineField, defineType} from 'sanity'
 import {orderRankField, orderRankOrdering} from '@sanity/orderable-document-list'
+import {filterSlugField} from '../lib/filterSlug'
 import {baseText, requiredInAllLanguages} from '../lib/localized'
 
 export const skillType = defineType({
@@ -16,6 +17,8 @@ export const skillType = defineType({
       type: 'internationalizedArrayString',
       validation: requiredInAllLanguages,
     }),
+    // Built from the English (base) title.
+    filterSlugField((document) => baseText(document.title) ?? ''),
     defineField({
       name: 'iconKey',
       type: 'string',

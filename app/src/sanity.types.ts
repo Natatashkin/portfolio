@@ -38,8 +38,15 @@ export type CtaSection = {
   eyebrow?: InternationalizedArrayString;
   headline?: InternationalizedArrayHeadline;
   description?: InternationalizedArrayRichText;
-  tagline?: InternationalizedArrayString;
-  button?: LinkButton;
+  hasBackground?: boolean;
+  cover?: ResponsiveImage;
+  buttons?: Array<
+    {
+      _key: string;
+    } & LinkButton
+  >;
+  layout?: 'row' | 'column-centered';
+  isFullWidth?: boolean;
   anchorId?: string;
 };
 
@@ -208,7 +215,14 @@ export type Technology = {
   _rev: string;
   orderRank?: string;
   name: string;
+  slug: Slug;
   iconKey?: string;
+};
+
+export type Slug = {
+  _type: 'slug';
+  current: string;
+  source?: string;
 };
 
 export type Metric = {
@@ -267,6 +281,7 @@ export type Skill = {
   _rev: string;
   orderRank?: string;
   title?: InternationalizedArrayString;
+  slug: Slug;
   iconKey?: string;
 };
 
@@ -348,7 +363,7 @@ export type Project = {
 
 export type ResponsiveImage = {
   _type: 'responsiveImage';
-  desktop: {
+  desktop?: {
     asset?: SanityImageAssetReference;
     media?: unknown;
     hotspot?: SanityImageHotspot;
@@ -365,20 +380,15 @@ export type ResponsiveImage = {
   alt?: InternationalizedArrayString;
 };
 
-export type Slug = {
-  _type: 'slug';
-  current: string;
-  source?: string;
-};
-
 export type Page = {
   _id: string;
   _type: 'page';
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
-  title: string;
+  title?: InternationalizedArrayString;
   slug: Slug;
+  description?: InternationalizedArrayRichText;
   sections?: Array<
     | ({
         _key: string;
@@ -418,6 +428,12 @@ export type Page = {
   };
 };
 
+export type InternationalizedArrayHeadline = Array<
+  {
+    _key: string;
+  } & InternationalizedArrayHeadlineValue
+>;
+
 export type LinkButton = {
   _type: 'linkButton';
   label?: InternationalizedArrayString;
@@ -430,12 +446,6 @@ export type LinkButton = {
   hasIcon?: boolean;
   iconKey?: 'arrowRight' | 'arrowTopRigh' | 'github';
 };
-
-export type InternationalizedArrayHeadline = Array<
-  {
-    _key: string;
-  } & InternationalizedArrayHeadlineValue
->;
 
 export type SiteSettings = {
   _id: string;
@@ -666,6 +676,7 @@ export type AllSanitySchemaTypes =
   | MetricReference
   | HeroSection
   | Technology
+  | Slug
   | Metric
   | InternationalizedArrayString
   | Road
@@ -679,10 +690,9 @@ export type AllSanitySchemaTypes =
   | SanityImageHotspot
   | Project
   | ResponsiveImage
-  | Slug
   | Page
-  | LinkButton
   | InternationalizedArrayHeadline
+  | LinkButton
   | SiteSettings
   | SanityFileAssetReference
   | DownloadDocument
@@ -728,7 +738,7 @@ export type PAGE_QUERY_RESULT = {
             hotspot?: SanityImageHotspot;
             crop?: SanityImageCrop;
             _type: 'image';
-          };
+          } | null;
           mobile: {
             asset?: SanityImageAssetReference;
             media?: unknown;
@@ -837,7 +847,7 @@ export type PAGE_QUERY_RESULT = {
             hotspot?: SanityImageHotspot;
             crop?: SanityImageCrop;
             _type: 'image';
-          };
+          } | null;
           mobile: {
             asset?: SanityImageAssetReference;
             media?: unknown;
@@ -887,7 +897,7 @@ export type PAGE_QUERY_RESULT = {
               hotspot?: SanityImageHotspot;
               crop?: SanityImageCrop;
               _type: 'image';
-            };
+            } | null;
             mobile: {
               asset?: SanityImageAssetReference;
               media?: unknown;
@@ -956,7 +966,7 @@ export type PROJECTS_QUERY_RESULT = Array<{
       hotspot?: SanityImageHotspot;
       crop?: SanityImageCrop;
       _type: 'image';
-    };
+    } | null;
     mobile: {
       asset?: SanityImageAssetReference;
       media?: unknown;

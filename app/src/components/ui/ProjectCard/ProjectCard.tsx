@@ -27,12 +27,12 @@ const ProjectCard = ({ project }: Props) => {
 
   return (
     <li className={styles.card}>
-      {image && (
+      {image?.desktop?.asset && (
         <div className={styles.card__media}>
           <ResponsiveImage
             className={styles.card__picture}
             desktop={image.desktop}
-            mobile={image.mobile}
+            mobile={image.mobile?.asset ? image.mobile : null}
             alt={image.alt}
             sizes={IMAGE_SIZES}
           />

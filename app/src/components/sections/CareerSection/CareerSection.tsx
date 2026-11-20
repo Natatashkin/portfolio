@@ -27,7 +27,7 @@ const CareerSection = ({
   const cards = (steps ?? []).filter(
     ({ period, title, description: text }) => period || title || text
   );
-  const hasCover = Boolean(cover?.desktop.asset);
+  const hasCover = Boolean(cover?.desktop?.asset);
   const isOverlay = hasCover && cards.length <= MAX_OVERLAY_STEPS;
   // `LinkButton` renders nothing without a label, so a labelless button must not leave an empty wrapper.
   const hasButton = Boolean(button?.label);
@@ -76,7 +76,7 @@ const CareerSection = ({
                   !isOverlay && styles['career__mediaWrapper--plain']
                 )}
               >
-                {cover && hasCover && (
+                {cover?.desktop?.asset && (
                   <ResponsiveImage
                     desktop={cover.desktop}
                     mobile={cover.mobile?.asset ? cover.mobile : null}

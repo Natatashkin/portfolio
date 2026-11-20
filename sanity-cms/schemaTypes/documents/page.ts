@@ -1,5 +1,6 @@
 import {DocumentIcon} from '@sanity/icons/Document'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {baseText, requiredInBaseLanguage} from '../lib/localized'
 import {sectionTypes} from '../sections/sectionTypes'
 
 export const pageType = defineType({
@@ -21,16 +22,17 @@ export const pageType = defineType({
   fields: [
     defineField({
       name: 'title',
-      type: 'string',
-      description: 'Internal name, not shown on the site.',
+      type: 'internationalizedArrayString',
+      description: 'Page heading (h1) and breadcrumb label. Other languages fall back to English.',
       group: 'content',
-      validation: (rule) => rule.required(),
+      validation: requiredInBaseLanguage,
     }),
     defineField({
       name: 'slug',
       type: 'slug',
       description: 'Use "home" for the home page.',
-      options: {source: 'title'},
+      // The slug is built from the English (base) title.
+      options: {source: (document) => baseText(document.title) ?? ''},
       group: 'content',
       validation: (rule) => rule.required(),
     }),
@@ -83,5 +85,9 @@ export const pageType = defineType({
       title: 'title',
       subtitle: 'slug.current',
     },
+    prepare: ({title, subtitle}) => ({
+      title: baseText(title) ?? 'Page',
+      subtitle,
+    }),
   },
 })

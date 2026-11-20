@@ -47,7 +47,7 @@ const HeroSection = ({
           </div>
         )}
         <TagList className={styles.hero__stack} tags={toTagItems(stack)} />
-        {image?.desktop.asset && (
+        {image?.desktop?.asset && (
           <figure className={styles.hero__image}>
             {/* `sizes` mirrors the widths of `.hero__picture` (50vw / 44vw / 33vw, max 400px). */}
             <ResponsiveImage

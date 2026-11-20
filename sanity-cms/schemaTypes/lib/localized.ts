@@ -49,12 +49,12 @@ function hasContent(value: unknown): boolean {
   return false
 }
 
-/** Requires a value in every language. Skipped while the field or one of its ancestors is hidden. */
-export function requiredInAllLanguages(rule: Rule) {
+// Skipped while the field or one of its ancestors is hidden.
+function requiredIn(rule: Rule, languageIds: string[]) {
   return rule.custom((items: unknown, context) => {
     if (context.hidden) return true
     const localized = Array.isArray(items) ? items.filter(isLocalizedItem) : []
-    const errors = LANGUAGES.flatMap(({id}) => {
+    const errors = languageIds.flatMap((id) => {
       const item = localized.find((candidate) => candidate.language === id)
       if (item && hasContent(item.value)) return []
       const message = `Required in ${id}`
@@ -63,4 +63,17 @@ export function requiredInAllLanguages(rule: Rule) {
     })
     return errors.length > 0 ? errors : true
   })
+}
+
+/** Requires a value in every language. */
+export function requiredInAllLanguages(rule: Rule) {
+  return requiredIn(
+    rule,
+    LANGUAGES.map(({id}) => id),
+  )
+}
+
+/** Requires a value in the base language (`en`); other languages fall back to it on the site. */
+export function requiredInBaseLanguage(rule: Rule) {
+  return requiredIn(rule, [BASE_LANGUAGE])
 }
