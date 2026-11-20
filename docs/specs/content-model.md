@@ -83,21 +83,21 @@ current position. Every document has the same shape, there are no conditional fi
 
 ## Sections (`page.sections`)
 
-| Section             | Fields                                                                                                                                                               |
-| ------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `heroSection`       | `role`, `fullname` (loc), `headline`, `description`, `stack[]` → technology \| skill, `image`, `quote` (loc text), `metrics[]` → metric, `ctaButton`                 |
-| `careerSection`     | `eyebrow`, `headline`, `description`, `steps[]` → road, `tagline`, `cover`, `button` (linkButton)                                                                    |
-| `whatIDoSection`    | `eyebrow`, `headline`, `description`, `skills[]` → skill, `button`                                                                                                   |
-| `playgroundSection` | `eyebrow`, `headline`, `description`, `pieces[]` → piece, `button`                                                                                                   |
-| `projectsSection`   | `eyebrow`, `headline`, `description`, `projects[]` → project, `button`                                                                                               |
-| `experienceSection` | `eyebrow`, `headline`, `description`, `experiences[]` → experience, `buttons[]` (linkButton), `anchorId`                                                             |
-| `techStackSection`  | `eyebrow`, `headline`, `description`, `technologies[]` → technology, `moreLabel`                                                                                     |
-| `ctaSection`        | `eyebrow` (optional), `headline`, `description`, `hasBackground`, `cover` (responsiveImage), `buttons[]` (linkButton, optional), `layout`, `isFullWidth`, `anchorId` |
+| Section             | Fields                                                                                                                                                                                                                         |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `heroSection`       | `role`, `fullname` (loc), `headline`, `description`, `stack[]` → technology \| skill, `image`, `quote` (loc text), `metrics[]` → metric, `ctaButton`                                                                           |
+| `careerSection`     | `eyebrow`, `headline`, `description`, `steps[]` → road, `tagline`, `cover`, `button` (linkButton)                                                                                                                              |
+| `whatIDoSection`    | `eyebrow`, `headline`, `description`, `skills[]` → skill, `button`                                                                                                                                                             |
+| `playgroundSection` | `eyebrow`, `headline`, `description`, `pieces[]` → piece, `button`                                                                                                                                                             |
+| `projectsSection`   | `eyebrow`, `headline`, `description`, `projects[]` → project, `button`                                                                                                                                                         |
+| `experienceSection` | `eyebrow`, `headline`, `description`, `experiences[]` → experience, `buttons[]` (linkButton), `anchorId`                                                                                                                       |
+| `techStackSection`  | `eyebrow`, `headline`, `description`, `technologies[]` → technology, `moreLabel`                                                                                                                                               |
+| `ctaSection`        | `eyebrow` (optional), `headline`, `description`, `hasBackground`, `cover` (responsiveImage), `ctaButton` (linkButton, optional), `buttons[]` ("Additional buttons", linkButton, optional), `layout`, `isFullWidth`, `anchorId` |
 
 `ctaSection`: `layout` is a select `row` (default) \| `column-centered`. `cover` is shown only when
 `hasBackground` is true and Studio keeps its value when hidden, so the frontend renders it only when `hasBackground` is
 true. Existing content may lack the new values: a missing `hasBackground` or `isFullWidth` means false, a missing
-`layout` means `row`. Reasons: [../features/cta-section.md](../features/cta-section.md) (Decisions).
+`layout` means `row`. `ctaButton` is the main action; `buttons[]` are the secondary ones (in `row` under the text, in `column-centered` before the CTA button). Reasons: [../features/cta-section.md](../features/cta-section.md) (Decisions).
 
 Text fields in sections are loc unless noted. Plain (non-localized) strings: `heroSection.role`, `siteSettings.siteName`,
 `technology.name`, `metric.value`. Implementation status per section:

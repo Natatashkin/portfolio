@@ -46,8 +46,16 @@ export const ctaSectionType = defineType({
       group: 'media',
       hidden: ({parent}) => !ctaSectionOf(parent)?.hasBackground,
     }),
+    // The main action stands apart from the secondary ones in the layout (right column or last in the row).
+    defineField({
+      name: 'ctaButton',
+      title: 'CTA button',
+      type: 'linkButton',
+      group: 'actions',
+    }),
     defineField({
       name: 'buttons',
+      title: 'Additional buttons',
       type: 'array',
       group: 'actions',
       of: [defineArrayMember({type: 'linkButton'})],

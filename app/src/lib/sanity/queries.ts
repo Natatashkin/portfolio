@@ -387,6 +387,94 @@ export const PAGE_QUERY = defineQuery(`
               download.document->files.en.asset->originalFilename
           )
         }
+      },
+      _type == "ctaSection" => {
+        "eyebrow": select(
+          defined(eyebrow[language == $locale][0].value) &&
+            eyebrow[language == $locale][0].value != "" =>
+            eyebrow[language == $locale][0].value,
+          eyebrow[language == "en"][0].value
+        ),
+        "headline": select(
+          defined(headline[language == $locale][0].value) &&
+            count(headline[language == $locale][0].value) > 0 =>
+            headline[language == $locale][0].value,
+          headline[language == "en"][0].value
+        ),
+        "description": select(
+          defined(description[language == $locale][0].value) &&
+            count(description[language == $locale][0].value) > 0 =>
+            description[language == $locale][0].value,
+          description[language == "en"][0].value
+        ),
+        hasBackground,
+        "cover": cover{
+          desktop,
+          mobile,
+          "alt": select(
+            defined(alt[language == $locale][0].value) &&
+              alt[language == $locale][0].value != "" =>
+              alt[language == $locale][0].value,
+            alt[language == "en"][0].value
+          )
+        },
+        layout,
+        isFullWidth,
+        "ctaButton": ctaButton{
+          linkType,
+          url,
+          hasAnchor,
+          anchor,
+          variant,
+          hasIcon,
+          iconKey,
+          "label": select(
+            defined(label[language == $locale][0].value) &&
+              label[language == $locale][0].value != "" =>
+              label[language == $locale][0].value,
+            label[language == "en"][0].value
+          ),
+          "fileUrl": select(
+            linkType == "download" && download.language == "uk" =>
+              download.document->files.uk.asset->url,
+            linkType == "download" && download.language == "en" =>
+              download.document->files.en.asset->url
+          ),
+          "fileName": select(
+            linkType == "download" && download.language == "uk" =>
+              download.document->files.uk.asset->originalFilename,
+            linkType == "download" && download.language == "en" =>
+              download.document->files.en.asset->originalFilename
+          )
+        },
+        "buttons": buttons[]{
+          _key,
+          linkType,
+          url,
+          hasAnchor,
+          anchor,
+          variant,
+          hasIcon,
+          iconKey,
+          "label": select(
+            defined(label[language == $locale][0].value) &&
+              label[language == $locale][0].value != "" =>
+              label[language == $locale][0].value,
+            label[language == "en"][0].value
+          ),
+          "fileUrl": select(
+            linkType == "download" && download.language == "uk" =>
+              download.document->files.uk.asset->url,
+            linkType == "download" && download.language == "en" =>
+              download.document->files.en.asset->url
+          ),
+          "fileName": select(
+            linkType == "download" && download.language == "uk" =>
+              download.document->files.uk.asset->originalFilename,
+            linkType == "download" && download.language == "en" =>
+              download.document->files.en.asset->originalFilename
+          )
+        }
       }
     }
   }

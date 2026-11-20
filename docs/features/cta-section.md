@@ -5,10 +5,10 @@ Status: approved
 ## Goal
 
 A reusable call-to-action section the author places on any `page` document in Studio: text, optional background
-picture and 0..n buttons, in one of two layouts. First use: the "Under NDA" block on the
+picture, an optional main CTA button and 0..n additional buttons, in one of two layouts. First use: the "Under NDA" block on the
 [projects page](projects-page.md), which points to the work experience and the CV.
 
-Design variants: a card; a card without an eyebrow; a card with fewer buttons; full width; full width with a
+Design variants ([mockups](https://claude.ai/artifact/G4YBQTBueE8YYXmVXKP5Ex)): a card; a card without an eyebrow; a card with fewer buttons; full width; full width with a
 picture; centered.
 
 ## Requirements
@@ -23,7 +23,10 @@ picture; centered.
       ignored even if it holds data.
 - [ ] In the `column-centered` layout the text and buttons are centered, but the eyebrow stays left-aligned with the
       accent bar under it.
-- [ ] 0..n `buttons` (`LinkButton`); an empty list renders no button area. An empty `eyebrow` renders nothing.
+- [ ] An optional `ctaButton` (the main action) and 0..n additional `buttons` (`LinkButton`). In `row` the CTA button
+      sits on the right and the additional buttons under the description; in `column-centered` all buttons form one
+      centered row, additional buttons first, the CTA button last. Below `lg` the `row` layout stacks and the CTA button
+      follows the additional buttons. No button renders no button area. An empty `eyebrow` renders nothing.
 - [ ] Every combination of `layout` × `hasBackground` × `isFullWidth` renders correctly.
 - [ ] Internal button `url` `home` resolves to `/`, so a button can target an anchor of the home page from another
       page (see Decisions).
@@ -33,17 +36,19 @@ picture; centered.
 
 ## Design
 
-- **Schema** (done, `ctaSection`):
+- **Schema** (`ctaSection`):
   - Content: `eyebrow` (optional), `headline`, `description`.
   - Media: `hasBackground` (default false) and `cover` (`responsiveImage`), hidden unless `hasBackground` is true.
-  - Actions: `buttons[]` of `linkButton` (optional, as in `experienceSection`).
+  - Actions: `ctaButton` (`linkButton`, optional, title "CTA button", as in `heroSection`) and `buttons[]` of
+    `linkButton` (optional, title "Additional buttons").
   - Settings: `layout` select `row` | `column-centered` (default `row`), `isFullWidth` (default false),
     `anchorId`.
   - Hidden fields skip required validation (see Decisions): `requiredInAllLanguages` and `responsiveImage.desktop` return valid
     when `context.hidden` is set, so a hidden `cover` does not block publishing. Studio keeps the hidden value, so the
     frontend decides what to render.
 - **Query:** `PAGE_QUERY` in `app/src/lib/sanity/queries.ts` gets the `ctaSection` branch: text fields, `hasBackground`,
-  `cover`, `layout`, `isFullWidth`, `anchorId` and `buttons[]` with the download fields, as in `experienceSection`.
+  `cover`, `layout`, `isFullWidth`, `anchorId`, and `ctaButton` and `buttons[]`, both with the download fields, as in
+  `experienceSection`.
   Types from TypeGen.
 - **UI:**
   - `CtaSection` in `components/sections/` with its `SectionRenderer` case; Server Component, reusable on any page.
@@ -51,7 +56,7 @@ picture; centered.
   - Look follows `layout`, `hasBackground` and `isFullWidth` as modifiers (`row` | `centered`, card | `full`, `bg`),
     eight combinations; the background is applied only when `hasBackground` is true and `cover.desktop` exists, with
     `ResponsiveImage` and a dark overlay. Colours, fonts and spacing come from the existing tokens.
-- **Edge cases:** no buttons; no eyebrow; `hasBackground` true without a `cover` image (renders without background);
+- **Edge cases:** no buttons; only the CTA button (mockup 3); only additional buttons; no eyebrow; `hasBackground` true without a `cover` image (renders without background);
   `cover` filled while `hasBackground` is false; missing `layout`, `hasBackground` or `isFullWidth` in older content; a broken
   download reference (no button, as in `LinkButton`).
 
@@ -81,8 +86,10 @@ picture; centered.
 
 ## Decisions
 
-- `buttons[]` instead of one `button`: same shape as `experienceSection`, so one block can carry two actions ("Work
-  experience", "Download CV"); the unused `tagline` is removed. The block is reusable on any `page` document.
+- One `ctaButton` plus `buttons[]` instead of a single list: the mockups place the main action apart from the
+  secondary ones, and a separate field states which is which instead of guessing from the order or the `linkType`.
+  The array keeps its name `buttons` (only its title is "Additional buttons"), so content already entered survives.
+  The unused `tagline` is removed. The block is reusable on any `page` document.
 - `layout` is a select, since a few options fit a dropdown and the section settings stay compact. `hasBackground` sits
   in Media next to `cover`, which is optional and shown only when it is on, so a CTA without a picture needs no image.
   `eyebrow` and `buttons[]` are optional, so a CTA can be text only.
@@ -99,7 +106,7 @@ picture; centered.
 
 ## Tasks
 
-1. Schema: done.
+1. Schema: done, including the split into `ctaButton` and `buttons[]`.
 2. Query branch and TypeGen. Done when a `ctaSection` on a `page` document returns every field in both locales.
 3. `CtaSection` with all variants, `SectionRenderer` case, `home` path in `LinkButton`. Done when every variant
    renders and existing buttons are unchanged.
@@ -108,5 +115,4 @@ picture; centered.
 
 ## Open questions
 
-- `app/src/sanity.types.ts` is stale for `ctaSection` (still `button` and `tagline`); regenerated by `pnpm typegen`
-  in the schema block of the [projects page](projects-page.md).
+- None.
