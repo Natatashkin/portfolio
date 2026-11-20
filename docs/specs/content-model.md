@@ -36,7 +36,7 @@ whatever the site locale is; if the reference is broken or the document has no f
 (deliberately silent). The app always keys off `linkType`, never off which fields are filled: Studio hides the fields
 that do not apply but does not clear them, so `url` and `anchor` are ignored for `download`, and `download` is
 ignored for the other two types. See
-[../decisions.md](../decisions.md#d15-download-link-in-linkbutton).
+[../features/ui-blocks.md](../features/ui-blocks.md) (Decisions).
 
 ## Validation rules (Studio)
 
@@ -61,7 +61,7 @@ ignored for the other two types. See
 ## Documents
 
 Every document below except `siteSettings` and `page` also carries a hidden `orderRank` (Studio drag-and-drop order). The site does not read it, except
-`project` on the projects page, which is ordered by it ([../decisions.md](../decisions.md#d26-projects-list-page-in-scope-ordered-by-orderrank)).
+`project` on the projects page, which is ordered by it ([../features/projects-page.md](../features/projects-page.md)).
 
 | Document                                      | Fields                                                                                                                                                                                                                                                                                 |
 | --------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -97,7 +97,7 @@ current position. Every document has the same shape, there are no conditional fi
 `ctaSection`: `layout` is a select `row` (default) \| `column-centered`. `cover` is shown only when
 `hasBackground` is true and Studio keeps its value when hidden, so the frontend renders it only when `hasBackground` is
 true. Existing content may lack the new values: a missing `hasBackground` or `isFullWidth` means false, a missing
-`layout` means `row`. Reasons: [../decisions.md](../decisions.md#d28-ctasection-holds-buttons-not-one-button).
+`layout` means `row`. Reasons: [../features/cta-section.md](../features/cta-section.md) (Decisions).
 
 Text fields in sections are loc unless noted. Plain (non-localized) strings: `heroSection.role`, `siteSettings.siteName`,
 `technology.name`, `metric.value`. Implementation status per section:

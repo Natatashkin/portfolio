@@ -3,6 +3,9 @@
 One file per feature, written from [\_template.md](_template.md). A feature gets its spec before implementation
 starts; features built before the spec-driven workflow are marked "done (documented after implementation)".
 
+Cross-cutting infrastructure (theming, smooth scroll, i18n and routing) is described in
+[../specs/theming-and-motion.md](../specs/theming-and-motion.md) and [../specs/architecture.md](../specs/architecture.md).
+
 ## Implemented
 
 | Feature            | Covers                                                                                                                    | Status                 | Spec                                           |
@@ -11,9 +14,6 @@ starts; features built before the spec-driven workflow are marked "done (documen
 | Footer             | Footer, SocialLinks, copyright                                                                                            | in progress            | [footer.md](footer.md)                         |
 | Hero section       | HeroSection, DotGrid, HeroMetricNumber, metrics                                                                           | done                   | [hero-section.md](hero-section.md)             |
 | UI blocks          | LinkButton, Button, Headline, RichText, ResponsiveImage, Container, InView                                                | done                   | [ui-blocks.md](ui-blocks.md)                   |
-| Theming            | Light/dark themes, no-flash script, `useTheme`                                                                            | done                   | [theming.md](theming.md)                       |
-| i18n and routing   | Locales, proxy, localized 404, `messages/`                                                                                | done                   | [i18n-routing.md](i18n-routing.md)             |
-| Smooth scroll      | SmoothScrollProvider, `loadGsap`, Lenis, GSAP loaded after idle, reduced motion                                           | done                   | [smooth-scroll.md](smooth-scroll.md)           |
 | Language switcher  | `EN`/`UK` link in the desktop header and the burger menu; hash, focus and announcement kept after a switch                | done, with caveats     | [language-switcher.md](language-switcher.md)   |
 | Theme switcher     | Label shows the theme a click leads to; the chosen theme survives a language switch                                       | done, with caveats     | [theme-switcher.md](theme-switcher.md)         |
 | Career section     | CareerSection, CareerText, CareerSteps, GSAP reveal, plain list, markers and lines, pulse, handwritten tagline            | done                   | [career-section.md](career-section.md)         |

@@ -34,6 +34,9 @@ they cannot express.
   `index.ts`) and is imported by that folder; it is not used outside the parent. When a second component needs it,
   move it to `components/ui/`. A small client leaf with no styles of its own may stay flat
   (`HeroSection/HeroMetricNumber.tsx`).
+- A child needed in two layouts (mobile and desktop) is rendered in both by the server and CSS hides one; after
+  hydration (`useIsMobile`) the client drops the variant that does not match. Reason: no repeated ids and one list in the
+  DOM for assistive tech; cost: duplicate markup until hydration (example: `CareerSteps`).
 - Loading placeholders that mirror one component's layout live in `components/skeletons/` (`ProjectCardSkeleton`), not
   in `ui/`; same folder rules apply. A skeleton is `aria-hidden` and animates opacity only.
 - Hooks shared by components go in `hooks/` (`useThing.ts`); a hook used by one component stays beside it.
@@ -71,7 +74,7 @@ they cannot express.
   orderable inside their collection in the Studio: each has `orderRankField({type})` and `orderRankOrdering`, and
   `structure.ts` lists them with `orderableDocumentListDeskItem` (`@sanity/orderable-document-list`). Keep `CONTENT_TYPES`
   in `structure.ts` in sync with the schemas that carry the field. Queries do not sort by `orderRank` (the site order comes from
-  the section references), except the projects page list, which does ([decisions.md](decisions.md#d26-projects-list-page-in-scope-ordered-by-orderrank)).
+  the section references), except the projects page list, which does ([features/projects-page.md](features/projects-page.md)).
 - Field reference: [specs/content-model.md](specs/content-model.md).
 
 ## Naming
@@ -152,7 +155,7 @@ about 390 px (mobile), 844 px (burger menu, below `lg` at 1024 px), 1400 px (des
 - **Keyboard:** tab order, visible focus, Escape closes the burger menu and returns focus to the toggle, Enter/Space
   on controls.
 - **Soft locale switch:** click the language link, not a reload. A marker set on `window` must survive; the whole
-  `[locale]` layout remounts (D14), so check `<html lang>`, `data-theme`, `color-scheme`, the `theme-ready` class,
+  `[locale]` layout remounts ([features/language-switcher.md](features/language-switcher.md)), so check `<html lang>`, `data-theme`, `color-scheme`, the `theme-ready` class,
   scroll lock, focus returning to the visible language switcher, and rebuilt animation state.
 - **No JavaScript:** `curl -s http://localhost:3000/` shows the content in the server HTML. That alone does not prove
   it is visible: also check the CSS for elements hidden until JS runs (`opacity: 0`, `visibility: hidden`, initial

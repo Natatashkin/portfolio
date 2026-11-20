@@ -26,7 +26,7 @@ picture; centered.
 - [ ] 0..n `buttons` (`LinkButton`); an empty list renders no button area. An empty `eyebrow` renders nothing.
 - [ ] Every combination of `layout` × `hasBackground` × `isFullWidth` renders correctly.
 - [ ] Internal button `url` `home` resolves to `/`, so a button can target an anchor of the home page from another
-      page ([D27](../decisions.md)).
+      page (see Decisions).
 - [ ] The headline is an `h2`.
 - [ ] Light and dark themes through tokens, at the breakpoints used by the other sections.
 - [ ] Empty or unexpected CMS data does not throw.
@@ -39,7 +39,7 @@ picture; centered.
   - Actions: `buttons[]` of `linkButton` (optional, as in `experienceSection`).
   - Settings: `layout` select `row` | `column-centered` (default `row`), `isFullWidth` (default false),
     `anchorId`.
-  - Hidden fields skip required validation (D29): `requiredInAllLanguages` and `responsiveImage.desktop` return valid
+  - Hidden fields skip required validation (see Decisions): `requiredInAllLanguages` and `responsiveImage.desktop` return valid
     when `context.hidden` is set, so a hidden `cover` does not block publishing. Studio keeps the hidden value, so the
     frontend decides what to render.
 - **Query:** `PAGE_QUERY` in `app/src/lib/sanity/queries.ts` gets the `ctaSection` branch: text fields, `hasBackground`,
@@ -62,7 +62,7 @@ picture; centered.
 - `app/src/lib/sanity/queries.ts`, `app/src/sanity.types.ts`.
 - `app/src/components/sections/CtaSection/`, `SectionRenderer`.
 - `app/src/components/ui/LinkButton/` (`home` path).
-- Docs: `specs/content-model.md`, `decisions.md` (D27, D28, D29), `features/ui-blocks.md`.
+- Docs: `specs/content-model.md`, `features/ui-blocks.md`.
 
 ## Acceptance criteria
 
@@ -81,10 +81,17 @@ picture; centered.
 
 ## Decisions
 
-- `buttons[]` instead of one `button`, `layout` as a select, `hasBackground` next to an optional `cover`
-  ([D28](../decisions.md)).
-- Hidden fields skip required validation, so a hidden `cover` never blocks publishing ([D29](../decisions.md)).
-- `home` means `/` ([D27](../decisions.md)).
+- `buttons[]` instead of one `button`: same shape as `experienceSection`, so one block can carry two actions ("Work
+  experience", "Download CV"); the unused `tagline` is removed. The block is reusable on any `page` document.
+- `layout` is a select, since a few options fit a dropdown and the section settings stay compact. `hasBackground` sits
+  in Media next to `cover`, which is optional and shown only when it is on, so a CTA without a picture needs no image.
+  `eyebrow` and `buttons[]` are optional, so a CTA can be text only.
+- Hidden fields skip required validation: Sanity validates hidden fields too, so a hidden `cover` would block
+  publishing. `requiredInAllLanguages` and `responsiveImage.desktop` return valid when `context.hidden` is set (the
+  field or an ancestor is hidden); it applies to every hidden field that uses these rules. The value is kept, so the
+  frontend decides what to render (`cover` only when `hasBackground` is true).
+- Internal `linkButton` path `home` means `/`: Studio cannot store an empty path and `home` is already the home page
+  slug, so a button on another page can target a home anchor.
 - Layout is `row | column-centered` only: a plain stacked `column` was dropped as unnecessary; the design needs a
   centered layout, not merely a stacked one.
 - `hasBackground` without a cover renders the no-background variant: the toggle alone is not an error the visitor

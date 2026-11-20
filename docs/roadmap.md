@@ -9,7 +9,7 @@
 - next-intl routing (`en` at `/`, `uk` at `/uk`), localized 404, `messages/`.
 - Tokens, themes with no-flash script, `useTheme`, `ThemeSwitcher`.
 - UI blocks: Button, LinkButton, Headline, RichText, ResponsiveImage, Container, InView ([features/ui-blocks.md](features/ui-blocks.md)). Logo, Navigation and SocialLinks are part of the header and footer.
-- Layout: Header, BurgerMenu, Footer. Lenis `SmoothScrollProvider` with GSAP loaded after idle ([features/smooth-scroll.md](features/smooth-scroll.md)).
+- Layout: Header, BurgerMenu, Footer. Lenis `SmoothScrollProvider` with GSAP loaded after idle ([specs/theming-and-motion.md](specs/theming-and-motion.md#motion-lenis--gsap)).
 - `HeroSection` (with `HeroMetricNumber`) and the shared `DotGrid`.
 - `CareerSection` complete: desktop and mobile layout, text and steps scroll reveal, plain-list fallback with markers and lines, pulsing last marker, handwritten tagline ([features/career-section.md](features/career-section.md)).
 - `ExperienceSection`: company timeline, entry toggle, card reveal, pinned intro, CV downloads, shared `TagList`
@@ -31,11 +31,14 @@
 3. Scroll animations for the remaining sections (GSAP ScrollTrigger in client children; see the `scroll-animation`
    skill; the career and experience sections are the references).
 4. Page metadata and SEO: title, description, canonical, hreflang (D2), Open Graph, `sitemap.ts`, `robots.ts`.
-5. Revalidate webhook: the route `api/revalidate` is built (D4). Left: set `SANITY_REVALIDATE_SECRET` in Vercel and
+5. Revalidate webhook: the route `api/revalidate` is built ([D30](decisions.md)). Left: set `SANITY_REVALIDATE_SECRET` in Vercel and
    create the Sanity webhook that points at it. Until then, edits reach the page after the hourly `revalidate`.
 6. Draft preview via Draft Mode with a server-only read token (conventions: Security).
 7. Final 404 design; resolve the `__next_error__` shell issue (decision D7).
-8. Decide on security headers (decision D13).
+8. Decide on security headers. A strict `script-src` CSP needs nonces (dynamic rendering, loses SSG), so it is not used.
+   Candidate: static headers in `next.config.ts` (CSP without script restriction, `nosniff`, `Referrer-Policy`,
+   `Permissions-Policy`), introduced as `Content-Security-Policy-Report-Only` first; draft preview needs
+   `frame-ancestors` to allow the Studio origin. Ask before changing `next.config.ts`.
 9. Bring the header navigation back when work on the nested pages starts: it is hidden now and the code is commented
    out in `Header.tsx` ([features/header.md](features/header.md)).
 

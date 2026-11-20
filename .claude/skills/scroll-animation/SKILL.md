@@ -6,8 +6,8 @@ description: Add or change motion in this portfolio repo — scroll-triggered or
 # Scroll animation
 
 Motion is client-only and layered on top of content that already works without it. The invariants are in
-`docs/specs/theming-and-motion.md` (Motion) and the reasons in `docs/decisions.md` D10; the current wiring is in
-`docs/features/smooth-scroll.md`. Read them before writing code, this skill is the procedure and the traps.
+`docs/specs/theming-and-motion.md` (Motion) and the reasons in `docs/decisions.md` D10. Read them before writing
+code, this skill is the procedure and the traps.
 
 ## How the pieces fit
 
@@ -65,7 +65,7 @@ no-preference)', ...)` callback from step 4, and the content stays in its static
    the only owner of cleanup: do not add a second `gsap.context` for the same tweens. A section with no media
    condition can use `gsap.context(..., scopeRef)` and `ctx.revert()` in the same place instead.
 6. **Refresh after layout changes.** When async content or a locale change alters page height, call
-   `ScrollTrigger.refresh()`. Remember a locale switch remounts the whole `[locale]` layout (D14), so triggers are
+   `ScrollTrigger.refresh()`. Remember a locale switch remounts the whole `[locale]` layout (`docs/features/language-switcher.md`), so triggers are
    rebuilt by the effect cleanup and setup from step 4, not carried over.
 7. **Cursor effects** (if ever added) are disabled for `(pointer: coarse)` and reduced motion.
 

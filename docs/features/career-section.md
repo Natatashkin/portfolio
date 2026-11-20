@@ -19,7 +19,7 @@ must not change; later work adds only the reveal and the pulse to it.
       references, in order; `period`, `title`, `description` per card), `tagline` and `cover`. Every field is optional;
       a missing one renders nothing, never an empty wrapper.
 - [x] Without a desktop cover asset no image renders, the steps fall back to the plain list and the text still renders.
-      The tagline shows only together with a cover or steps (D20).
+      The tagline shows only together with a cover or steps (see Decisions).
 - [x] Desktop (`lg` up): text column on the left; on the right the cover with the step cards overlaid diagonally, the
       tagline below. Mobile: the cover is a full-bleed background; the text, then the cards in a zigzag, then the
       tagline. A dot grid shows from `lg` up only.
@@ -55,12 +55,12 @@ must not change; later work adds only the reveal and the pulse to it.
 
 - **Schema and query:** `careerSection` and `road` in [../specs/content-model.md](../specs/content-model.md); the
   `careerSection` branch of `PAGE_QUERY` filters dangling step references and projects `button` (`linkType`, `url`,
-  `hasAnchor`, `anchor`, `variant`, `hasIcon`, localized label, and `fileUrl` / `fileName` for a download, D15). The field is one `linkButton`
+  `hasAnchor`, `anchor`, `variant`, `hasIcon`, localized label, and `fileUrl` / `fileName` for a download, see [ui-blocks.md](ui-blocks.md)). The field is one `linkButton`
   with field-level `initialValue` `linkType: external`, variant `primary`, `hasIcon` and `hasAnchor` false;
   `linkType` stays editable.
 - **Split:** `CareerSection` is a Server Component. `CareerText`, `CareerSteps` and `DotGrid` are client leaves.
   `CareerSteps` is rendered twice (`mobile`, `desktop`), keeps only the variant for the viewport after hydration and is
-  CSS-hidden before it (D17).
+  CSS-hidden before it (see Decisions).
 - **Overlay vs plain list:** `isOverlay` = a cover and at most `MAX_OVERLAY_STEPS` (4) steps; otherwise both variants
   render the plain list and the media wrapper gets `career__mediaWrapper--plain`. The wrapper and the desktop line
   exist only in the plain list, so the overlay markup stays untouched.
@@ -118,9 +118,18 @@ must not change; later work adds only the reveal and the pulse to it.
 
 ## Decisions
 
-In [../decisions.md](../decisions.md): D16 shared `DotGrid`, D17 `CareerSteps` rendered per viewport, D18 GSAP reveal and
-the continuous pulse, D19 Caveat as the handwriting accent, D20 the tagline needs a cover or steps. Here:
+Project-wide: [D19](../decisions.md) Caveat as the handwriting accent. Here:
 
+- Reveal with GSAP + ScrollTrigger (`scroll-animation` skill), not CSS `useInView`: a staggered sequence per breakpoint
+  driven by scroll does not fit one in-view flag. The server HTML stays final; the hidden state comes from GSAP only,
+  never from CSS.
+- The last marker's pulse is a CSS animation started by the reveal and runs continuously. An endless animation over 5s
+  is a WCAG 2.2.2 concern; accepted because the ring is decorative (`aria-hidden`) and off under reduced motion.
+- `CareerSteps` is needed twice (mobile column, desktop overlay): the server renders both and CSS hides one; after
+  hydration (`useIsMobile`) the client drops the variant that does not match. Reason: no repeated ids and one list in
+  the DOM for assistive tech. Cost: duplicate markup and payload until hydration.
+- The tagline shows only together with a cover or steps: it closes the road picture and the steps, so without them it
+  has nothing to close.
 - Card positions are CSS by index, not data: designed for four steps, the author controls the count.
 - The plain list is an animated fallback with markers (author decision); its lines are separate tweens, no shared
   timeline, because the stagger timing already puts the desktop line at each marker.
@@ -130,6 +139,6 @@ the continuous pulse, D19 Caveat as the handwriting accent, D20 the tagline need
   `--color-accent` is too pale on the light page background. Markers, lines and the pulse keep `--color-accent`.
 - On the photo the tagline is white with a bottom scrim (`--color-on-primary` turns dark in the dark theme).
 - `CareerText` owns the `career__textBody` ref and takes its class as a prop.
-- The CV downloads (D15) moved to the Experience section; Career keeps one optional `button` of any link type, external by default
+- The CV downloads ([ui-blocks.md](ui-blocks.md)) moved to the Experience section; Career keeps one optional `button` of any link type, external by default
   (author decision). It shipped before the data was re-entered in Studio, so the old `buttons` data is an unknown field
   until removed. No minimum height; `MOBILE_QUERY` mirrors `lg`; `useIsMobile` stays in `hooks/`.

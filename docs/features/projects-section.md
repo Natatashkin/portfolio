@@ -99,7 +99,9 @@ Design source: [../layouts/Projects.png](../layouts/Projects.png).
 - No blur and no About below `md` or on touch: a hover effect has no meaning there and a permanent button covered
   the preview. The title is the link on every device, so the details page stays reachable.
 - The card is not a link, to avoid nested interactive elements.
-- The blur is a `filter` transition, an exception to "transform and opacity only": [D25](../decisions.md).
+- The blur is a `filter` transition, an exception to "animate `transform` and `opacity` only". Reason: the design asks
+  for a blur; it is one small picture per card, the overlay and the button animate `opacity` only, nothing changes
+  layout, and the transition is removed under `prefers-reduced-motion`.
 - `ProjectCard` forces `linkType: external` on Live and GitHub: Studio defaults a new `linkButton` to `internal`,
   which would drop a full URL.
 - The summary height is fixed from `md` and the tags have a `min-height` (not a fixed height): dividers line up in

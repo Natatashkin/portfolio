@@ -33,12 +33,12 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
       locale-aware `Link` from `@/i18n/navigation`. `#anchor` is appended only when `hasAnchor` is set and `anchor`
       matches `^[a-z]+(?:-[a-z]+)*$` (the Studio regex, copied by hand); otherwise it is dropped.
 - [ ] Planned: an internal `url` of `home` resolves to `/` (the home page slug), so a button can target a home anchor
-      from another page ([cta-section.md](cta-section.md), D27).
+      from another page ([cta-section.md](cta-section.md)).
 - [x] External links carry a visually hidden "(opens in a new tab)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.opensInNewTab`); the string is the same as in `SocialLinks`.
 - [x] `linkType: download`: renders `<a href download>` with the PDF URL of `download.document` in `download.language`,
       after `safeHref`, with `?dl=<originalFilename>` (fallback `document.pdf`, `DEFAULT_DOWNLOAD_FILENAME`) appended; no `target="_blank"`. Renders nothing when there is no file or
-      the URL is unsafe. Props gain `fileUrl` and `fileName` (resolved in GROQ, D15).
+      the URL is unsafe. Props gain `fileUrl` and `fileName` (resolved in GROQ, see Decisions).
 - [x] A download link carries a visually hidden "(download file)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.download`).
 - [x] `variant` is `primary` (default when empty or unknown), `secondary`, `accent` or `outlined`; classes `button--<variant>`. `outlined` has a transparent background, `--color-text-muted` text
@@ -79,7 +79,7 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
       `--richText-gap` and `--richText-item-gap` (defaults `--space-4` and `0.5rem`).
 - [x] The `link` mark renders `<a>` only when `safeHref(value?.href)` passes (`rel="noopener noreferrer"`); otherwise
       the link text is rendered as plain text. An `https:` link gets `target="_blank"` and a visually hidden
-      "(opens in a new tab)" (`RichText.opensInNewTab`); mail and phone links stay in the page (D24).
+      "(opens in a new tab)" (`RichText.opensInNewTab`); mail and phone links stay in the page (see Decisions).
 - [x] No `dangerouslySetInnerHTML`.
 - [x] `strong` and `em` (allowed by the schema) use the library defaults (`<strong>`, `<em>`); there is no custom
       component for them.
@@ -196,6 +196,19 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 - `MOBILE_QUERY` and `DESKTOP_QUERY` in `lib/constants.ts` are tied to the `lg` breakpoint (1024px) by a comment; the
   values stay separate because the SCSS variable cannot be read from TypeScript.
 - `Button` stays in `components/ui` although only `ThemeSwitcher` uses it: it is generic and carries the variants.
+- `linkButton` reading rules: an external `url` is used only if it passes `safeHref`, an internal one gets `/` and the
+  locale prefix; `anchor` is read only when `hasAnchor` is true, because Studio does not clear it when the toggle is
+  turned off. Internal `home` means `/` (Studio cannot store an empty path, so a button on another page can target a
+  home anchor; see [cta-section.md](cta-section.md)).
+- Download link: files live in a `downloadDocument` collection ("Documents" in Studio), one PDF per language (`en`
+  required, `uk` optional), so a new CV needs no deploy. `linkType` gets a third value, `download`, with a `document`
+  reference plus the `language` version. GROQ reads `download.document->files[download.language].asset->url`, the app
+  passes it through `safeHref` and appends `?dl=<filename>` (the asset's `originalFilename`, fallback `document.pdf`):
+  the `download` attribute is ignored for a cross-origin CDN URL, and the Sanity CDN answers `?dl=` with
+  `Content-Disposition: attachment`. The Experience section shows one button per language version, whatever the site
+  locale, because a visitor does not think of switching the site language to get the other CV.
+- `RichText` web links open in a new tab (`target="_blank"` and a visually hidden hint); mail and phone links stay in
+  the page. Reason: a link in a company description leaves the portfolio, as external `LinkButton` links do.
 
 ## Tasks
 

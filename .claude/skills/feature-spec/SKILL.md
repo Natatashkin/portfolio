@@ -33,7 +33,7 @@ their line numbers go stale at the next edit.
 - **Unverified claims are not ticked.** What you cannot back goes to Open questions, not into the spec as a checked
   item. Command criteria (`pnpm format`, `code-quality`, `build`) are ticked by the main session after it runs them;
   `docs-writer` has no shell, so it leaves them unticked and adds no comment.
-- **Tasks after the feature is done** are replaced by one line ("Done in the code"), as in `smooth-scroll.md`.
+- **Tasks after the feature is done** are replaced by one line ("Done in the code"), as in `ui-blocks.md`.
 - A spec over about 150 lines is probably carrying a log: cut before adding.
 
 ## New feature (before code)

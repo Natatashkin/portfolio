@@ -57,7 +57,7 @@ The stored theme is unknown on the server, so a JS-chosen label would need a pla
 
 ### Theme after a soft locale switch
 
-The locale switch is a soft navigation (D14 in [../decisions.md](../decisions.md)). React remounts the root layout
+The locale switch is a soft navigation ([language-switcher.md](language-switcher.md)). React remounts the root layout
 subtree and removes the attributes it does not own from `<html>`: `data-theme`, `color-scheme` (the `style`) and the
 `theme-ready` class. The inline `themeScript` only runs on a document load, so the theme was lost until a reload, and
 rendering the `<script>` again on the client logged a React error.

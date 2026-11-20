@@ -10,7 +10,7 @@ in Studio.
 
 Depends on: [caching.md](caching.md), [breadcrumbs.md](breadcrumbs.md), [filter.md](filter.md),
 [loading-states.md](loading-states.md), [cta-section.md](cta-section.md). The project details page
-`projects/[slug]` stays out of scope ([D26](../decisions.md)).
+`projects/[slug]` stays out of scope, so project links stay `#`.
 
 ## Requirements
 
@@ -25,7 +25,7 @@ Depends on: [caching.md](caching.md), [breadcrumbs.md](breadcrumbs.md), [filter.
       project, ordered by slug ([D31](../decisions.md)); in `uk` the labels may therefore not look alphabetical, which
       is intended. Eligible: the same rule as `ProjectsSection` (a slug and a title after the `en` fallback).
 - [ ] Multi-select through repeated `?filter=<slug>` params ([filter.md](filter.md)). A project must reference all
-      selected slugs (AND). Projects keep the Studio `orderRank` order ([D26](../decisions.md)).
+      selected slugs (AND). Projects keep the Studio `orderRank` order (see Decisions).
 - [ ] Normalization (the only place this rule is written): each `filter` value is checked against the options;
       unknown values are dropped, the rest is deduplicated and sorted in option order. The normalized list is the
       fetch and cache key, so an arbitrary URL creates no cache entries beyond valid combinations. No valid value
@@ -115,6 +115,9 @@ title[language == "en"][0].value != "")`. The counter therefore matches the card
 
 ## Decisions
 
+- `/projects` is in scope; the details page `projects/[slug]` is not. The list is ordered by the project's
+  `orderRank`: the author already sorts projects in Studio and a numeric field would duplicate it. It is the one place
+  the site reads `orderRank`.
 - Filter by slug in Sanity, not in the browser: [D31](../decisions.md).
 - Filter options ride on the page query: one request, one tag set, and no extra Sanity call for the options.
 - Several filters combine with AND: a project must have all selected technologies, so an empty result is possible

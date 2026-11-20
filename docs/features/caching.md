@@ -36,7 +36,7 @@ Keep every page served from a static shell while a page can still read request d
 
 - **Schema:** none.
 - **Query:** no GROQ change. `client.fetch` keeps `useCdn: false`; Next's cache is the only staleness layer
-  ([D4](../decisions.md), [D30](../decisions.md)).
+  ([D30](../decisions.md)).
 - **UI:** none. Pages follow one pattern: a shell that reads no request data, and the request-dependent part in an
   async child wrapped in `<Suspense>` with a fallback that matches its layout
   ([loading-states.md](loading-states.md)).
@@ -51,7 +51,7 @@ Keep every page served from a static shell while a page can still read request d
 - `app/src/lib/sanity/api/fetchPage.ts`, `fetchProjects.ts`, `fetchSiteSettings.ts`: cached fetchers.
 - `app/src/app/[locale]/page.tsx`: `revalidate` removed.
 - `app/src/app/api/revalidate/route.ts`: unchanged; it is the freshness path.
-- Docs: `specs/architecture.md` (Rendering and data flow), `decisions.md` (D4, D30).
+- Docs: `specs/architecture.md` (Rendering and data flow), `decisions.md` (D30).
 
 ## Acceptance criteria
 

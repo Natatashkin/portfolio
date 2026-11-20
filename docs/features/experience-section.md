@@ -14,7 +14,7 @@ left, mobile right).
 
 ## Requirements
 
-- [x] Renders `eyebrow`, `headline`, rich-text `description`, `buttons` (CV downloads EN and UK, D15) and
+- [x] Renders `eyebrow`, `headline`, rich-text `description`, `buttons` (CV downloads EN and UK, see [ui-blocks.md](ui-blocks.md)) and
       `experiences` in reference order. Every part is optional and leaves no empty wrapper. Intro without cards or
       cards without intro is one column; neither renders nothing. A company without a name is skipped.
 - [x] Layout: from `lg` two columns (intro left, cards right), below `lg` one column (intro, then cards).
@@ -46,7 +46,7 @@ left, mobile right).
       column is held (not animated) while the cards scroll past and released when the row ends; the right column is
       not pinned. It is skipped when the intro plus its offset does not fit the viewport or the row is not taller than
       the intro, and re-evaluated after a window resize (`RESIZE_REFRESH_DELAY_MS`).
-- [x] Reduced motion: GSAP is not loaded, everything is visible and static (D18). A failed import is ignored; setup
+- [x] Reduced motion: GSAP is not loaded, everything is visible and static. A failed import is ignored; setup
       errors surface. Cleanup kills triggers and tweens and clears inline styles.
 - [x] A dangling reference is dropped; an empty `uk` value falls back to `en` in GROQ (D3).
 - [x] No new dependencies; shared blocks `Container`, `Headline`, `RichText`, `LinkButton`, `TagList` and TypeGen types.
@@ -63,7 +63,7 @@ left, mobile right).
   owns the pin), `ExperienceTimeline` (client, the `<ol>` around server-rendered cards, owns the reveal),
   `ExperienceCard` (server: date, rail, card, logo, entries), `ExperienceEntry` (client: toggle state, title, button,
   body). Types: `types.ts` (`ExperienceItem`).
-- **Entry state:** CSS and `data-open` only, no `useIsMobile` (D22). The body has no `hidden`, `aria-hidden` or
+- **Entry state:** CSS and `data-open` only, no `useIsMobile` (see Decisions). The body has no `hidden`, `aria-hidden` or
   `inert`; below `lg` the toggle's `::after` covers the header row.
 - **Motion:** both run under `gsap.matchMedia`. The reveal trigger is on the never-transformed `li`, with `start`
   capped at `maxScroll - 1`. The pin trigger is on the grid row (`pinSpacing: false`, `anticipatePin: 1`); the intro's
@@ -99,8 +99,11 @@ left, mobile right).
 
 ## Decisions
 
-- Pin the left intro; the cards scroll (D21).
-- Responsive entry state in CSS (D22).
+- Pin the left intro (ScrollTrigger `pin`, no spacing, nothing animated); the cards scroll normally. Rejected: pinning
+  the cards column with a scrubbed track; the transformed track moves focused elements out of view and breaks
+  find-in-page.
+- Responsive entry state in CSS (a media query and `data-open`), not `useIsMobile`: it is `null` on the server, so
+  desktop would flash a wrong state, and CSS also works without JS.
 - Logo size comes from asset metadata, never the asset ref.
 - `ignoreMobileResize` is global in `loadGsap`: address-bar resizes would make the pin jump.
 - The pin offset, minimum height and resize delay are provisional, kept until seen on real screens.

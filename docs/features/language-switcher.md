@@ -21,7 +21,7 @@ The visitor switches the page between Ukrainian and English from the header with
 - [x] The `#hash` of the URL is kept on switch (`/#career` -> `/uk#career` and back).
 - [x] After switching, a screen reader announces the change of page language in the **new** page language, for soft
       and full navigation. Built as a live region outside React.
-- [x] After switching, keyboard focus returns to the visible switcher instead of being lost to `<body>` (D14).
+- [x] After switching, keyboard focus returns to the visible switcher instead of being lost to `<body>`.
 - [x] The accessible name names the **target** language in the page language and starts with the visible code
       (WCAG 2.5.3): "UK. Switch language to: Ukrainian" (en) / "EN. Перемкнути мову: англійська" (uk), an
       `aria-label` localized in `messages/{en,uk}.json` (`LanguageSwitcher.label`).
@@ -58,7 +58,7 @@ The visitor switches the page between Ukrainian and English from the header with
 - The locale switch is a **soft navigation**: no document reload, `<html lang>` is updated, Lenis keeps working.
 - The whole locale layout subtree is **remounted** (the dynamic segment key changes): the header and live-region DOM
   nodes are replaced. React state cannot carry anything across the switch; what must survive goes through
-  `sessionStorage` (D14 in [../decisions.md](../decisions.md)). Scroll resets to 0.
+  `sessionStorage` (see Decisions). Scroll resets to 0.
 
 ### Hash, focus and announcement
 
@@ -150,6 +150,12 @@ tab order, so exactly one copy is reachable at a time. No `inert` or `aria-hidde
 - [x] No hydration warning from the language switcher.
 - [x] Renders in `en` and `uk`, light and dark, mobile and desktop.
 - [x] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`.
+
+## Decisions
+
+- State across a locale switch goes through one short-lived `sessionStorage` entry `{hash, at}` and a live region
+  created in `document.body` outside React. Reason: the switch is a soft navigation but the whole `[locale]` layout
+  remounts, so React state and React-owned DOM are lost (see Navigation behaviour above).
 
 ## Tasks
 

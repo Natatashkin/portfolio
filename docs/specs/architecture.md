@@ -48,7 +48,23 @@ Outside `src/`: `messages/{en,uk}.json`, `scripts/check-sanity.mts` (connection 
   via Page `alternates` in the Page metadata and SEO feature. No `alternates`/hreflang code exists in `app/src` yet.
   It is on the Launch checklist in [../roadmap.md](../roadmap.md).
 - `proxy.ts` matcher excludes `api`, `trpc`, `_next`, `_vercel` and paths with a file extension.
-- Unknown paths hit `[locale]/[...rest]` and call `notFound()`, rendering the localized `[locale]/not-found.tsx`.
+- Unknown paths hit `[locale]/[...rest]` and call `notFound()`, rendering the localized `[locale]/not-found.tsx`
+  (title and a "back home" link). There is no `global-not-found.tsx` ([D7](../decisions.md)); why `as-needed`:
+  [D2](../decisions.md).
+- Locales (`en` default, `uk`) are defined once in `i18n/routing.ts` (`defineRouting`); `request.ts` needs an explicit
+  message loader per locale (a missing one is a type error; a template-string import would be untyped). It takes the
+  locale from the request or from `next/root-params`, and calls `notFound()` if there is none.
+- `i18n/navigation.ts` (`createNavigation`) exports the locale-aware `Link`, `redirect`, `usePathname`, `useRouter`,
+  `getPathname`; internal links use it.
+- The `[locale]` layout and every page validate the segment with `hasLocale` and call `notFound()` otherwise;
+  `generateStaticParams` returns both locales, `<html lang>` is the locale, and `NextIntlClientProvider` wraps the page.
+- Interface strings: `messages/en.json` and `uk.json` must have the same keys at every level; message types come from
+  `en.json` (`i18n/appConfig.d.ts`), so a missing or leftover key fails type checking. Editable content stays in Sanity.
+- Known gaps: `not-found.tsx` renders `<main>` without `id="main-content"`, so the skip link does nothing on the 404
+  page (proposal: add the id); the `cases` route is a hard-coded English placeholder that should be removed or renamed
+  (project details pages are out of scope). Not yet checked in the browser: `/xyz` gives the 404 in the matching
+  locale, `/` and `/uk` render, `/en` redirects to `/`. The switcher, cookie and focus behavior:
+  [../features/language-switcher.md](../features/language-switcher.md).
 
 ## Rendering and data flow
 
