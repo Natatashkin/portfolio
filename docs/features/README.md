@@ -25,19 +25,19 @@ and [caching.md](caching.md).
 
 ## Planned
 
-| Feature               | Notes                                                                                                |
-| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| Feature               | Notes                                                                                         |
+| --------------------- | --------------------------------------------------------------------------------------------- |
 | Projects page         | `/projects` list, URL filter, page sections from Sanity: [projects-page.md](projects-page.md) |
 | Caching               | Cache Components: `use cache`, tags, Suspense for request data: [caching.md](caching.md)      |
 | Breadcrumbs           | Reusable trail on every page except home: [breadcrumbs.md](breadcrumbs.md)                    |
 | Filter                | Reusable URL-driven chip filter: [filter.md](filter.md)                                       |
 | Loading states        | Loader, `loading.tsx`, ProjectCardSkeleton: [loading-states.md](loading-states.md)            |
-| What I do section     |                                                                                                      |
-| Playground section    | Needs a `componentKey` → demo map                                                                    |
-| Tech stack section    |                                                                                                      |
+| What I do section     |                                                                                               |
+| Playground section    | Needs a `componentKey` → demo map                                                             |
+| Tech stack section    |                                                                                               |
 | CTA section           | Reusable CTA: layouts, background, buttons: [cta-section.md](cta-section.md)                  |
-| Page metadata and SEO | Title, description, canonical, hreflang (required before launch), Open Graph, sitemap                |
-| Draft preview         | Draft Mode, server-only read token                                                                   |
+| Page metadata and SEO | Title, description, canonical, hreflang (required before launch), Open Graph, sitemap         |
+| Draft preview         | Draft Mode, server-only read token                                                            |
 
 Metrics are part of the hero; there is no separate metrics section. Schemas for all planned sections already exist ([../specs/content-model.md](../specs/content-model.md)); each planned section
 still needs a query branch, a component and its `SectionRenderer` case. Section rules:

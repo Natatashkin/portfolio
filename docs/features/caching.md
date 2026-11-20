@@ -9,13 +9,13 @@ Keep every page served from a static shell while a page can still read request d
 
 ## Requirements
 
-- [ ] `cacheComponents: true` in `app/next.config.ts`.
-- [ ] Each Sanity fetcher in `app/src/lib/sanity/api/` (`fetchPage`, `fetchProjects`, `fetchSiteSettings`) is a cached
+- [x] `cacheComponents: true` in `app/next.config.ts`.
+- [x] Each Sanity fetcher in `app/src/lib/sanity/api/` (`fetchPage`, `fetchProjects`, `fetchSiteSettings`) is a cached
       function: `'use cache'`, `cacheTag(...)` with the existing tag arrays (`PAGE_QUERY_TAGS`,
       `PROJECTS_QUERY_TAGS`, `SITE_SETTING_QUERY_TAGS`) and a 30-minute
       `cacheLife` (`cacheLife({ revalidate: 1800 })`).
-- [ ] The fetchers drop `next: { tags }` from `client.fetch`: inside `'use cache'` the tags come from `cacheTag`.
-- [ ] `export const revalidate = 3600` is removed from `app/[locale]/page.tsx`; the `cacheLife` is the fallback if a
+- [x] The fetchers drop `next: { tags }` from `client.fetch`: inside `'use cache'` the tags come from `cacheTag`.
+- [x] `export const revalidate = 3600` is removed from `app/[locale]/page.tsx`; the `cacheLife` is the fallback if a
       webhook is missed.
 - [ ] The webhook `api/revalidate` stays the freshness path: a changed `page`, `project`, `technology`, `skill` or
       other document still refreshes the content through `revalidateTag`. The webhook and its `TAG_BY_TYPE` map are

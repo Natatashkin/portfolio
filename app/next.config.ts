@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const nextConfig: NextConfig = {
+  cacheComponents: true,
   images: {
     // Without the 2048 and 3840 steps: no image on the page renders wider than 960 CSS px.
     // 400 and 800 match the hero picture (400 CSS px max) at 1x and 2x.

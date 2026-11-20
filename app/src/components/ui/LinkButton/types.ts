@@ -11,7 +11,8 @@ type LinkButtonField =
 
 // Field types come from the Studio schema (TypeGen); GROQ returns an empty field as `null`.
 // `label`, `fileUrl` and `fileName` are resolved in GROQ: the localized label as a string, the file
-// from `download.document->files[download.language]` (read only for `linkType: download`, D15).
+// from `download.document->files[download.language]` (read only for `linkType: download`).
+// Why: docs/features/ui-blocks.md (Decisions).
 export type LinkButtonProps = {
   [Key in LinkButtonField]?: NonNullable<LinkButton[Key]> | null;
 } & {

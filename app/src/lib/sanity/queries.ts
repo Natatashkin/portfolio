@@ -16,6 +16,10 @@ export const PAGE_QUERY_TAGS = [
 export const SITE_SETTING_QUERY_TAGS = ['site-settings'] as const;
 export const PROJECTS_QUERY_TAGS = ['project', 'technology', 'skill'] as const;
 
+// `cacheLife` of every Sanity fetcher (30 minutes). Studio edits arrive through the
+// webhook (`api/revalidate`); this is only the fallback if one is missed.
+export const QUERY_REVALIDATE_SECONDS = 1800;
+
 // Localized fields are written out literally: TypeGen reads queries
 // statically and cannot infer types through interpolated strings.
 // Items are matched by `language` (`_key` is a random id). An empty `locale`

@@ -53,7 +53,8 @@ Depends on: [caching.md](caching.md), [breadcrumbs.md](breadcrumbs.md), [filter.
 - **Schema:** `page.title` localized ([D32](../decisions.md)); `slug` on `technology` and `skill`
   ([D31](../decisions.md)). Fields: [content-model.md](../specs/content-model.md). The author re-enters the page
   titles and fills the slugs in Studio.
-- **Data:** two cached fetchers ([caching.md](caching.md), including the tags), no separate filter-options request.
+- **Data:** two cached fetchers for the page data ([caching.md](caching.md), including the tags; the layout's
+  `fetchSiteSettings` is separate), no separate filter-options request.
   - `fetchPage(slug, locale)` with `PAGE_QUERY` returns the localized `title`, `description`, `sections` and `filters`.
   - `filters` (`{ slug, label }[]`) is computed only when `$slug == "projects"` (`select(...)`, `null` otherwise), so
     the home page pays nothing: technologies and skills with `defined(slug.current)` and
