@@ -17,6 +17,9 @@
 - `ProjectsSection`: project cards with About overlay, Live/GitHub buttons, tech stack
   ([features/projects-section.md](features/projects-section.md)); the `projects/<slug>` page behind About is not built, so the title and About link to `#` for now. The "All Projects" button leads to `/projects`.
 - Projects page at `/projects` ([features/projects-page.md](features/projects-page.md)) with its building blocks: Cache Components on every fetcher ([caching](features/caching.md)), localized `page.title` and `slug` on technology and skill, [CTA section](features/cta-section.md), [breadcrumbs](features/breadcrumbs.md), [loading states](features/loading-states.md), [filter](features/filter.md). The screen-reader pass (breadcrumbs, filter, counter) is deferred.
+- Revalidate webhook: the route `api/revalidate` ([D30](decisions.md)) and the Sanity webhook that calls it, filtered to
+  every type in `PAGE_QUERY_TAGS` plus `siteSettings` ([specs/architecture.md](specs/architecture.md#revalidation-webhook)); a Studio
+  change reaches the page right away, the 30-minute `cacheLife` is only the fallback ([features/caching.md](features/caching.md)).
 - Language switcher ([features/language-switcher.md](features/language-switcher.md)) in the desktop header and the burger menu.
 - Theme switcher: label shows the target theme, the chosen theme survives a language switch ([features/theme-switcher.md](features/theme-switcher.md)).
 - Production Branch of both Vercel projects (Studio, app) is `main`; `dev` is the working branch and builds as Preview.
@@ -28,15 +31,13 @@
 2. Scroll animations for the remaining sections (GSAP ScrollTrigger in client children; see the `scroll-animation`
    skill; the career and experience sections are the references).
 3. Page metadata and SEO: title, description, canonical, hreflang (D2), Open Graph, `sitemap.ts`, `robots.ts`.
-4. Revalidate webhook: the route `api/revalidate` is built ([D30](decisions.md)). Left: set `SANITY_REVALIDATE_SECRET` in Vercel and
-   create the Sanity webhook that points at it. Until then, edits reach the page after the 30-minute `cacheLife` ([features/caching.md](features/caching.md)).
-5. Draft preview via Draft Mode with a server-only read token (conventions: Security).
-6. Final 404 design; resolve the `__next_error__` shell issue (decision D7).
-7. Decide on security headers. A strict `script-src` CSP needs nonces (dynamic rendering, loses SSG), so it is not used.
+4. Draft preview via Draft Mode with a server-only read token (conventions: Security).
+5. Final 404 design; resolve the `__next_error__` shell issue (decision D7).
+6. Decide on security headers. A strict `script-src` CSP needs nonces (dynamic rendering, loses SSG), so it is not used.
    Candidate: static headers in `next.config.ts` (CSP without script restriction, `nosniff`, `Referrer-Policy`,
    `Permissions-Policy`), introduced as `Content-Security-Policy-Report-Only` first; draft preview needs
    `frame-ancestors` to allow the Studio origin. Ask before changing `next.config.ts`.
-8. Bring the header navigation back when work on the nested pages starts: it is hidden now and the code is commented
+7. Bring the header navigation back when work on the nested pages starts: it is hidden now and the code is commented
    out in `Header.tsx` ([features/header.md](features/header.md)).
 
 ## Launch checklist
