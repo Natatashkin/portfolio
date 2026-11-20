@@ -17,8 +17,8 @@ A visitor on an inner page sees where they are and can go back up the path: `Hom
 - [ ] Earlier items with an `href` are locale-aware links; an item without an `href` renders as text.
 - [ ] Markup: `nav` with an `aria-label` from `messages`, containing an `ol` with one `li` per item.
 - [ ] The separator is a CSS `/` in a muted token, `aria-hidden`, so a screen reader hears the items only.
-- [ ] Link targets are at least 44 px (WCAG 2.5.5 / 2.5.8 best practice) through padding or `min-height`, without
-      breaking the inline layout.
+- [ ] Link targets are at least 44 px tall (WCAG 2.5.5 / 2.5.8 best practice) through a hit area that does not
+      change the inline layout; the width follows the label (above the 24 px minimum of WCAG 2.5.8).
 - [ ] Long labels wrap instead of widening the page.
 - [ ] Light and dark themes through tokens; visible focus on links (the shared `focused-underline` mixin).
 - [ ] No structured data (JSON-LD): SEO belongs to "Page metadata and SEO".
@@ -28,7 +28,7 @@ A visitor on an inner page sees where they are and can go back up the path: `Hom
 - **Schema / Query:** none. On `/projects` the current label is `page.title` ([D32](../decisions.md)).
 - **UI:** `components/ui/Breadcrumbs/` (`Breadcrumbs.tsx`, `.module.scss`, `index.ts`, `types.ts`); a Server Component,
   no client code, no animation. The page renders it above the `h1`.
-- **Edge cases:** an empty `items` list renders only `Home` as the current item; an item with an empty label is
+- **Edge cases:** an empty `items` list renders nothing: `Home` alone is not a trail, and the home page has none; an item with an empty label is
   skipped. Items come from page code, not from the CMS href, so no extra link sanitizing is needed.
 
 ## Files
@@ -42,7 +42,7 @@ A visitor on an inner page sees where they are and can go back up the path: `Hom
       the locale's home page.
 - [ ] The last item is not a link and carries `aria-current="page"`.
 - [ ] A screen reader reads a navigation landmark with its label and a list of items, without the separators.
-- [ ] Links are at least 44 px; keyboard focus is visible.
+- [ ] Links are at least 44 px tall; keyboard focus is visible.
 - [ ] Renders in light and dark, at 390 px and desktop widths.
 - [ ] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`.
 
@@ -50,6 +50,10 @@ A visitor on an inner page sees where they are and can go back up the path: `Hom
 
 - `Home` is added inside the component: every trail starts there and the label is an interface string.
 - The last item is never a link: it points at the current page.
+- A trail has at least two items (`Home / …`): `Home` alone tells nothing, so the component renders nothing without
+  other items, and the home page shows no breadcrumbs.
+- The 44 px target applies to the height only: widening short labels like "Home" would push into the separator, and
+  their width already passes the 24 px minimum of WCAG 2.5.8.
 
 ## Tasks
 

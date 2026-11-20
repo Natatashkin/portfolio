@@ -40,5 +40,9 @@
   },
   "RichText": {
     "opensInNewTab": "opens in a new tab"
+  },
+  "Breadcrumbs": {
+    "home": "Home",
+    "label": "Breadcrumbs"
   }
 }

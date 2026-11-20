@@ -27,6 +27,12 @@ export const QUERY_REVALIDATE_SECONDS = 1800;
 export const PAGE_QUERY = defineQuery(`
   *[_type == "page" && slug.current == $slug][0]{
     _id,
+    "title": select(
+      defined(title[language == $locale][0].value) &&
+        title[language == $locale][0].value != "" =>
+        title[language == $locale][0].value,
+      title[language == "en"][0].value
+    ),
     sections[]{
       _key,
       _type,

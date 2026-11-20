@@ -1,0 +1,52 @@
+@use 'mixins' as *;
+
+.breadcrumbs {
+  font-size: var(--font-sm);
+
+  &__list {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    overflow-wrap: anywhere;
+
+    // A CSS separator is not read by screen readers, so the trail is heard as items only.
+    & + &::before {
+      content: '/';
+      margin-inline: var(--space-2);
+      color: var(--color-text-muted);
+    }
+  }
+
+  &__link {
+    @include muted-control;
+
+    font-size: inherit;
+
+    // A 44 px tall hit area (WCAG 2.5.5) that does not change the height of the trail; the focus underline
+    // (`::after`) stays under the text.
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 50% 0 auto;
+      height: 44px;
+      transform: translateY(-50%);
+    }
+  }
+
+  &__text {
+    color: var(--color-text-muted);
+  }
+
+  &__current {
+    color: var(--color-text);
+  }
+}
