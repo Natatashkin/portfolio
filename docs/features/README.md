@@ -31,7 +31,7 @@ and [caching.md](caching.md).
 | Caching               | Cache Components: `use cache`, tags, Suspense for request data: [caching.md](caching.md)      |
 | Breadcrumbs           | Reusable trail on every page except home: [breadcrumbs.md](breadcrumbs.md)                    |
 | Filter                | Reusable URL-driven chip filter: [filter.md](filter.md)                                       |
-| Loading states        | Loader, `loading.tsx`, ProjectCardSkeleton: [loading-states.md](loading-states.md)            |
+| Loading states        | ProjectCardSkeleton for the projects list: [loading-states.md](loading-states.md)             |
 | What I do section     |                                                                                               |
 | Playground section    | Needs a `componentKey` → demo map                                                             |
 | Tech stack section    |                                                                                               |

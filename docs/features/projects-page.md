@@ -133,7 +133,7 @@ title[language == "en"][0].value != "")`. The counter therefore matches the card
 1. Cache Components ([caching.md](caching.md)).
 2. Schema changes (`page.title`, `slug` on technology and skill) and TypeGen.
 3. CTA section ([cta-section.md](cta-section.md)).
-4. Breadcrumbs, Loader and `loading.tsx`, ProjectCardSkeleton, Filter (their specs).
+4. Breadcrumbs, ProjectCardSkeleton, Filter (their specs).
 5. Queries (`$filters` param, eligibility in GROQ, `filters` in `PAGE_QUERY`, the obsolete `PROJECTS_QUERY` comment and
    `filterLabel` removed), `fetchProjects(locale, filters)`, the page, `ProjectsList`, the shared grid mixin, the
    restored "All projects" url.
