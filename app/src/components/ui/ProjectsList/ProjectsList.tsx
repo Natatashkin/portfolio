@@ -41,7 +41,8 @@ const ProjectsList = async ({ locale, filters }: Props) => {
   return (
     <ul className={styles.grid}>
       {projects.map((project) => (
-        <ProjectCard key={project._id} project={project} />
+        // No section heading between the page `h1` and the cards, so the card titles are `h2`.
+        <ProjectCard key={project._id} project={project} headingLevel="h2" />
       ))}
     </ul>
   );

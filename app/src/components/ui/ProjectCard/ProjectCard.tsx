@@ -10,6 +10,8 @@ import type { ProjectCardItem } from './types';
 
 type Props = {
   project: ProjectCardItem;
+  // The card title's level in the page outline: `h3` under a section's `h2` (home), `h2` right under the page `h1`.
+  headingLevel?: 'h2' | 'h3';
 };
 
 // The `sizes` hint mirrors the grid: a full row on mobile, half from `md`, a third from `lg`.
@@ -17,7 +19,7 @@ const IMAGE_SIZES = '(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw';
 
 // The card is not a link: the title, the preview's About button (pointer devices only), Live and GitHub
 // are separate controls, so no interactive element is nested in another.
-const ProjectCard = ({ project }: Props) => {
+const ProjectCard = ({ project, headingLevel: Heading = 'h3' }: Props) => {
   const t = useTranslations('ProjectCard');
   const { title, slug, summary, image, technologies, buttons } = project;
   const tags = toTagItems(technologies);
@@ -52,7 +54,7 @@ const ProjectCard = ({ project }: Props) => {
         </div>
       )}
       <div className={styles.card__header}>
-        <h3 className={styles.card__title}>
+        <Heading className={styles.card__title}>
           {detailsPath ? (
             <Link
               className={styles.card__titleLink}
@@ -65,7 +67,7 @@ const ProjectCard = ({ project }: Props) => {
           ) : (
             title
           )}
-        </h3>
+        </Heading>
         {actions.length > 0 && (
           <div className={styles.card__actions}>
             {/* The kind of a button is read from its icon, never from its position in the array. */}
