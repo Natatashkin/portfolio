@@ -1,6 +1,6 @@
 # Filter
 
-Status: draft
+Status: approved
 
 ## Goal
 

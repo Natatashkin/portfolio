@@ -1,6 +1,6 @@
 # Projects page
 
-Status: draft
+Status: approved
 
 ## Goal
 

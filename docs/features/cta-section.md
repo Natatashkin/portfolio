@@ -1,6 +1,6 @@
 # CTA section
 
-Status: draft
+Status: approved
 
 ## Goal
 

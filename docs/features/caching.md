@@ -1,6 +1,6 @@
 # Caching (Cache Components)
 
-Status: draft
+Status: approved
 
 ## Goal
 

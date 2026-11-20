@@ -27,15 +27,15 @@ and [caching.md](caching.md).
 
 | Feature               | Notes                                                                                                |
 | --------------------- | ---------------------------------------------------------------------------------------------------- |
-| Projects page         | `/projects` list, URL filter, page sections from Sanity; draft: [projects-page.md](projects-page.md) |
-| Caching               | Cache Components: `use cache`, tags, Suspense for request data; draft: [caching.md](caching.md)      |
-| Breadcrumbs           | Reusable trail on every page except home; draft: [breadcrumbs.md](breadcrumbs.md)                    |
-| Filter                | Reusable URL-driven chip filter; draft: [filter.md](filter.md)                                       |
-| Loading states        | Loader, `loading.tsx`, ProjectCardSkeleton; draft: [loading-states.md](loading-states.md)            |
+| Projects page         | `/projects` list, URL filter, page sections from Sanity: [projects-page.md](projects-page.md) |
+| Caching               | Cache Components: `use cache`, tags, Suspense for request data: [caching.md](caching.md)      |
+| Breadcrumbs           | Reusable trail on every page except home: [breadcrumbs.md](breadcrumbs.md)                    |
+| Filter                | Reusable URL-driven chip filter: [filter.md](filter.md)                                       |
+| Loading states        | Loader, `loading.tsx`, ProjectCardSkeleton: [loading-states.md](loading-states.md)            |
 | What I do section     |                                                                                                      |
 | Playground section    | Needs a `componentKey` → demo map                                                                    |
 | Tech stack section    |                                                                                                      |
-| CTA section           | Reusable CTA: layouts, background, buttons; draft: [cta-section.md](cta-section.md)                  |
+| CTA section           | Reusable CTA: layouts, background, buttons: [cta-section.md](cta-section.md)                  |
 | Page metadata and SEO | Title, description, canonical, hreflang (required before launch), Open Graph, sitemap                |
 | Draft preview         | Draft Mode, server-only read token                                                                   |
 

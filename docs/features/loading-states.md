@@ -1,6 +1,6 @@
 # Loading states
 
-Status: draft
+Status: approved
 
 ## Goal
 
