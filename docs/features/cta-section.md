@@ -13,26 +13,26 @@ picture; centered.
 
 ## Requirements
 
-- [ ] Content: `eyebrow` (optional), `headline`, `description` are localized and fall back to `en` when the page
+- [x] Content: `eyebrow` (optional), `headline`, `description` are localized and fall back to `en` when the page
       locale is empty.
-- [ ] `layout` supports `row` | `column-centered`; a missing value means `row`.
-- [ ] `isFullWidth` true | false; a missing value means false.
-- [ ] `hasBackground` true | false; a missing value means false. When true and `cover` has an image, the cover is the
+- [x] `layout` supports `row` | `column-centered`; a missing value means `row`.
+- [x] `isFullWidth` true | false; a missing value means false.
+- [x] `hasBackground` true | false; a missing value means false. When true and `cover` has an image, the cover is the
       background, both inside the card and in the full-width variant; a dark overlay over the picture keeps the text
       readable. When true without a cover image, the no-background variant renders (no error). When false, `cover` is
       ignored even if it holds data.
-- [ ] In the `column-centered` layout the text and buttons are centered, but the eyebrow stays left-aligned with the
+- [x] In the `column-centered` layout the text and buttons are centered, but the eyebrow stays left-aligned with the
       accent bar under it.
-- [ ] An optional `ctaButton` (the main action) and 0..n additional `buttons` (`LinkButton`). In `row` the CTA button
+- [x] An optional `ctaButton` (the main action) and 0..n additional `buttons` (`LinkButton`). In `row` the CTA button
       sits on the right and the additional buttons under the description; in `column-centered` all buttons form one
       centered row, additional buttons first, the CTA button last. Below `lg` the `row` layout stacks and the CTA button
       follows the additional buttons. No button renders no button area. An empty `eyebrow` renders nothing.
-- [ ] Every combination of `layout` × `hasBackground` × `isFullWidth` renders correctly.
-- [ ] Internal button `url` `home` resolves to `/`, so a button can target an anchor of the home page from another
+- [x] Every combination of `layout` × `hasBackground` × `isFullWidth` renders correctly.
+- [x] Internal button `url` `home` resolves to `/`, so a button can target an anchor of the home page from another
       page (see Decisions).
-- [ ] The headline is an `h2`.
-- [ ] Light and dark themes through tokens, at the breakpoints used by the other sections.
-- [ ] Empty or unexpected CMS data does not throw.
+- [x] The headline is an `h2`.
+- [x] Light and dark themes through tokens, at the breakpoints used by the other sections.
+- [x] Empty or unexpected CMS data does not throw.
 
 ## Design
 
@@ -71,18 +71,19 @@ picture; centered.
 
 ## Acceptance criteria
 
-- [ ] Every combination of `layout` × `hasBackground` × `isFullWidth` renders in light and dark at 1400, 1040, 800,
+- [x] Every combination of `layout` × `hasBackground` × `isFullWidth` renders in light and dark at 1400, 1040, 800,
       700 and 390 px.
-- [ ] Missing values render as `row`, no background, not full width.
-- [ ] `cover` is not shown when `hasBackground` is false; `hasBackground` without a cover image renders the
+- [x] Missing values render as `row`, no background, not full width.
+- [x] `cover` is not shown when `hasBackground` is false; `hasBackground` without a cover image renders the
       no-background variant.
-- [ ] The six mockup variants are reproducible with the fields.
-- [ ] Empty `buttons`, `eyebrow` or `cover` do not throw.
-- [ ] A `home` button with an anchor lands on that section of the home page in the current locale; a download button
-      serves the file of the current locale.
-- [ ] Existing `LinkButton` behavior is unchanged.
-- [ ] Keyboard order and visible focus through the buttons.
-- [ ] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`; Studio builds.
+- [x] The six mockup variants are reproducible with the fields.
+- [x] Empty `buttons`, `eyebrow` or `cover` do not throw.
+- [x] A `home` button with an anchor lands on that section of the home page in the current locale; a download button
+      serves the file of its own language (`download.language`) whatever the site locale, as in the Experience section
+      ([ui-blocks.md](ui-blocks.md), Decisions).
+- [x] Existing `LinkButton` behavior is unchanged.
+- [x] Keyboard order and visible focus through the buttons.
+- [x] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`; Studio builds.
 
 ## Decisions
 

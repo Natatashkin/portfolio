@@ -116,7 +116,9 @@ const LinkButton = ({
     );
   }
 
-  const path = safePath(url);
+  // `home` is the home page slug. Studio cannot store an empty path, so `home` stands for `/`
+  // (a button on another page can then target a home anchor).
+  const path = url === 'home' ? '/' : safePath(url);
   const hash =
     hasAnchor && anchor && ANCHOR_PATTERN.test(anchor) ? `#${anchor}` : '';
 

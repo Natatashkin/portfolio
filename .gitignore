@@ -8,3 +8,6 @@
 !.claude/skills/docs-sync/
 docs/layouts
 
+
+# Playwright MCP screenshots and snapshots
+.playwright-mcp/

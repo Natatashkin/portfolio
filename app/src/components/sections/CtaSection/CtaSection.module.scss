@@ -1,0 +1,167 @@
+@use 'mixins' as *;
+
+// Card (default): a bordered panel inside the container. `--full`: the band spans the page and the panel only
+// lays out the content. `--bg`: a photo with a dark scrim behind the content, on the panel or the band.
+// `--centered`: one centered column; the eyebrow stays on the left.
+.cta {
+  // The mockups give every pill the same width, so a row of actions lines up whatever the labels.
+  --cta-button-min-width: 13.75rem;
+
+  padding-block: var(--space-section);
+
+  &__panel {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    gap: var(--space-6);
+    padding: var(--space-8);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+
+    @include media-up(lg) {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      column-gap: var(--space-8);
+      padding: var(--space-10);
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__eyebrow {
+    @include eyebrow;
+
+    margin-bottom: var(--space-8);
+  }
+
+  &__headline {
+    margin: 0 0 var(--space-6);
+    font-size: var(--font-h2);
+    font-weight: 400;
+    line-height: 1.2;
+  }
+
+  &__description {
+    color: var(--color-text-muted);
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+
+    // Space only after text: without a headline or description the buttons start at the top.
+    &:not(:first-child) {
+      margin-top: var(--space-8);
+    }
+  }
+
+  // Full width on a phone.
+  &__actions > *,
+  &__main > * {
+    justify-content: center;
+    min-width: var(--cta-button-min-width);
+
+    @include media-down(sm) {
+      flex: 1 1 100%;
+      width: auto;
+    }
+  }
+
+  &__main {
+    display: flex;
+  }
+
+  &__picture {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    display: flex;
+  }
+
+  // The band carries the surface; the panel keeps only the layout.
+  &--full {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    border-block: 1px solid var(--color-border);
+    background: var(--color-surface);
+
+    .cta__panel {
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: none;
+      overflow: visible;
+    }
+  }
+
+  // A photo stays dark in both themes, so the text and buttons over it switch to light colours.
+  &--bg {
+    --color-text: var(--color-on-photo);
+    --color-text-muted: color-mix(
+      in srgb,
+      var(--color-on-photo) 80%,
+      transparent
+    );
+    --color-border: color-mix(in srgb, var(--color-on-photo) 15%, transparent);
+    --color-primary: var(--color-on-photo);
+    --color-on-primary: var(--color-photo-scrim);
+    --color-accent-ink: var(--color-accent);
+    --color-on-accent: var(--color-photo-scrim);
+
+    color: var(--color-text);
+  }
+
+  &--bg:not(#{&}--full) &__panel,
+  &--bg#{&}--full {
+    background: var(--color-photo-scrim);
+
+    // Darker on the text side; one even tint once the layout stacks.
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background: color-mix(in srgb, var(--color-photo-scrim) 70%, transparent);
+
+      @include media-up(lg) {
+        background: linear-gradient(
+          90deg,
+          color-mix(in srgb, var(--color-photo-scrim) 66%, transparent) 0%,
+          color-mix(in srgb, var(--color-photo-scrim) 63%, transparent) 74%,
+          color-mix(in srgb, var(--color-photo-scrim) 12%, transparent) 100%
+        );
+      }
+    }
+  }
+
+  &--centered &__panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    text-align: center;
+  }
+
+  &--centered &__eyebrow {
+    align-self: stretch;
+    text-align: left;
+  }
+
+  &--centered &__headline,
+  &--centered &__description {
+    max-width: 45rem;
+  }
+
+  &--centered &__actions {
+    justify-content: center;
+  }
+}

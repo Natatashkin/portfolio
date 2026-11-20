@@ -1,4 +1,5 @@
 import CareerSection from '@/components/sections/CareerSection';
+import CtaSection from '@/components/sections/CtaSection';
 import ExperienceSection from '@/components/sections/ExperienceSection';
 import HeroSection from '@/components/sections/HeroSection';
 import ProjectsSection from '@/components/sections/ProjectsSection';
@@ -19,6 +20,8 @@ const SectionRenderer = ({ sections }: Props) =>
         return <ExperienceSection key={section._key} {...section} />;
       case 'projectsSection':
         return <ProjectsSection key={section._key} {...section} />;
+      case 'ctaSection':
+        return <CtaSection key={section._key} {...section} />;
       default:
         return null;
     }
