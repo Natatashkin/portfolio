@@ -1,6 +1,6 @@
 # Breadcrumbs
 
-Status: approved
+Status: done
 
 ## Goal
 
@@ -9,19 +9,21 @@ A visitor on an inner page sees where they are and can go back up the path: `Hom
 
 ## Requirements
 
-- [ ] Props: `items: { label: string; href?: string }[]`. The component always prepends `Home` (label from
+- [x] Props: `items: { label: string; href?: string }[]`. The component always prepends `Home` (label from
       `messages/{uk,en}.json`, link `/` through `@/i18n/navigation`), so callers pass only the rest of the path.
-- [ ] Shown on every page except the home page. Today that is `/projects`; the details page `projects/[slug]` is out of
-      scope, but the shape already supports it.
-- [ ] The last item is plain text with `aria-current="page"` and is never a link, even if it has an `href`.
-- [ ] Earlier items with an `href` are locale-aware links; an item without an `href` renders as text.
-- [ ] Markup: `nav` with an `aria-label` from `messages`, containing an `ol` with one `li` per item.
-- [ ] The separator is a CSS `/` in a muted token, `aria-hidden`, so a screen reader hears the items only.
-- [ ] Link targets are at least 44 px tall (WCAG 2.5.5 / 2.5.8 best practice) through a hit area that does not
-      change the inline layout; the width follows the label (above the 24 px minimum of WCAG 2.5.8).
-- [ ] Long labels wrap instead of widening the page.
-- [ ] Light and dark themes through tokens; visible focus on links (the shared `focused-underline` mixin).
-- [ ] No structured data (JSON-LD): SEO belongs to "Page metadata and SEO".
+- [x] Used by every inner page and never by the home page. Today that is `/projects`; the details page
+      `projects/[slug]` is out of scope, but the shape already supports it.
+- [x] The last item is plain text with `aria-current="page"` and is never a link, even if it has an `href`; it is
+      drawn in `--color-accent-ink`.
+- [x] Earlier items with an `href` are locale-aware links; an item without an `href` renders as text.
+- [x] Markup: `nav` with an `aria-label` from `messages`, containing an `ol` with one `li` per item.
+- [x] The separator is a CSS `/` (a pseudo-element, so a screen reader hears the items only) in a muted token.
+- [x] Link targets are at least 44 px tall (WCAG 2.5.5 / 2.5.8 best practice) through a `::before` hit area that does
+      not change the inline layout; the width follows the label (above the 24 px minimum of WCAG 2.5.8).
+- [x] Long labels wrap instead of widening the page.
+- [x] Light and dark themes through tokens; visible focus on links (the `muted-control` mixin, which includes
+      `focused-underline`).
+- [x] No structured data (JSON-LD): SEO belongs to "Page metadata and SEO".
 
 ## Design
 
@@ -38,13 +40,13 @@ A visitor on an inner page sees where they are and can go back up the path: `Hom
 
 ## Acceptance criteria
 
-- [ ] On `/en/projects` and `/uk/projects` the trail is `Home / Projects` in the matching language; `Home` links to
+- [x] On `/en/projects` and `/uk/projects` the trail is `Home / Projects` in the matching language; `Home` links to
       the locale's home page.
-- [ ] The last item is not a link and carries `aria-current="page"`.
-- [ ] A screen reader reads a navigation landmark with its label and a list of items, without the separators.
-- [ ] Links are at least 44 px tall; keyboard focus is visible.
-- [ ] Renders in light and dark, at 390 px and desktop widths.
-- [ ] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`.
+- [x] The last item is not a link and carries `aria-current="page"`.
+- [ ] Deferred (author decision): a screen reader reads a navigation landmark with its label and a list of items, without the separators.
+- [x] Links are at least 44 px tall; keyboard focus is visible.
+- [x] Renders in light and dark, at 390 px and desktop widths.
+- [x] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`.
 
 ## Decisions
 
@@ -57,10 +59,8 @@ A visitor on an inner page sees where they are and can go back up the path: `Hom
 
 ## Tasks
 
-1. Component, styles and messages.
-2. Browser check in both locales, both themes, 390 px and desktop, keyboard focus.
-3. Sync: `docs-writer` marks the spec `done` and adds the component to `ui-blocks.md`.
+Done in the code.
 
 ## Open questions
 
-- None.
+- The screen-reader check is deferred (author decision); the markup (`nav`, `ol`, CSS separator) was checked.

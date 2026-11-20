@@ -1,6 +1,6 @@
 # Caching (Cache Components)
 
-Status: approved
+Status: done
 
 ## Goal
 
@@ -12,24 +12,24 @@ Keep every page served from a static shell while a page can still read request d
 - [x] `cacheComponents: true` in `app/next.config.ts`.
 - [x] Each Sanity fetcher in `app/src/lib/sanity/api/` (`fetchPage`, `fetchProjects`, `fetchSiteSettings`) is a cached
       function: `'use cache'`, `cacheTag(...)` with the existing tag arrays (`PAGE_QUERY_TAGS`,
-      `PROJECTS_QUERY_TAGS`, `SITE_SETTING_QUERY_TAGS`) and a 30-minute
-      `cacheLife` (`cacheLife({ revalidate: 1800 })`).
+      `PROJECTS_QUERY_TAGS`, `SITE_SETTING_QUERY_TAGS`) and a 30-minute `cacheLife`
+      (`cacheLife({ revalidate: QUERY_REVALIDATE_SECONDS })`, one constant, 1800, in `queries.ts`).
 - [x] The fetchers drop `next: { tags }` from `client.fetch`: inside `'use cache'` the tags come from `cacheTag`.
 - [x] `export const revalidate = 3600` is removed from `app/[locale]/page.tsx`; the `cacheLife` is the fallback if a
       webhook is missed.
-- [ ] The webhook `api/revalidate` stays the freshness path: a changed `page`, `project`, `technology`, `skill` or
+- [x] The webhook `api/revalidate` stays the freshness path: a changed `page`, `project`, `technology`, `skill` or
       other document still refreshes the content through `revalidateTag`. The webhook and its `TAG_BY_TYPE` map are
       unchanged, and no tag array is duplicated: `PAGE_QUERY_TAGS` already holds `page`, `project`, `technology` and
       `skill`, so one edit to any of them invalidates the page data, including the projects filter options
       ([projects-page.md](projects-page.md)). A type whose tag differs from its name keeps its `TAG_BY_TYPE` entry.
-- [ ] Request data (`searchParams`, `cookies`, `headers`) is read only in a component below a shell that reads no
+- [x] Request data (`searchParams`, `cookies`, `headers`) is read only in a component below a shell that reads no
       request data, inside a `<Suspense>` boundary, never in the page component itself.
-- [ ] The static shell of every route is prerendered; the home page stays fully static, `/[locale]/projects` is
+- [x] The static shell of every route is prerendered; the home page stays fully static, `/[locale]/projects` is
       partially prerendered (shell static, the list streams).
-- [ ] The locale reaches cached code as a fetcher argument, never through a request API; every argument of a cached
+- [x] The locale reaches cached code as a fetcher argument, never through a request API; every argument of a cached
       function is serializable (locale, slug, and the filter list). The filter list must be normalized first (sorted,
       deduplicated): the rule is in [projects-page.md](projects-page.md).
-- [ ] The documented Sanity webhook filter lists every type in `PAGE_QUERY_TAGS` (including `project` and
+- [x] The documented Sanity webhook filter lists every type in `PAGE_QUERY_TAGS` (including `project` and
       `experience`), so no tagged type misses an invalidation.
 
 ## Design
@@ -55,25 +55,20 @@ Keep every page served from a static shell while a page can still read request d
 
 ## Acceptance criteria
 
-- [ ] `pnpm build` prerenders every route; `/[locale]/projects` is reported as partially prerendered, home as static.
-- [ ] After a Studio change and a webhook call, the next request shows the new content in both locales.
-- [ ] No `searchParams` read outside `<Suspense>` (the build fails otherwise).
-- [ ] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`.
+- [x] `pnpm build` prerenders every route; `/[locale]/projects` is reported as partially prerendered, home as static.
+- [x] After a Studio change and a webhook call, the next request shows the new content in both locales.
+- [x] No `searchParams` read outside `<Suspense>` (the build fails otherwise).
+- [x] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`.
 
 ## Decisions
 
 - Cache Components, a 30-minute `cacheLife` and tags from `cacheTag`: [D30](../decisions.md).
+- Every fetcher uses the same `cacheLife`, from one constant: the webhook is the freshness path and the value is only
+  the fallback, so there is nothing to tune per query.
 
 ## Tasks
 
-1. Read the Next.js guides in `node_modules/next/dist/docs/` (migrating to Cache Components, ISR with Cache
-   Components) and the current next-intl docs.
-2. Set the flag, convert the three fetchers, remove `revalidate` from the home page. Done when `pnpm build` passes and
-   every route prerenders.
-3. Author: update the webhook filter in the Sanity dashboard to include every `PAGE_QUERY_TAGS` type (add `project`
-   and `experience`; the documented list is in `specs/architecture.md`). Then check that the webhook still refreshes
-   content.
-4. Sync: `docs-writer` updates `architecture.md` and marks the spec `done`.
+Done. The author updated the webhook filter in the Sanity dashboard and confirmed the refresh.
 
 ## Open questions
 

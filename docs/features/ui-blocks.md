@@ -25,14 +25,14 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
       links only (About on a project card).
 - [x] Renders nothing without `label` or `url`, or when the link does not pass the safety check.
 - [ ] TEMPORARY: `url === '#'` renders a plain `<a href="#">` instead of going through `safePath`, so the project
-      details links and the "All Projects" button stay on the page until their pages exist. To be removed (see
+      details links stay on the page until their pages exist. To be removed (see
       [projects-section.md](projects-section.md)).
 - [x] `linkType: external`: `url` goes through `safeHref`; the `<a>` gets `target="_blank"` and
       `rel="noopener noreferrer"`.
 - [x] Any other `linkType` is treated as internal: `url` goes through `safePath`, the result is rendered with the
       locale-aware `Link` from `@/i18n/navigation`. `#anchor` is appended only when `hasAnchor` is set and `anchor`
       matches `^[a-z]+(?:-[a-z]+)*$` (the Studio regex, copied by hand); otherwise it is dropped.
-- [ ] Planned: an internal `url` of `home` resolves to `/` (the home page slug), so a button can target a home anchor
+- [x] An internal `url` of `home` resolves to `/` (the home page slug), so a button can target a home anchor
       from another page ([cta-section.md](cta-section.md)).
 - [x] External links carry a visually hidden "(opens in a new tab)" after the content, from `messages/{en,uk}.json`
       (`LinkButton.opensInNewTab`); the string is the same as in `SocialLinks`.
@@ -163,8 +163,10 @@ specs ([theme-switcher.md](theme-switcher.md), [language-switcher.md](language-s
 - `app/src/components/ui/Headline/`: `Headline.tsx`, `.module.scss` (accent colour, shine keyframes), `index.ts`.
 - `app/src/components/ui/RichText/`: `RichText.tsx`, `.module.scss`, `index.ts`.
 - `app/src/components/ui/TagList/`: `TagList.tsx`, `.module.scss`, `types.ts`, `index.ts`.
-- Planned: `ProjectCard` moves here from `sections/ProjectsSection/` because two pages share it
-  ([projects-page.md](projects-page.md)).
+- Also in `components/ui/` and described in their own specs: `ProjectCard` (with `ProjectCardSkeleton/`) and
+  `ProjectsList` ([projects-page.md](projects-page.md), [loading-states.md](loading-states.md)), `Breadcrumbs`
+  ([breadcrumbs.md](breadcrumbs.md)), `Filter` ([filter.md](filter.md)); `CtaSection` is a section
+  ([cta-section.md](cta-section.md)).
 - `app/src/components/icons/`: `DownloadIcon` (download button), `ArrowIcon` (other buttons).
 - `app/src/components/ui/ResponsiveImage/`: `ResponsiveImage.tsx`, `helpers.ts` (`getDimensions`),
   `.module.scss`, `index.ts`.

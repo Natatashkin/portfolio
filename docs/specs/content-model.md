@@ -30,7 +30,7 @@ How schemas are written (helpers, registration, tiles) is in
 
 `linkButton` reading rules: external `url` is rendered only if it passes `safeHref` (otherwise no button,
 see [../conventions.md](../conventions.md#security)); internal is a slash-less path (`about`, `projects/sub`), the
-app adds the leading `/` and the locale prefix; the path `home` is the home page `/` (planned, [cta-section](../features/cta-section.md)). `anchor` is read only when `hasAnchor` is true (Studio does not clear
+app adds the leading `/` and the locale prefix; the path `home` is the home page `/` ([cta-section](../features/cta-section.md)). `anchor` is read only when `hasAnchor` is true (Studio does not clear
 it when the toggle is turned off). `download` renders `download.document->files[download.language].asset->url` as a download link,
 whatever the site locale is; if the reference is broken or the document has no file in that language, no button
 (deliberately silent). The app always keys off `linkType`, never off which fields are filled: Studio hides the fields
@@ -40,23 +40,24 @@ ignored for the other two types. See
 
 ## Validation rules (Studio)
 
-| Field                            | Rule                                                                                                                                                                                                  |
-| -------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `linkButton.download`            | Visible only for `download`; `document` (reference to a `downloadDocument`) and `language` (`en` or `uk`) are both required                                                                           |
-| `downloadDocument.title`         | Required (internal name)                                                                                                                                                                              |
-| `downloadDocument.files`         | `en` required, `uk` optional; the upload picker accepts PDF only (`accept`)                                                                                                                           |
-| `linkButton.url`                 | Hidden for `download`. Otherwise required. External: valid URL with `https`, `mailto` or `tel`. Internal: `^[a-z0-9]+(?:[-/][a-z0-9]+)*$` (case-insensitive), no leading slash                        |
-| `linkButton.anchor`              | Visible and required only when `hasAnchor`. Letters and hyphens: `^[a-z]+(?:-[a-z]+)*$` (case-insensitive), no `#`, no digits                                                                         |
-| `<section>.anchorId`             | Optional. `^[a-z0-9-]+$` (digits allowed, unlike `linkButton.anchor`)                                                                                                                                 |
-| `siteSettings.navigation[].url`  | Required. Lowercase letters only: `^[a-z]+$`                                                                                                                                                          |
-| `siteSettings.socialLinks[].url` | Required. `https`, `mailto` or `tel`                                                                                                                                                                  |
-| `page.slug`                      | Required. Generated from the `en` entry of the localized `title`; `home` is the landing                                                                                                               |
-| `technology.slug`, `skill.slug`  | Required, unique across both types (custom `isUnique` check), ASCII. Generated from `name` / the `en` title. The projects filter key ([D31](../decisions.md))                                         |
-| `project.slug`                   | Required. Generated from the `en` (base) entry of the localized `title` via a source function                                                                                                         |
-| `project` required fields        | `title` and `summary` in every language; `image`; `technologies` (at least one). `buttons` is optional                                                                                                |
-| Hidden fields                    | Sanity validates hidden fields too. `requiredInAllLanguages` and `responsiveImage.desktop` skip when the field or an ancestor is hidden (`context.hidden`), so a hidden field never blocks publishing |
-| `piece.componentKey`             | One of `animatedCard`, `formValidation`, `themeSwitcher`, `responsiveDesign`                                                                                                                          |
-| `technology.name`                | Required                                                                                                                                                                                              |
+| Field                            | Rule                                                                                                                                                                                                                            |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `linkButton.download`            | Visible only for `download`; `document` (reference to a `downloadDocument`) and `language` (`en` or `uk`) are both required                                                                                                     |
+| `downloadDocument.title`         | Required (internal name)                                                                                                                                                                                                        |
+| `downloadDocument.files`         | `en` required, `uk` optional; the upload picker accepts PDF only (`accept`)                                                                                                                                                     |
+| `linkButton.url`                 | Hidden for `download`. Otherwise required. External: valid URL with `https`, `mailto` or `tel`. Internal: `^[a-z0-9]+(?:[-/][a-z0-9]+)*$` (case-insensitive), no leading slash                                                  |
+| `linkButton.anchor`              | Visible and required only when `hasAnchor`. Letters and hyphens: `^[a-z]+(?:-[a-z]+)*$` (case-insensitive), no `#`, no digits                                                                                                   |
+| `<section>.anchorId`             | Optional. `^[a-z0-9-]+$` (digits allowed, unlike `linkButton.anchor`)                                                                                                                                                           |
+| `siteSettings.navigation[].url`  | Required. Lowercase letters only: `^[a-z]+$`                                                                                                                                                                                    |
+| `siteSettings.socialLinks[].url` | Required. `https`, `mailto` or `tel`                                                                                                                                                                                            |
+| `page.title`                     | Required in `en` only (`requiredInBaseLanguage`); other languages fall back to `en`                                                                                                                                             |
+| `page.slug`                      | Required. Generated from the `en` entry of the localized `title`; `home` is the landing                                                                                                                                         |
+| `technology.slug`, `skill.slug`  | Required, unique across both types (custom `isUnique` check), lowercase ASCII letters, digits and single hyphens (`filterSlugField`). Generated from `name` / the `en` title. The projects filter key ([D31](../decisions.md))  |
+| `project.slug`                   | Required. Generated from the `en` (base) entry of the localized `title` via a source function                                                                                                                                   |
+| `project` required fields        | `title` and `summary` in every language; `image`; `technologies` (at least one). `buttons` is optional                                                                                                                          |
+| Hidden fields                    | Sanity validates hidden fields too. `requiredInAllLanguages`, `requiredInBaseLanguage` and `responsiveImage.desktop` skip when the field or an ancestor is hidden (`context.hidden`), so a hidden field never blocks publishing |
+| `piece.componentKey`             | One of `animatedCard`, `formValidation`, `themeSwitcher`, `responsiveDesign`                                                                                                                                                    |
+| `technology.name`                | Required                                                                                                                                                                                                                        |
 
 ## Documents
 

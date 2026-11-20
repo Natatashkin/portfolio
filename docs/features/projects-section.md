@@ -12,7 +12,7 @@ Design source: [../layouts/Projects.png](../layouts/Projects.png).
 ## Requirements
 
 - [x] Renders `eyebrow`, `headline`, rich-text `description`, the `projects` cards in reference order and a closing
-      `button` ("All Projects"; TEMPORARILY its `url` is overridden with `#`, see Open questions). Every part is optional and leaves no empty wrapper. The section renders nothing
+      `button` ("All Projects", its Studio link, `/projects`). Every part is optional and leaves no empty wrapper. The section renders nothing
       without an intro and without cards.
 - [x] A card needs a `title` and a `slug`; otherwise it is skipped. Dangling project references are dropped in the
       query.
@@ -37,7 +37,7 @@ Design source: [../layouts/Projects.png](../layouts/Projects.png).
       match the design). They are always external links (`linkType` is forced, see Decisions), compact size, with an
       icon. A button without a label or a URL is not rendered.
 - [x] About is an `outlined` `LinkButton` to the internal path `projects/<slug>`, label from `messages`
-      (`ProjectsSection.about`). Its accessible name is `ProjectsSection.aboutProject` ("About: {title}"), so the
+      (`ProjectCard.about`). Its accessible name is `ProjectCard.aboutProject` ("About: {title}"), so the
       links of different cards differ.
 - [x] Preview: `ResponsiveImage` (desktop and mobile sources, localized alt, `sizes` mirroring the grid) in a fixed
       16:9 frame, so nothing shifts while it loads. A card without an image has no preview and no About button.
@@ -64,8 +64,8 @@ Design source: [../layouts/Projects.png](../layouts/Projects.png).
   `button`. `'project'` is in `PAGE_QUERY_TAGS`.
 - **UI:** server components only, no client code and no animation. `ProjectsSection` (intro, grid, closing button) and
   the shared `ProjectCard` (`components/ui/`, also used by the projects page). `SectionRenderer` has the `projectsSection` case. Shared parts: `Container`,
-  `Headline`, `RichText`, `LinkButton`, `ResponsiveImage`, `TagList`, `toTagItems`. Strings: `ProjectsSection.about`
-  and `ProjectsSection.aboutProject` in `messages/{uk,en}.json`. `LinkButton` gained `size` and `ariaLabel`, see [ui-blocks.md](ui-blocks.md).
+  `Headline`, `RichText`, `LinkButton`, `ResponsiveImage`, `TagList`, `toTagItems`. Strings: `ProjectCard.about`
+  and `ProjectCard.aboutProject` in `messages/{uk,en}.json` (they belong to the card). `LinkButton` gained `size` and `ariaLabel`, see [ui-blocks.md](ui-blocks.md).
 - **Edge cases:** no buttons, no image, no technologies, no summary: each part is simply absent. Buttons keep their
   CMS order.
 
@@ -114,15 +114,10 @@ Done in the code.
 ## Open questions
 
 - The route `/[locale]/projects/[slug]` does not exist (project details pages are out of scope, see
-  [../specs/product.md](../specs/product.md); the `/projects` list page is planned in [projects-page.md](projects-page.md),
-  and `ProjectCard` is already in `components/ui/`), so the title and About are TEMPORARILY pointed at `#` (they stay on the page) until the page is built, in
+  [../specs/product.md](../specs/product.md); the `/projects` list page is built, see [projects-page.md](projects-page.md),
+  and `ProjectCard` is in `components/ui/`), so the title and About are TEMPORARILY pointed at `#` (they stay on the page) until the page is built, in
   `ProjectCard.tsx` (the `href` of the title `Link` and the `url` of About; the real lines are commented out next to them, `detailsPath` is still computed and only checked for truthiness) and in a
   `url === '#'` branch of `LinkButton.tsx`. The About and title lines and the `LinkButton` branch carry a `TEMPORARY` comment and are removed together with the
   launch decision on the project details pages (see [../roadmap.md](../roadmap.md)). Until then the requirements
   above about `projects/<slug>` describe the target behaviour, not the current one.
-- The closing "All Projects" button is TEMPORARILY `<LinkButton {...button} url="#" />` in `ProjectsSection.tsx`: the
-  `url` from Studio (the `projects` list page) is overridden, so the button stays on the page until that page exists.
-  The line carries a `TEMPORARY` comment. It works only because the Studio `linkType` is `internal`
-  (the `#` branch of `LinkButton` is skipped for `external`). Restore it together with the other `#` placeholders
-  above: remove `url="#"` and the button uses its CMS `url` again.
 - The `uk` headline falls back to `en` in the current dataset; the author fills the `uk` value in Studio.

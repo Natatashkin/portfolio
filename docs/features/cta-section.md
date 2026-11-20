@@ -1,6 +1,6 @@
 # CTA section
 
-Status: approved
+Status: done
 
 ## Goal
 
@@ -55,8 +55,11 @@ picture; centered.
   - `LinkButton` resolves an internal `url` of `home` to `/`.
   - Look follows `layout`, `hasBackground` and `isFullWidth` as modifiers (`row` | `centered`, card | `full`, `bg`),
     eight combinations; the background is applied only when `hasBackground` is true and `cover.desktop` exists, with
-    `ResponsiveImage` and a dark overlay. Colours, fonts and spacing come from the existing tokens.
-- **Edge cases:** no buttons; only the CTA button (mockup 3); only additional buttons; no eyebrow; `hasBackground` true without a `cover` image (renders without background);
+    `ResponsiveImage` and a dark scrim (`--color-photo-scrim`). Colours, fonts and spacing come from the existing
+    tokens; over a photo the block overrides the colour tokens locally (`--color-on-photo` for text and borders,
+    the scrim colour for text on filled buttons), because a photo stays dark in both themes. The headline is
+    `--font-h2` at weight 400.
+- **Edge cases:** no headline, description or button: the section renders nothing; no buttons; only the CTA button (mockup 3); only additional buttons; no eyebrow; `hasBackground` true without a `cover` image (renders without background);
   `cover` filled while `hasBackground` is false; missing `layout`, `hasBackground` or `isFullWidth` in older content; a broken
   download reference (no button, as in `LinkButton`).
 
@@ -102,17 +105,14 @@ picture; centered.
   slug, so a button on another page can target a home anchor.
 - Layout is `row | column-centered` only: a plain stacked `column` was dropped as unnecessary; the design needs a
   centered layout, not merely a stacked one.
+- Over a photo the block redefines the colour tokens on itself instead of adding photo-only classes: every child
+  (headline, buttons, eyebrow bar) keeps its normal rules and reads light on the dark scrim in both themes.
 - `hasBackground` without a cover renders the no-background variant: the toggle alone is not an error the visitor
   should see.
 
 ## Tasks
 
-1. Schema: done, including the split into `ctaButton` and `buttons[]`.
-2. Query branch and TypeGen. Done when a `ctaSection` on a `page` document returns every field in both locales.
-3. `CtaSection` with all variants, `SectionRenderer` case, `home` path in `LinkButton`. Done when every variant
-   renders and existing buttons are unchanged.
-4. Browser check of all variants in light and dark at the breakpoints.
-5. Sync: `docs-writer` updates the specs to the code. Done when the author marks the feature `done`.
+Done in the code.
 
 ## Open questions
 

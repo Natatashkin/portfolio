@@ -7,6 +7,8 @@ they cannot express.
 
 - `strict`; no `any`, no non-null `!` to silence errors. Prefer `import type`.
 - Prop and data types that mirror Sanity come from TypeGen (`@/sanity.types`, `SectionOf` from `@/lib/sanity/types`), never hand-typed copies.
+- The locale type is `Locale` from `next-intl` (`import type { Locale } from 'next-intl'`), narrowed to the app's
+  locales in `src/i18n/appConfig.d.ts`; no local `(typeof routing.locales)[number]` copies.
 - Prettier: single quotes, semicolons, no trailing commas, width 80. ESLint: Next base + strict TS, sorted imports,
   `@/` alias instead of `../`. Husky + lint-staged run both on commit.
 - `sanity-cms/` has its own Prettier config in its `package.json` (no semicolons, width 100, no bracket spacing,

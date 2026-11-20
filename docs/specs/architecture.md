@@ -19,7 +19,7 @@ TypeGen (`pnpm typegen` in `app/` runs the Studio's `typegen`).
 
 ```
 proxy.ts                  next-intl proxy (Next 16 name for middleware)
-app/[locale]/             layout (root layout), page, not-found, [...rest] catch-all, projects/ (list page planned, features/projects-page.md; now a stub), cases/ stub
+app/[locale]/             layout (root layout), page, not-found, [...rest] catch-all, projects/ (list page with private ProjectsResults/, features/projects-page.md), cases/ stub
 components/
   ui/                     reusable blocks (Button, LinkButton, ResponsiveImage, RichText, Headline, ...)
   sections/               one component per Sanity section + SectionRenderer
@@ -30,7 +30,7 @@ hooks/                    useTheme, useSystemTheme, useInView, useIsMounted
 i18n/                     routing.ts, request.ts, navigation.ts, appConfig.d.ts
 lib/constants.ts          all shared constants, grouped by meaning (media queries, storage keys, timing, patterns)
 lib/sanity/               env, apiVersion, client, image, queries, types (Section, SectionOf), api/ (fetchPage, fetchProjects, fetchSiteSettings)
-lib/helpers/              safeHref, safePath, localeSwitch (re-exported by index.ts)
+lib/helpers/              safeHref, safePath, localeSwitch, projects (isProjectCardItem) (re-exported by index.ts)
 lib/motion/               loadGsap (dynamic GSAP + ScrollTrigger import)
 lib/theme/                theme storage + the no-flash inline script
 styles/                   _tokens.scss, _mixins.scss, globals.scss
@@ -68,16 +68,20 @@ Outside `src/`: `messages/{en,uk}.json`, `scripts/check-sanity.mts` (connection 
 ## Rendering and data flow
 
 1. `LocaleLayout` validates the locale, fetches `siteSettings`, renders `Header`, `Footer` and providers.
-2. `HomePage` fetches the `page` with slug `home` through `fetchPage(slug, locale)`. Planned: the `projects` page
-   reads its filter options from the same query (`filters`, only for that slug) and its list through
-   `fetchProjects(locale, filters)` ([../features/projects-page.md](../features/projects-page.md)).
+2. `HomePage` fetches the `page` with slug `home` through `fetchPage(slug, locale)`. The `projects` page reads its
+   filter options from the same query (`filters`, only for that slug) in its shell and its list through
+   `fetchProjects(locale, filters)` in `ProjectsResults`, the only place that reads `searchParams`, inside `<Suspense>`
+   ([../features/projects-page.md](../features/projects-page.md)).
 3. `SectionRenderer` maps each section's `_type` to a Server Component; unknown types render nothing.
 4. A client child exists only where a section animates or needs state.
 
-- Statically generated (`generateStaticParams` over locales). Fetches carry the cache tags in `PAGE_QUERY_TAGS`,
-  `PROJECTS_QUERY_TAGS` and `SITE_SETTING_QUERY_TAGS` (`app/src/lib/sanity/queries.ts`). Freshness fallback today:
-  `revalidate = 3600`. Planned: Cache Components replaces it with a 30-minute `cacheLife` and request data only
-  inside `<Suspense>`: [../features/caching.md](../features/caching.md), [D30](../decisions.md).
+- Cache Components (`cacheComponents: true`): the shell of every route is prerendered (`generateStaticParams` over
+  locales); the home page is fully static, `/[locale]/projects` is partially prerendered (the list streams). Every
+  Sanity fetcher in `lib/sanity/api/` is `'use cache'` with `cacheTag` from `PAGE_QUERY_TAGS`, `PROJECTS_QUERY_TAGS` or
+  `SITE_SETTING_QUERY_TAGS` and `cacheLife({ revalidate: QUERY_REVALIDATE_SECONDS })` (30 minutes, one constant in
+  `app/src/lib/sanity/queries.ts`), the fallback if a webhook is missed. Request data is read only inside
+  `<Suspense>`. There is no shared `[locale]/loading.tsx` ([../features/loading-states.md](../features/loading-states.md)).
+  Details: [../features/caching.md](../features/caching.md), [D30](../decisions.md).
 - The client uses `useCdn: false`; freshness comes from Next's cache plus tag revalidation.
 - Localization: queries pick `field[language == $locale]` and fall back to `en` when the value is empty.
 - Images go through Sanity's asset pipeline (`@sanity/image-url`) and `next/image`; remote pattern is

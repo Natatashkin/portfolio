@@ -87,3 +87,10 @@ Details: [features/filter.md](features/filter.md), [features/projects-page.md](f
 generated from the `en` value, and the Studio preview needs a `prepare` that reads the `en` title from the array.
 Reason: the projects page needs a localized `h1` and breadcrumb label from Studio. Existing page titles are
 re-entered by the author. Details: [features/projects-page.md](features/projects-page.md).
+
+## D33. No shared `[locale]/loading.tsx`, no generic loader
+
+Loading is a local `<Suspense>` fallback next to the data that streams (the `ProjectCardSkeleton` grid on the projects
+page). Reason: a boundary at `[locale]` level forces a prerendered shell for the catch-all `[...rest]`, where the
+header's `usePathname` would have to sit in its own `<Suspense>` or the build fails, and a prerendered shell means the
+fallback would never show. Details: [features/loading-states.md](features/loading-states.md).
