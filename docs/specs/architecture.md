@@ -22,7 +22,6 @@ proxy.ts                  next-intl proxy (Next 16 name for middleware)
 app/[locale]/             layout (root layout), page, not-found, [...rest] catch-all, projects/ (list page planned, features/projects-page.md; now a stub), cases/ stub
 components/
   ui/                     reusable blocks (Button, LinkButton, ResponsiveImage, RichText, Headline, ...)
-  skeletons/              loading placeholders that mirror one component (planned: ProjectCardSkeleton)
   sections/               one component per Sanity section + SectionRenderer
   layout/                 Header, Footer, BurgerMenu, ThemeScript
   icons/                  icon components

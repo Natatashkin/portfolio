@@ -37,8 +37,9 @@ they cannot express.
 - A child needed in two layouts (mobile and desktop) is rendered in both by the server and CSS hides one; after
   hydration (`useIsMobile`) the client drops the variant that does not match. Reason: no repeated ids and one list in the
   DOM for assistive tech; cost: duplicate markup until hydration (example: `CareerSteps`).
-- Loading placeholders that mirror one component's layout live in `components/skeletons/` (`ProjectCardSkeleton`), not
-  in `ui/`; same folder rules apply. A skeleton is `aria-hidden` and animates opacity only.
+- A loading placeholder lives in a subfolder of the component it mirrors (`ProjectCard/ProjectCardSkeleton/`) and
+  takes the geometry from that component's own CSS Module, adding only the bones: the sizes are never copied and no
+  extra CSS ships. A skeleton is `aria-hidden` and animates opacity only.
 - Hooks shared by components go in `hooks/` (`useThing.ts`); a hook used by one component stays beside it.
 - Server Components by default; `"use client"` only for interactivity or animation, as small leaf components.
 - Never name a folder "widgets".

@@ -20,8 +20,9 @@ holds the place of a project card while the list streams in.
 
 - **Schema / Query:** none.
 - **UI:**
-  - `components/skeletons/ProjectCardSkeleton/`: Server Component, styles, `index.ts`. Sizes are shared with
-    `ProjectCard` through tokens or a mixin rather than copied; the media frame keeps 16:9.
+  - `components/ui/ProjectCard/ProjectCardSkeleton/`: Server Component, styles, `index.ts`. It uses the classes of
+    `ProjectCard.module.scss` for the box, the 16:9 frame, the summary height and the tag block, so no size is copied;
+    its own module holds only the bones and the shimmer.
   - The skeleton is a `<Suspense>` fallback in the same grid as the cards on the
     [projects page](projects-page.md); the Suspense pattern is in [caching.md](caching.md).
 - **Announcements:** the fallback carries no `aria-busy`. On a slow connection the visible skeleton covers the wait,
@@ -31,8 +32,7 @@ holds the place of a project card while the list streams in.
 
 ## Files
 
-- `app/src/components/skeletons/ProjectCardSkeleton/`: the card placeholder (a new `skeletons` folder, see
-  `conventions.md`).
+- `app/src/components/ui/ProjectCard/ProjectCardSkeleton/`: the card placeholder (see `conventions.md`).
 
 ## Acceptance criteria
 
@@ -46,8 +46,8 @@ holds the place of a project card while the list streams in.
 
 - Shimmer by opacity, not a moving gradient: it follows the `transform`/`opacity` rule and has a simple
   reduced-motion fallback.
-- `ProjectCardSkeleton` lives in `components/skeletons/`, not in `ui/`: it is a placeholder for one component, not a
-  building block.
+- `ProjectCardSkeleton` lives in the `ProjectCard` folder and reuses the card's CSS Module: it mirrors one component,
+  so it sits with it, and sharing the module (not mixins) keeps the sizes in one place without adding CSS.
 
 ## Tasks
 

@@ -1,0 +1,81 @@
+// Only the bones and the shimmer; the geometry comes from `ProjectCard.module.scss`. The bones take the muted
+// text colour at low strength, so they read in both themes.
+.skeleton {
+  --skeleton-bone: color-mix(in srgb, var(--color-text-muted) 18%, transparent);
+
+  // The shimmer: the whole card breathes by opacity. Static under reduced motion.
+  @media (prefers-reduced-motion: no-preference) {
+    animation: skeleton-pulse 1.6s ease-in-out infinite;
+  }
+
+  &__fill {
+    position: absolute;
+    inset: 0;
+    background: var(--skeleton-bone);
+  }
+
+  &__title {
+    width: 55%;
+    height: calc(var(--font-h3) * 1.2);
+    border-radius: var(--radius-sm);
+    background: var(--skeleton-bone);
+  }
+
+  // A compact `LinkButton`: one line of small text plus its padding (`--chip-height` without the chip border).
+  &__action {
+    width: 5rem;
+    height: calc(var(--chip-height) - 2px);
+    border-radius: var(--radius-pill);
+    background: var(--skeleton-bone);
+  }
+
+  // One line box of the summary each; the bone sits in its middle like the x-height of text.
+  &__line {
+    display: block;
+    height: calc(var(--summary-line-height) * 1em);
+    padding-block: 0.35em;
+    background: var(--skeleton-bone);
+    background-clip: content-box;
+
+    &:last-child {
+      width: 60%;
+    }
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1);
+  }
+
+  // Widths vary like real technology names, so the placeholder does not read as a pattern.
+  &__tag {
+    width: 4.5rem;
+    height: var(--chip-height);
+    border-radius: var(--radius-pill);
+    background: var(--skeleton-bone);
+
+    &:nth-child(2) {
+      width: 6rem;
+    }
+
+    &:nth-child(3) {
+      width: 3.5rem;
+    }
+
+    &:nth-child(4) {
+      width: 5rem;
+    }
+  }
+}
+
+@keyframes skeleton-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.55;
+  }
+}
