@@ -6,13 +6,17 @@ import {
   PROJECTS_QUERY_TAGS,
   QUERY_REVALIDATE_SECONDS
 } from '@/lib/sanity/queries';
+import type { ProjectItem } from '@/lib/sanity/types';
 
 type Locale = (typeof routing.locales)[number];
 
-export const fetchProjects = async (locale: Locale) => {
+// `filters` is part of the cache key, so it must already be normalized (valid slugs, deduplicated, in option
+// order): an arbitrary URL then maps to an existing entry instead of creating a new one.
+export const fetchProjects = async (locale: Locale, filters: string[]) => {
   'use cache';
   cacheTag(...PROJECTS_QUERY_TAGS);
   cacheLife({ revalidate: QUERY_REVALIDATE_SECONDS });
 
-  return client.fetch(PROJECTS_QUERY, { locale });
+  // Typed with the shared projection: TypeGen infers `never` for this query (see `ProjectItem`).
+  return client.fetch<ProjectItem[]>(PROJECTS_QUERY, { locale, filters });
 };

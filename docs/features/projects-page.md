@@ -66,8 +66,12 @@ Depends on: [caching.md](caching.md), [breadcrumbs.md](breadcrumbs.md), [filter.
 title[language == $locale][0].value != "" || defined(title[language == "en"][0].value) &&
 title[language == "en"][0].value != "")`. The counter therefore matches the cards.
   - `fetchProjects(locale, filters)` with `PROJECTS_QUERY` takes the normalized list (`$filters`) and applies the
-    eligibility. Matching: `count($filters) == 0 || count(array::unique(technologies[]->slug.current)[@ in $filters])
-== count($filters)`. The `filterLabel` projection and its comment are removed from `queries.ts`.
+    eligibility. Matching: `count($filters) == 0 || count(*[_type in ["technology", "skill"] && slug.current in
+$filters && _id in ^.technologies[]._ref]) == count($filters)` (the subquery counts each referenced document once).
+    The `filterLabel` projection and its comment are removed from `queries.ts`.
+  - TypeGen infers `PROJECTS_QUERY` as `Array<never>` because of the `$filters` condition, so `fetchProjects` types its
+    result with `ProjectItem` from `lib/sanity/types.ts`, the generated type of the same projection in the
+    `projectsSection` branch (see Decisions).
 - **UI:** `app/[locale]/projects/page.tsx` is a shell that reads no request data. It awaits `params` and `fetchPage`,
   calls `notFound()` if the page is missing, and renders Breadcrumbs, `h1`, `RichText`, `SectionRenderer` and an outer
   `<Suspense>` around `ProjectsResults`, passing `filters` as props.
@@ -120,6 +124,9 @@ title[language == "en"][0].value != "")`. The counter therefore matches the card
   `orderRank`: the author already sorts projects in Studio and a numeric field would duplicate it. It is the one place
   the site reads `orderRank`.
 - Filter by slug in Sanity, not in the browser: [D31](../decisions.md).
+- `PROJECTS_QUERY` is typed with `ProjectItem`, not its own TypeGen result: TypeGen cannot evaluate an array
+  parameter in `count($filters)` and types the query as `Array<never>`, which would turn off type checking for the list.
+  `ProjectItem` is still generated (the `projectsSection` projection is the same), so nothing is typed by hand.
 - Filter options ride on the page query: one request, one tag set, and no extra Sanity call for the options.
 - Several filters combine with AND: a project must have all selected technologies, so an empty result is possible
   and has its own state.

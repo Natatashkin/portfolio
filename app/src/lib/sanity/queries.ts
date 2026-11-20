@@ -24,9 +24,37 @@ export const QUERY_REVALIDATE_SECONDS = 1800;
 // statically and cannot infer types through interpolated strings.
 // Items are matched by `language` (`_key` is a random id). An empty `locale`
 // value falls back to `en`, not only a missing one.
+// `filters` (projects page only, `null` elsewhere, so other pages pay nothing): technologies and skills with a slug
+// that at least one eligible project references. The eligibility of `PROJECTS_QUERY` is repeated literally.
 export const PAGE_QUERY = defineQuery(`
   *[_type == "page" && slug.current == $slug][0]{
     _id,
+    "filters": select(
+      $slug == "projects" => *[
+        _type in ["technology", "skill"] &&
+        defined(slug.current) &&
+        // Eligible projects: keep in sync with the filter of PROJECTS_QUERY.
+        _id in *[
+          _type == "project" &&
+          defined(slug.current) &&
+          (
+            defined(title[language == $locale][0].value) &&
+              title[language == $locale][0].value != "" ||
+            defined(title[language == "en"][0].value) &&
+              title[language == "en"][0].value != ""
+          )
+        ].technologies[]._ref
+      ] | order(slug.current asc){
+        "slug": slug.current,
+        "label": select(
+          _type == "technology" => name,
+          defined(title[language == $locale][0].value) &&
+            title[language == $locale][0].value != "" =>
+            title[language == $locale][0].value,
+          title[language == "en"][0].value
+        )
+      }
+    ),
     "title": select(
       defined(title[language == $locale][0].value) &&
         title[language == $locale][0].value != "" =>
@@ -219,6 +247,7 @@ export const PAGE_QUERY = defineQuery(`
             description[language == $locale][0].value,
           description[language == "en"][0].value
         ),
+        // Keep this projection identical to PROJECTS_QUERY: both are typed as ProjectItem.
         "projects": projects[defined(@->_id)]->{
           _id,
           "slug": slug.current,
@@ -486,12 +515,31 @@ export const PAGE_QUERY = defineQuery(`
   }
 `);
 
-// Projects page list: every project with a slug, in the Studio drag-and-drop
-// order. Same projection as the `projectsSection` branch, plus `filterLabel`:
-// a locale-independent label (technology `name`, skill `en` title) the filter
-// key is built from, so a shared filtered link works in both locales.
+// Projects page list, in the Studio drag-and-drop order, with the projection of the `projectsSection` branch.
+// Eligible projects only (a slug and a title after the `en` fallback, the same rule as the card and the filter
+// options in `PAGE_QUERY`). `$filters` is the normalized list of technology and skill slugs: an empty list means
+// every project, otherwise a project must reference all of them (AND).
 export const PROJECTS_QUERY = defineQuery(`
-  *[_type == "project" && defined(slug.current)] | order(orderRank asc){
+  // Eligibility: keep in sync with the filter options in PAGE_QUERY.
+  *[
+    _type == "project" &&
+    defined(slug.current) &&
+    (
+      defined(title[language == $locale][0].value) &&
+        title[language == $locale][0].value != "" ||
+      defined(title[language == "en"][0].value) &&
+        title[language == "en"][0].value != ""
+    ) &&
+    (
+      count($filters) == 0 ||
+      count(*[
+        _type in ["technology", "skill"] &&
+        slug.current in $filters &&
+        _id in ^.technologies[]._ref
+      ]) == count($filters)
+    )
+  ] | order(orderRank asc){
+    // Keep this projection identical to the projects of the projectsSection branch (typed as ProjectItem).
     _id,
     "slug": slug.current,
     "title": select(
@@ -520,8 +568,7 @@ export const PROJECTS_QUERY = defineQuery(`
       _id,
       _type,
       _type == "technology" => {
-        name,
-        "filterLabel": name
+        name
       },
       _type == "skill" => {
         "title": select(
@@ -529,8 +576,7 @@ export const PROJECTS_QUERY = defineQuery(`
             title[language == $locale][0].value != "" =>
             title[language == $locale][0].value,
           title[language == "en"][0].value
-        ),
-        "filterLabel": title[language == "en"][0].value
+        )
       }
     },
     "buttons": buttons[]{
