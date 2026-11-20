@@ -34,6 +34,8 @@ they cannot express.
   `index.ts`) and is imported by that folder; it is not used outside the parent. When a second component needs it,
   move it to `components/ui/`. A small client leaf with no styles of its own may stay flat
   (`HeroSection/HeroMetricNumber.tsx`).
+- Loading placeholders that mirror one component's layout live in `components/skeletons/` (`ProjectCardSkeleton`), not
+  in `ui/`; same folder rules apply. A skeleton is `aria-hidden` and animates opacity only.
 - Hooks shared by components go in `hooks/` (`useThing.ts`); a hook used by one component stays beside it.
 - Server Components by default; `"use client"` only for interactivity or animation, as small leaf components.
 - Never name a folder "widgets".

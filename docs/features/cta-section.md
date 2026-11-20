@@ -5,17 +5,24 @@ Status: draft
 ## Goal
 
 A reusable call-to-action section the author places on any `page` document in Studio: text, optional background
-picture and 0..n buttons, in one of three layouts. First use: the "Under NDA" block on the
+picture and 0..n buttons, in one of two layouts. First use: the "Under NDA" block on the
 [projects page](projects-page.md), which points to the work experience and the CV.
+
+Design variants: a card; a card without an eyebrow; a card with fewer buttons; full width; full width with a
+picture; centered.
 
 ## Requirements
 
 - [ ] Content: `eyebrow` (optional), `headline`, `description` are localized and fall back to `en` when the page
       locale is empty.
-- [ ] `layout` supports `row` | `column` | `column-centered`; a missing value means `row`.
+- [ ] `layout` supports `row` | `column-centered`; a missing value means `row`.
 - [ ] `isFullWidth` true | false; a missing value means false.
-- [ ] `hasBackground` true | false; a missing value means false. When true, `cover` is the background if it has an
-      image. When false, `cover` is ignored even if it holds data.
+- [ ] `hasBackground` true | false; a missing value means false. When true and `cover` has an image, the cover is the
+      background, both inside the card and in the full-width variant; a dark overlay over the picture keeps the text
+      readable. When true without a cover image, the no-background variant renders (no error). When false, `cover` is
+      ignored even if it holds data.
+- [ ] In the `column-centered` layout the text and buttons are centered, but the eyebrow stays left-aligned with the
+      accent bar under it.
 - [ ] 0..n `buttons` (`LinkButton`); an empty list renders no button area. An empty `eyebrow` renders nothing.
 - [ ] Every combination of `layout` × `hasBackground` × `isFullWidth` renders correctly.
 - [ ] Internal button `url` `home` resolves to `/`, so a button can target an anchor of the home page from another
@@ -30,7 +37,7 @@ picture and 0..n buttons, in one of three layouts. First use: the "Under NDA" bl
   - Content: `eyebrow` (optional), `headline`, `description`.
   - Media: `hasBackground` (default false) and `cover` (`responsiveImage`), hidden unless `hasBackground` is true.
   - Actions: `buttons[]` of `linkButton` (optional, as in `experienceSection`).
-  - Settings: `layout` select `row` | `column` | `column-centered` (default `row`), `isFullWidth` (default false),
+  - Settings: `layout` select `row` | `column-centered` (default `row`), `isFullWidth` (default false),
     `anchorId`.
   - Hidden fields skip required validation (D29): `requiredInAllLanguages` and `responsiveImage.desktop` return valid
     when `context.hidden` is set, so a hidden `cover` does not block publishing. Studio keeps the hidden value, so the
@@ -41,9 +48,11 @@ picture and 0..n buttons, in one of three layouts. First use: the "Under NDA" bl
 - **UI:**
   - `CtaSection` in `components/sections/` with its `SectionRenderer` case; Server Component, reusable on any page.
   - `LinkButton` resolves an internal `url` of `home` to `/`.
-  - Look follows `layout`, `hasBackground` and `isFullWidth`; colours, fonts and spacing come from the existing tokens.
-- **Edge cases:** no buttons; no eyebrow; `hasBackground` true without a `cover` image (see Open questions); `cover`
-  filled while `hasBackground` is false; missing `layout`, `hasBackground` or `isFullWidth` in older content; a broken
+  - Look follows `layout`, `hasBackground` and `isFullWidth` as modifiers (`row` | `centered`, card | `full`, `bg`),
+    eight combinations; the background is applied only when `hasBackground` is true and `cover.desktop` exists, with
+    `ResponsiveImage` and a dark overlay. Colours, fonts and spacing come from the existing tokens.
+- **Edge cases:** no buttons; no eyebrow; `hasBackground` true without a `cover` image (renders without background);
+  `cover` filled while `hasBackground` is false; missing `layout`, `hasBackground` or `isFullWidth` in older content; a broken
   download reference (no button, as in `LinkButton`).
 
 ## Files
@@ -60,7 +69,9 @@ picture and 0..n buttons, in one of three layouts. First use: the "Under NDA" bl
 - [ ] Every combination of `layout` × `hasBackground` × `isFullWidth` renders in light and dark at 1400, 1040, 800,
       700 and 390 px.
 - [ ] Missing values render as `row`, no background, not full width.
-- [ ] `cover` is not shown when `hasBackground` is false.
+- [ ] `cover` is not shown when `hasBackground` is false; `hasBackground` without a cover image renders the
+      no-background variant.
+- [ ] The six mockup variants are reproducible with the fields.
 - [ ] Empty `buttons`, `eyebrow` or `cover` do not throw.
 - [ ] A `home` button with an anchor lands on that section of the home page in the current locale; a download button
       serves the file of the current locale.
@@ -74,6 +85,10 @@ picture and 0..n buttons, in one of three layouts. First use: the "Under NDA" bl
   ([D28](../decisions.md)).
 - Hidden fields skip required validation, so a hidden `cover` never blocks publishing ([D29](../decisions.md)).
 - `home` means `/` ([D27](../decisions.md)).
+- Layout is `row | column-centered` only: a plain stacked `column` was dropped as unnecessary; the design needs a
+  centered layout, not merely a stacked one.
+- `hasBackground` without a cover renders the no-background variant: the toggle alone is not an error the visitor
+  should see.
 
 ## Tasks
 
@@ -86,4 +101,5 @@ picture and 0..n buttons, in one of three layouts. First use: the "Under NDA" bl
 
 ## Open questions
 
-- What renders when `hasBackground` is true but `cover` has no image? Proposal: the no-background variant, no error.
+- `app/src/sanity.types.ts` is stale for `ctaSection` (still `button` and `tagline`); regenerated by `pnpm typegen`
+  in the schema block of the [projects page](projects-page.md).

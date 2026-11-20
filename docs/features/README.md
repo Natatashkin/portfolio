@@ -20,18 +20,24 @@ starts; features built before the spec-driven workflow are marked "done (documen
 | Experience section | Company cards on a timeline, CV downloads, entry toggle, GSAP card reveal, pinned intro, TagList                          | done, with open checks | [experience-section.md](experience-section.md) |
 | Projects section   | Project cards, title link, hover-only blur + About, Live/GitHub by `iconKey`, 4-line summary, equal heights, All Projects | done                   | [projects-section.md](projects-section.md)     |
 
+The revalidate webhook (`app/src/app/api/revalidate/route.ts`) is built; see [../specs/architecture.md](../specs/architecture.md)
+and [caching.md](caching.md).
+
 ## Planned
 
-| Feature               | Notes                                                                                                   |
-| --------------------- | ------------------------------------------------------------------------------------------------------- |
-| Projects page         | `/projects` list, URL filter, page sections from Sanity; approved: [projects-page.md](projects-page.md) |
-| What I do section     |                                                                                                         |
-| Playground section    | Needs a `componentKey` → demo map                                                                       |
-| Tech stack section    |                                                                                                         |
-| CTA section           | Reusable CTA: layouts, background, buttons; draft: [cta-section.md](cta-section.md)                     |
-| Page metadata and SEO | Title, description, canonical, hreflang (required before launch), Open Graph, sitemap                   |
-| Revalidate webhook    | Secret-checked route handler → `revalidateTag`                                                          |
-| Draft preview         | Draft Mode, server-only read token                                                                      |
+| Feature               | Notes                                                                                                |
+| --------------------- | ---------------------------------------------------------------------------------------------------- |
+| Projects page         | `/projects` list, URL filter, page sections from Sanity; draft: [projects-page.md](projects-page.md) |
+| Caching               | Cache Components: `use cache`, tags, Suspense for request data; draft: [caching.md](caching.md)      |
+| Breadcrumbs           | Reusable trail on every page except home; draft: [breadcrumbs.md](breadcrumbs.md)                    |
+| Filter                | Reusable URL-driven chip filter; draft: [filter.md](filter.md)                                       |
+| Loading states        | Loader, `loading.tsx`, ProjectCardSkeleton; draft: [loading-states.md](loading-states.md)            |
+| What I do section     |                                                                                                      |
+| Playground section    | Needs a `componentKey` → demo map                                                                    |
+| Tech stack section    |                                                                                                      |
+| CTA section           | Reusable CTA: layouts, background, buttons; draft: [cta-section.md](cta-section.md)                  |
+| Page metadata and SEO | Title, description, canonical, hreflang (required before launch), Open Graph, sitemap                |
+| Draft preview         | Draft Mode, server-only read token                                                                   |
 
 Metrics are part of the hero; there is no separate metrics section. Schemas for all planned sections already exist ([../specs/content-model.md](../specs/content-model.md)); each planned section
 still needs a query branch, a component and its `SectionRenderer` case. Section rules:

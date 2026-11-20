@@ -22,6 +22,7 @@ proxy.ts                  next-intl proxy (Next 16 name for middleware)
 app/[locale]/             layout (root layout), page, not-found, [...rest] catch-all, projects/ (list page planned, features/projects-page.md; now a stub), cases/ stub
 components/
   ui/                     reusable blocks (Button, LinkButton, ResponsiveImage, RichText, Headline, ...)
+  skeletons/              loading placeholders that mirror one component (planned: ProjectCardSkeleton)
   sections/               one component per Sanity section + SectionRenderer
   layout/                 Header, Footer, BurgerMenu, ThemeScript
   icons/                  icon components
@@ -29,7 +30,7 @@ components/
 hooks/                    useTheme, useSystemTheme, useInView, useIsMounted
 i18n/                     routing.ts, request.ts, navigation.ts, appConfig.d.ts
 lib/constants.ts          all shared constants, grouped by meaning (media queries, storage keys, timing, patterns)
-lib/sanity/               env, apiVersion, client, image, queries, types (Section, SectionOf), api/ (fetchPage, fetchSiteSettings)
+lib/sanity/               env, apiVersion, client, image, queries, types (Section, SectionOf), api/ (fetchPage, fetchProjects, fetchSiteSettings)
 lib/helpers/              safeHref, safePath, localeSwitch (re-exported by index.ts)
 lib/motion/               loadGsap (dynamic GSAP + ScrollTrigger import)
 lib/theme/                theme storage + the no-flash inline script
@@ -52,12 +53,16 @@ Outside `src/`: `messages/{en,uk}.json`, `scripts/check-sanity.mts` (connection 
 ## Rendering and data flow
 
 1. `LocaleLayout` validates the locale, fetches `siteSettings`, renders `Header`, `Footer` and providers.
-2. `HomePage` fetches the `page` with slug `home` through `fetchPage(slug, locale)`.
+2. `HomePage` fetches the `page` with slug `home` through `fetchPage(slug, locale)`. Planned: the `projects` page
+   reads its filter options from the same query (`filters`, only for that slug) and its list through
+   `fetchProjects(locale, filters)` ([../features/projects-page.md](../features/projects-page.md)).
 3. `SectionRenderer` maps each section's `_type` to a Server Component; unknown types render nothing.
 4. A client child exists only where a section animates or needs state.
 
-- Statically generated (`generateStaticParams` over locales). Fetches carry cache tags (`page`, `technology`, `skill`,
-  `metric`, `site-settings`), and `revalidate = 3600` is the fallback if a webhook is missed.
+- Statically generated (`generateStaticParams` over locales). Fetches carry the cache tags in `PAGE_QUERY_TAGS`,
+  `PROJECTS_QUERY_TAGS` and `SITE_SETTING_QUERY_TAGS` (`app/src/lib/sanity/queries.ts`). Freshness fallback today:
+  `revalidate = 3600`. Planned: Cache Components replaces it with a 30-minute `cacheLife` and request data only
+  inside `<Suspense>`: [../features/caching.md](../features/caching.md), [D30](../decisions.md).
 - The client uses `useCdn: false`; freshness comes from Next's cache plus tag revalidation.
 - Localization: queries pick `field[language == $locale]` and fall back to `en` when the value is empty.
 - Images go through Sanity's asset pipeline (`@sanity/image-url`) and `next/image`; remote pattern is
@@ -78,7 +83,7 @@ A bad signature returns 401, an unparsable body or a missing `_type` 400, a miss
 an unknown type returns 200 with `{ revalidated: null }`, so Sanity does not retry it.
 
 Sanity webhook setup (dashboard → API → Webhooks): URL `https://<site>/api/revalidate`, trigger on create, update and
-delete, filter `_type in ["page","technology","skill","metric","road","downloadDocument","siteSettings"]`, projection
+delete, filter `_type in ["page","technology","skill","metric","road","experience","project","downloadDocument","siteSettings"]` (every type in `PAGE_QUERY_TAGS` plus `siteSettings`; see [../features/caching.md](../features/caching.md)), projection
 `{_type}`, the same secret, dataset `production`.
 
 ## Environment variables (names only, see `app/.env.example`)

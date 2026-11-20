@@ -23,7 +23,9 @@
 ## Next
 
 1. Projects page at `/projects` (list, URL filter, the page's sections from Sanity): [features/projects-page.md](features/projects-page.md), draft.
-   CTA section (later, schema done): [features/cta-section.md](features/cta-section.md), draft.
+   Its building blocks, in order: [caching](features/caching.md), schema changes (`page.title` localized, `slug` on
+   technology and skill), [CTA section](features/cta-section.md) (schema done), [breadcrumbs](features/breadcrumbs.md),
+   [loading states](features/loading-states.md), [filter](features/filter.md); all draft.
 2. Remaining sections in order of page flow, each with query, component, registration (see
    [features/README.md](features/README.md)): whatIDo, playground, techStack (cta comes with the projects page).
 3. Scroll animations for the remaining sections (GSAP ScrollTrigger in client children; see the `scroll-animation`

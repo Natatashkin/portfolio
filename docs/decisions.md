@@ -1,7 +1,8 @@
 # Decisions
 
-Short ADR-style log. Newest at the bottom. Add an entry when a choice is non-obvious or hard to reverse: the decision
-and one reason, plus a cost only if it changes how someone must work. Details live in the feature spec or the code.
+Short ADR-style log of project-wide decisions only; feature-level decisions live in the feature spec's Decisions
+section. Add an entry when a choice is non-obvious, hard to reverse and affects more than one feature: the decision and
+one reason. Numbers are stable; gaps are decisions that moved to a feature spec.
 
 ## D1. Two independent packages, no root workspace
 
@@ -17,14 +18,6 @@ required before launch (SEO, Launch checklist): hreflang `<head>` tags (en → `
 
 `sanity-plugin-internationalized-array` (`en`, `uk`) instead of per-locale documents: one document per entity, shared
 references and images. GROQ falls back to `en` when `uk` is empty; Studio validation requires all languages.
-
-## D4. Static rendering with tag revalidation
-
-Pages are SSG; the page fetch is tagged with every document type its query reads (`PAGE_QUERY_TAGS`), `revalidate =
-3600` is a safety net, and the Sanity client uses `useCdn: false` so Next's cache is the only staleness layer. The tags
-are invalidated by the `api/revalidate` route, which a Sanity webhook calls on every change. When a query starts
-dereferencing another type, extend `PAGE_QUERY_TAGS` and the webhook filter; a type whose tag differs from its name
-needs an entry in the route's `TAG_BY_TYPE`.
 
 ## D5. Theme in `localStorage`, not a cookie
 
@@ -49,10 +42,6 @@ flash); revisit when the 404 page is designed.
 From 1.16.12 SWC's native addon is blocked on Windows and `next dev` fails. The pin is in `overrides` in
 `app/pnpm-workspace.yaml`; remove it once SWC or next-intl changes this.
 
-## D9. Sass `loadPaths`
-
-Modules use `@use 'mixins' as *;` through `sassOptions.loadPaths` (`src/styles`), the current Sass option.
-
 ## D10. One Lenis instance on its own loop, GSAP loaded after idle
 
 `SmoothScrollProvider` is the only place Lenis is created; it runs its own `requestAnimationFrame` loop. GSAP and
@@ -63,63 +52,10 @@ Experience section is the second GSAP user (reveal and an intro pin, no scrub), 
 still pending. Under reduced motion Lenis stays mounted with `smoothWheel: false` and GSAP is not loaded; the tree must
 not change shape with the preference (it remounted the page on every load).
 
-## D11. `linkButton` reading rules
-
-An external `url` is used only if it passes `safeHref` (D6); an internal one gets `/` and the locale prefix. `anchor` is
-read only when `hasAnchor` is true, because Studio does not clear it when the toggle is turned off.
-
 ## D12. Pre-launch indexing off
 
 Root metadata sets `robots: noindex`. Remove it at launch. The Vercel Production Branch of both projects is already
 `main`, so the site stays unindexed until this flag is removed.
-
-## D13. Security headers (undecided)
-
-A strict `script-src` CSP needs nonces (dynamic rendering, loses SSG), so it is not used. Candidate: static headers in
-`next.config.ts` (CSP without script restriction, `nosniff`, `Referrer-Policy`, `Permissions-Policy`), introduced as
-`Content-Security-Policy-Report-Only` first; draft preview needs `frame-ancestors` to allow the Studio origin. Ask
-before changing `next.config.ts`.
-
-## D14. State across a locale switch: `sessionStorage` and a live region outside React
-
-A locale switch is a soft navigation, but the whole `[locale]` layout is remounted, so React state and React-owned DOM
-are lost. What must survive (the hash, then focus and the announcement) goes through one short-lived `sessionStorage`
-entry `{hash, at}` that the new layout reads and clears, and the live region is created in `document.body` outside
-React. Details: [features/language-switcher.md](features/language-switcher.md).
-
-## D15. Download link in `linkButton`
-
-Downloadable files live in a `downloadDocument` collection ("Documents" in Studio) with one PDF per language (`en`
-required, `uk` optional), so a new CV needs no deploy. The Experience section shows one button per language version
-(`buttons[]`; the Career `button` is one link of any type, external by default), whatever the site locale, because a
-visitor does not think of switching the site language to get the other CV. `linkType` gets a third value, `download`, and the button holds a `document` reference plus the `language`
-version. GROQ reads `download.document->files[download.language].asset->url`, the app passes it through `safeHref`
-(D6) and appends `?dl=<filename>` (the asset's `originalFilename`, fallback `document.pdf`): the `download` attribute
-is ignored for a cross-origin CDN URL, and the Sanity CDN answers `?dl=` with `Content-Disposition: attachment`.
-
-## D16. Shared `DotGrid` (was the hero's `HeroGrid`)
-
-The dot grid moves to `components/ui/DotGrid` and `HERO_GRID_*` becomes `DOT_GRID_*`. Reason: the Career section needs it
-too, and a private child moves to `components/ui/` when a second component uses it. Behaviour is unchanged.
-
-## D17. Private child in its own folder; one layout rendered per viewport after hydration
-
-A private child gets its own folder inside the parent's (`CareerSection/CareerSteps/`, module and `index.ts`) and is
-imported by folder, so each module has one owner.
-
-`CareerSteps` is needed in two places (mobile column, desktop overlay). The server renders both variants and CSS hides
-one; after hydration (`useIsMobile`) the client drops the variant that does not match. Reason: no repeated ids and one
-list in the DOM for assistive tech. Cost: duplicate markup and payload until hydration.
-
-## D18. Career reveal with GSAP + ScrollTrigger, not CSS `useInView`
-
-The Career section reveals text and steps with GSAP + ScrollTrigger (`scroll-animation` skill), not CSS `useInView`:
-a staggered sequence per breakpoint driven by scroll does not fit one in-view flag. The server HTML stays final; the
-hidden state comes from GSAP only, never from CSS.
-
-The last marker's pulse is a CSS animation started by the reveal and runs continuously. An endless animation over 5s is a
-WCAG 2.2.2 concern; accepted because the ring is decorative (`aria-hidden`) and off under reduced motion. Details:
-[features/career-section.md](features/career-section.md).
 
 ## D19. Caveat as the handwriting accent font next to Montserrat
 
@@ -128,63 +64,26 @@ the design asks for it and never for body text; today only the career tagline. R
 sign-off and Caveat has full Cyrillic. Accepted cost: one more font file (about 50 KB latin, about 94 KB for `uk`),
 loaded on page load because the tagline is in the DOM; to be re-checked in production.
 
-## D20. The career tagline needs a cover or steps
+## D30. Cache Components + tag revalidation
 
-The tagline shows only together with a cover or steps. Reason: it closes the road picture and the steps, so without them
-it has nothing to close.
+Pages are statically rendered with `cacheComponents: true`: the Sanity fetchers use `'use cache'`, `cacheTag` (the tag
+arrays in `queries.ts`) and a 30-minute `cacheLife`, and the client keeps `useCdn: false` so Next's cache is the only
+staleness layer. The Sanity webhook calls `api/revalidate` → `revalidateTag`, so edits appear at once; `cacheLife` is
+only the fallback for a missed webhook. Reason: the projects page reads `?filter=` (request data), which a route-level
+`revalidate` cannot combine with a static shell. When a query starts dereferencing another type, extend its tag array
+and the webhook filter. Details: [features/caching.md](features/caching.md).
 
-## D21. Experience: pin the left intro, the cards scroll
+## D31. `slug` on technology and skill is the filter key
 
-The intro column is pinned (ScrollTrigger `pin`, no spacing, nothing animated) while the cards scroll normally. Rejected:
-pinning the cards column with a scrubbed track; the transformed track moves focused elements out of view and breaks
-find-in-page. Details: [features/experience-section.md](features/experience-section.md).
+The projects filter uses a required `slug` on `technology` and `skill`, unique across both types (a custom
+`isUnique` check, since one key must name one chip). Reason: a slug is the same in both locales, so a shared
+`?filter=` link works in `uk` and `en`. The filter is multi-select: repeated params
+(`?filter=next-js&filter=gsap`), a project must match all selected slugs.
+Details: [features/filter.md](features/filter.md), [features/projects-page.md](features/projects-page.md).
 
-## D22. Responsive Experience entry by CSS, not `useIsMobile`
+## D32. `page.title` is localized and is the visible `h1`
 
-The open or collapsed state of an entry comes from a media query and `data-open`. Reason: `useIsMobile` is `null` on the
-server, so desktop would flash a wrong state, and CSS also works without JS.
-
-## D23. `TagList` promoted from the hero
-
-The hero's chip list moved to `components/ui/TagList` because the Experience entries need it too (same rule as D16).
-
-## D24. Web links in rich text open in a new tab
-
-`RichText` web links get `target="_blank"` and a visually hidden hint; mail and phone links stay in the page. Reason: a
-link in a company description leaves the portfolio, as external `LinkButton` links already do.
-
-## D25. Project card blur is a `filter` transition
-
-The preview blur on hover is a CSS `filter` transition, an exception to "animate `transform` and `opacity` only". Reason:
-the design asks for a blur; it is one small picture per card, the overlay and the button animate `opacity` only, nothing
-changes layout, and the transition is removed under `prefers-reduced-motion`. Details:
-[features/projects-section.md](features/projects-section.md).
-
-## D26. Projects list page in scope, ordered by `orderRank`
-
-`/projects` moves into scope; the details page `projects/[slug]` stays out, so project links stay `#`. Its list is
-ordered by the project's `orderRank` (the author already sorts projects in Studio; a numeric field would duplicate
-it), the one place the site reads `orderRank`. Details: [features/projects-page.md](features/projects-page.md).
-
-## D27. Internal `linkButton` path `home` means `/`
-
-Studio cannot store an empty path and `home` is already the home page slug, so a button on another page can target a
-home anchor. Details: [features/cta-section.md](features/cta-section.md).
-
-## D28. `ctaSection` holds `buttons[]`, not one `button`
-
-Same shape as `experienceSection`, so one block can carry two actions ("Work experience", "Download CV"); the unused
-`tagline` is removed. The block is reusable on any `page` document. Details:
-[features/cta-section.md](features/cta-section.md).
-
-Layout and background: `layout` (`row` | `column` | `column-centered`) is a select, since three options fit a
-dropdown and the section settings stay compact. `hasBackground` sits in Media next to `cover`, which is optional and
-shown only when it is on, so a CTA without a picture needs no image. `eyebrow` and `buttons[]` are optional, so a CTA
-can be text only.
-
-## D29. Hidden fields skip required validation
-
-Sanity validates hidden fields too, so a hidden CTA `cover` would block publishing. `requiredInAllLanguages` and
-`responsiveImage.desktop` return valid when `context.hidden` is set (the field or an ancestor is hidden). It applies to
-every hidden field that uses these rules. The value of a hidden field is kept, so the frontend decides what to render
-(`cover` only when `hasBackground` is true). Details: [features/cta-section.md](features/cta-section.md).
+`page.title` becomes `internationalizedArrayString` (required in `en`) and is no longer an internal name; the slug is
+generated from the `en` value, and the Studio preview needs a `prepare` that reads the `en` title from the array.
+Reason: the projects page needs a localized `h1` and breadcrumb label from Studio. Existing page titles are
+re-entered by the author. Details: [features/projects-page.md](features/projects-page.md).

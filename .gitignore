@@ -1,5 +1,6 @@
 .claude/settings.local.json
 .claude/skills/*
+.claude/plans/*
 !.claude/skills/work-block/
 !.claude/skills/feature-spec/
 !.claude/skills/new-section/

@@ -63,7 +63,7 @@ Design source: [../layouts/Projects.png](../layouts/Projects.png).
   `technologies` as technology or skill, `buttons` with `_key`, `linkType`, `url`, `iconKey`, localized `label`) and
   `button`. `'project'` is in `PAGE_QUERY_TAGS`.
 - **UI:** server components only, no client code and no animation. `ProjectsSection` (intro, grid, closing button) and
-  the section-private `ProjectCard`. `SectionRenderer` has the `projectsSection` case. Shared parts: `Container`,
+  the shared `ProjectCard` (`components/ui/`, also used by the projects page). `SectionRenderer` has the `projectsSection` case. Shared parts: `Container`,
   `Headline`, `RichText`, `LinkButton`, `ResponsiveImage`, `TagList`, `toTagItems`. Strings: `ProjectsSection.about`
   and `ProjectsSection.aboutProject` in `messages/{uk,en}.json`. `LinkButton` gained `size` and `ariaLabel`, see [ui-blocks.md](ui-blocks.md).
 - **Edge cases:** no buttons, no image, no technologies, no summary: each part is simply absent. Buttons keep their
@@ -72,8 +72,8 @@ Design source: [../layouts/Projects.png](../layouts/Projects.png).
 ## Files
 
 - `app/src/components/sections/ProjectsSection/ProjectsSection.tsx` and `.module.scss`: intro, grid, closing button.
-- `app/src/components/sections/ProjectsSection/ProjectCard/`: card, preview overlay, action buttons, tech stack.
-- `app/src/components/sections/ProjectsSection/types.ts`: `ProjectItem`, derived from the TypeGen section type, and
+- `app/src/components/ui/ProjectCard/`: card, preview overlay, action buttons, tech stack.
+- `app/src/components/ui/ProjectCard/types.ts`: `ProjectItem`, derived from the TypeGen section type, and
   `ProjectCardItem` (`title` and `slug` narrowed to `string` by the filter in `ProjectsSection`).
 - `app/src/lib/sanity/queries.ts`: `projectsSection` branch and the `project` cache tag.
 - `app/src/components/sections/SectionRenderer/SectionRenderer.tsx`: the case.
@@ -113,7 +113,7 @@ Done in the code.
 
 - The route `/[locale]/projects/[slug]` does not exist (project details pages are out of scope, see
   [../specs/product.md](../specs/product.md); the `/projects` list page is planned in [projects-page.md](projects-page.md),
-  which also moves `ProjectCard` to `components/ui/`), so the title and About are TEMPORARILY pointed at `#` (they stay on the page) until the page is built, in
+  and `ProjectCard` is already in `components/ui/`), so the title and About are TEMPORARILY pointed at `#` (they stay on the page) until the page is built, in
   `ProjectCard.tsx` (the `href` of the title `Link` and the `url` of About; the real lines are commented out next to them, `detailsPath` is still computed and only checked for truthiness) and in a
   `url === '#'` branch of `LinkButton.tsx`. The About and title lines and the `LinkButton` branch carry a `TEMPORARY` comment and are removed together with the
   launch decision on the project details pages (see [../roadmap.md](../roadmap.md)). Until then the requirements

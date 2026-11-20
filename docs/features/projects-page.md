@@ -1,134 +1,141 @@
 # Projects page
 
-Status: approved
+Status: draft
 
 ## Goal
 
-A page at `/projects` (`/uk/projects`) that lists every public project as a card, with a technology filter kept in
-the URL (`?filter=`) so a filtered view can be shared, followed by any sections the author adds to the page in
-Sanity. The details page `projects/[slug]`, the header, sitemap, hreflang, Open Graph and animation on
-this page are out of scope.
+`/projects` (`/uk/projects`) lists every project as a card grid that the visitor can filter by technology or skill, with
+several filters at once. The author controls the title, the intro and the sections below the list (the "Under NDA" CTA)
+in Studio.
+
+Depends on: [caching.md](caching.md), [breadcrumbs.md](breadcrumbs.md), [filter.md](filter.md),
+[loading-states.md](loading-states.md), [cta-section.md](cta-section.md). The project details page
+`projects/[slug]` stays out of scope ([D26](../decisions.md)).
 
 ## Requirements
 
-- [ ] Order: breadcrumbs `Home / Projects` → `h1` and subtitle → filter → project counter → card grid → the page's
-      sections from Sanity. Header and footer come from the locale layout unchanged.
-- [ ] Breadcrumbs: `nav` with an accessible name and an `ol`; `Home` is a locale-aware link, `Projects` is plain text
-      with `aria-current="page"`.
-- [ ] Grid, breakpoints and card alignment are the same as in the home projects section.
-- [ ] Every project with a `slug` and a `title` (after the `en` fallback) is shown, in the Studio drag-and-drop order.
-- [ ] Cards are the home page `ProjectCard`, reused as is; links to `projects/<slug>` stay `#`.
-- [ ] Filter: `All` plus every technology and skill shown on the listed cards, collected from the data, in
-      alphabetical order; one active at a time. Each chip exposes its state (`aria-pressed`), the group has an
-      accessible name, touch targets meet the accessibility minimum.
-- [ ] URL: the page opens without a parameter, `All` active. Picking a chip sets `?filter=<key>`; `All` removes it.
-      A shared URL opens filtered, in either locale. An unknown or empty key acts as `All`. A change does not scroll
-      the page and does not add a history entry per click.
-- [ ] Stable layout: a filter change does not make the page jump. The results area keeps a minimum height (the value
-      is chosen and checked in the browser in task 5), so an empty or short result does not pull the footer up.
-- [ ] Counter: "N projects" with plural forms for `en` and `uk` (ICU), announced politely on change.
-- [ ] Empty state: when the filter matches nothing, a message and a control that clears the filter. Without any
-      projects: the message only.
-- [ ] Mobile: the filter is one row with horizontal scroll, edge to edge, no visible scrollbar; a focused chip
-      scrolls into view.
-- [ ] Headings: `h1` → a visually hidden `h2` above the grid (localized, e.g. "Project list") → the card `h3`s; a
-      section headline after the grid is an `h2`. No level is skipped.
-- [ ] The page renders the sections of the `page` document with slug `projects` through `SectionRenderer` after the
-      grid. Any section type the author adds in Studio works, as on home; the page does not depend on a particular
-      one. Without that document, or with no sections, the page renders without them.
-- [ ] Without JavaScript all projects are visible; the filter is a progressive enhancement.
-- [ ] `generateMetadata`: localized `title` and `description` for `en` and `uk`; the layout's pre-launch
-      `noindex` stays.
-- [ ] Localized fields fall back to `en` when the page locale is empty.
-- [ ] Light and dark themes through tokens; reduced motion removes the card transitions.
+- [ ] Order on the page: Breadcrumbs `Home / Projects` → `h1` → description → Filter → counter → card grid (or the
+      empty state) → the `page.sections` through `SectionRenderer`.
+- [ ] The `h1` is the localized `page.title` ([D32](../decisions.md)); the description is the localized rich text
+      `page.description`. Both fall back to `en`; the description is optional and leaves no empty wrapper.
+- [ ] `notFound()` only when the `page` document with slug `projects` is missing. It runs in the shell (`params` and
+      the cached `fetchPage`), which resolves at prerender, so a missing document is known at build time per locale
+      (`generateStaticParams`) and the prerendered route is the 404. Loading and empty results never call it.
+- [ ] The Filter chips are the technologies and skills that have a `slug` and are referenced by at least one eligible
+      project, ordered by slug ([D31](../decisions.md)); in `uk` the labels may therefore not look alphabetical, which
+      is intended. Eligible: the same rule as `ProjectsSection` (a slug and a title after the `en` fallback).
+- [ ] Multi-select through repeated `?filter=<slug>` params ([filter.md](filter.md)). A project must reference all
+      selected slugs (AND). Projects keep the Studio `orderRank` order ([D26](../decisions.md)).
+- [ ] Normalization (the only place this rule is written): each `filter` value is checked against the options;
+      unknown values are dropped, the rest is deduplicated and sorted in option order. The normalized list is the
+      fetch and cache key, so an arbitrary URL creates no cache entries beyond valid combinations. No valid value
+      means all projects. `filterKey` = the normalized `filters.join(',')`.
+- [ ] The counter shows the number of shown projects ("N projects", ICU plural in `en` and `uk`). The
+      `role="status"` element is persistent and never remounted; only the text inside it is keyed. It reads 0 for an
+      empty result.
+- [ ] Empty result (valid filters, no project matches): a localized "No projects match these filters" message and a
+      "Reset filters" link (locale-aware `Link` to `/projects`, `replace`, `scroll={false}`), the same as "All".
+- [ ] The grid is the same as in `ProjectsSection` (1 column, 2 from `md`, 3 from `lg`), shared through one SCSS mixin
+      in `_mixins.scss`, and uses `ProjectCard` from `components/ui/`.
+- [ ] While the list loads, a grid of `ProjectCardSkeleton`s shows ([loading-states.md](loading-states.md)). The
+      results container has a `min-height` of one card row per breakpoint, taken from the skeleton height, so the
+      footer does not jump.
+- [ ] While the filter changes, the results dim (Filter's `data-pending`), then the skeletons show, then the cards.
+- [ ] The "All projects" button of `ProjectsSection` uses its Studio link again (the temporary `url="#"` is removed).
+- [ ] The project links on cards stay `#` (details page out of scope; the existing placeholders remain).
+- [ ] `searchParams` is read once, in `ProjectsResults`, inside `<Suspense>` ([caching.md](caching.md)).
+- [ ] Counter, empty-state and filter strings are in `messages/{uk,en}.json` (`Filter.all`, `Filter.reset`, the
+      counter and the empty message).
+- [ ] Light and dark themes through tokens, at the breakpoints of the other sections; the page has one `h1`.
 
 ## Design
 
-- **Schema:**
-  - `project` is unchanged; its hidden `orderRank` (`@sanity/orderable-document-list`) holds the Studio order.
-  - `page` gets an optional `description` (loc richText): the page intro, e.g. the `/projects` lead, distinct from
-    `seo.description`. The page query and UI do not read it yet.
-- **Query:**
-  - `PROJECTS_QUERY` in `app/src/lib/sanity/queries.ts`: projects with a slug, ordered by `orderRank`, with the same
-    project projection as the `projectsSection` branch; each technology and skill also returns a locale-independent
-    filter label (technology `name`, skill `en` title). Tags `project`, `technology`, `skill`. Fetcher
-    `fetchProjects`, type from TypeGen. The title check stays in code.
-  - The page reads its sections with `fetchPage('projects', locale)` and the existing `PAGE_QUERY`; a section type
-    without a query branch or a `SectionRenderer` case is skipped, as on home.
-- **UI:**
-  - Route `app/src/app/[locale]/projects/page.tsx` replaces the stub: Server Component, same `revalidate` as home,
-    `generateMetadata` via `getTranslations`, sections through `SectionRenderer` after the grid. It does not read
-    `searchParams`, so the route stays static.
-  - The part that reads `?filter=` (`useSearchParams`) sits in a `Suspense` boundary, as Next requires for a
-    prerendered route. Its fallback is the full grid, so the static HTML (and a visit without JavaScript) has every
-    card. After JavaScript loads, the same grid is shown filtered in its place; on a shared filtered link the extra
-    cards disappear at that moment, and the minimum height keeps the footer from jumping. Whether the card data is
-    sent to the browser only once is checked in the build output in task 5.
-  - URL updates use `useRouter` and `usePathname` from `@/i18n/navigation` (`replace`, no scroll), so the locale
-    prefix survives.
-  - Filter chips show the name in the page language (a skill title is localized, a technology name is the same in
-    both). The key is a slug of the locale-independent label (`Next.js` → `nextjs`) from a helper in `lib/helpers`.
-    Options with the same label merge into one chip; a label that gives an empty key is skipped.
-  - `ProjectCard` comes from `components/ui/ProjectCard/` (moved from `sections/ProjectsSection/ProjectCard/`).
-  - Page-private components in `components/projects/`: `Breadcrumbs` (server), `ProjectsBrowser` (client: filter,
-    counter, grid, empty state), `TechFilter` (client child).
-  - Look: pill-shaped filter chips, the active one in the accent colour. Colours, fonts and spacing come from the
-    existing tokens. The hidden `h2` uses the `visually-hidden` mixin; page strings are in `messages` (`ProjectsPage`).
-- **Edge cases:** no projects; no matches; no `projects` page document; a project without image, buttons or
-  technologies; an empty `uk` field; an unknown `?filter=`; long titles and labels; a single option.
-- **Known limits (out of scope):** header anchors render as `#<id>` and do nothing on `/projects`.
+- **Schema:** `page.title` localized ([D32](../decisions.md)); `slug` on `technology` and `skill`
+  ([D31](../decisions.md)). Fields: [content-model.md](../specs/content-model.md). The author re-enters the page
+  titles and fills the slugs in Studio.
+- **Data:** two cached fetchers ([caching.md](caching.md), including the tags), no separate filter-options request.
+  - `fetchPage(slug, locale)` with `PAGE_QUERY` returns the localized `title`, `description`, `sections` and `filters`.
+  - `filters` (`{ slug, label }[]`) is computed only when `$slug == "projects"` (`select(...)`, `null` otherwise), so
+    the home page pays nothing: technologies and skills with `defined(slug.current)` and
+    `_id in *[_type == "project" && <eligible>].technologies[]._ref`, projecting
+    `{ "slug": slug.current, "label": ... }` (technology `name`; skill localized title with the `en` fallback),
+    `order(slug.current asc)`.
+  - Eligibility `<eligible>`, defined once and repeated literally in both queries because TypeGen cannot read
+    interpolation: `defined(slug.current) && (defined(title[language == $locale][0].value) &&
+title[language == $locale][0].value != "" || defined(title[language == "en"][0].value) &&
+title[language == "en"][0].value != "")`. The counter therefore matches the cards.
+  - `fetchProjects(locale, filters)` with `PROJECTS_QUERY` takes the normalized list (`$filters`) and applies the
+    eligibility. Matching: `count($filters) == 0 || count(array::unique(technologies[]->slug.current)[@ in $filters])
+== count($filters)`. The `filterLabel` projection and its comment are removed from `queries.ts`.
+- **UI:** `app/[locale]/projects/page.tsx` is a shell that reads no request data. It awaits `params` and `fetchPage`,
+  calls `notFound()` if the page is missing, and renders Breadcrumbs, `h1`, `RichText`, `SectionRenderer` and an outer
+  `<Suspense>` around `ProjectsResults`, passing `filters` as props.
+  - `ProjectsResults` (private to the page, async Server Component) never fetches options: it awaits `searchParams`,
+    validates against the given options, and renders `<Filter value items />`, the counter and an inner
+    `<Suspense key={filterKey} fallback={skeleton grid}>` with `ProjectsList`.
+  - Counter: a persistent `role="status"` element rendered by `ProjectsResults`, outside the keyed boundary, so it is
+    not remounted on a change. Inside it, a small `<Suspense key={filterKey}>` with an empty fallback renders the count
+    text from the same cached `fetchProjects(locale, filters)` call as `ProjectsList`. The `'use cache'` entry is
+    shared, so there is no second Sanity request. The status line keeps its height while empty, so nothing shifts.
+  - The outer fallback renders the chips (none active) and the skeleton grid; the options come from the shell, so
+    the chips are right even there. On a direct link a brief "no chip active" state shows until `ProjectsResults`
+    renders; this is expected.
+  - `ProjectsList` (`components/ui/ProjectsList/`, async Server Component) calls `fetchProjects` and renders the
+    `ProjectCard` grid or the empty state.
+- **Edge cases:** no filters renders only "All"; a project without a title or slug is skipped as in
+  `ProjectsSection`; no `page.sections` renders nothing after the grid; one locale empty falls back to `en`.
 
 ## Files
 
-- `sanity-cms/schemaTypes/documents/page.ts` (`description`).
-- `app/src/lib/sanity/queries.ts`, `app/src/lib/sanity/api/fetchProjects.ts`, `app/src/sanity.types.ts`.
-- `app/src/app/[locale]/projects/page.tsx`.
-- `app/src/components/ui/ProjectCard/` (moved) and `app/src/components/sections/ProjectsSection/` (import).
-- `app/src/components/projects/{Breadcrumbs,ProjectsBrowser,TechFilter}/`.
-- `app/src/lib/helpers/` (filter key helper), `app/messages/{en,uk}.json` (`ProjectsPage`).
-- Docs: `CLAUDE.md` (Out of scope), `specs/product.md`, `specs/content-model.md`, `conventions.md`, `features/ui-blocks.md`, `decisions.md`,
-  `features/README.md`, and the specs that call `projects/` a stub.
+- `app/src/app/[locale]/projects/page.tsx` (and the private `ProjectsResults`): the page.
+- `app/src/components/ui/ProjectsList/`: the grid and the empty state.
+- `app/src/lib/sanity/queries.ts`, `api/fetchPage.ts`, `api/fetchProjects.ts`, `app/src/sanity.types.ts`.
+- `app/src/styles/_mixins.scss`, `components/sections/ProjectsSection/`: shared grid mixin; the button `url` restored.
+- `app/messages/{uk,en}.json`: counter, empty state, `Filter.reset`.
+- `sanity-cms/schemaTypes/documents/page.ts`, `technology.ts`, `skill.ts`.
 
 ## Acceptance criteria
 
-- [ ] `/projects` and `/uk/projects` render in light and dark at 1400, 1040, 800, 700 and 390 px, with the same
-      grid and card alignment as home.
-- [ ] The home projects section and every existing `LinkButton` behave as before.
-- [ ] Filter, shared URL (also across locales), unknown key, empty state and Back behave as required; the footer
-      does not jump on a filter change.
-- [ ] With the author's `projects` page content, its sections render after the grid in both locales; without the
-      document the page renders without them.
-- [ ] Keyboard order and visible focus through breadcrumbs, chips and card controls.
-- [ ] Empty or unexpected CMS data does not throw.
-- [ ] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`; the route is
-      static in the build output. Studio builds (`pnpm build` in `sanity-cms/`).
+- [ ] `/en/projects` opens with "All" active, the full list and the CTA at the bottom; `/uk/projects` the same in
+      Ukrainian.
+- [ ] A chip click updates the params without a scroll jump or a new history entry; the chip changes at once, the
+      grid dims, the skeletons show, then the results.
+- [ ] A direct `?filter=a&filter=b` link opens with both chips active in both locales; unknown values are dropped and
+      all-unknown shows all projects.
+- [ ] A combination with no match shows the empty state, the counter says 0, and "Reset filters" restores the list.
+- [ ] The counter uses the right plural form (en: 1, 2; uk: 1, 2, 5, 21) and is announced politely.
+- [ ] Skeletons cause no layout shift and the footer does not jump (checked with throttling).
+- [ ] The last breadcrumb is not a link; the "All projects" button on the home page leads here.
+- [ ] A missing `projects` page document gives the localized 404 with a 404 status (to confirm with `pnpm build` and
+      `curl -I`).
+- [ ] On a direct `?filter=` link the outer fallback briefly shows no active chip before the real chips; expected.
+- [ ] The home page query returns `filters: null` and its data is unchanged.
+- [ ] `pnpm build` reports `/[locale]/projects` as partially prerendered.
+- [ ] `pnpm format`, `pnpm code-quality` (no circular dependencies) and `pnpm build` pass in `app/`; Studio builds.
 
 ## Decisions
 
-- The list page moves into scope; the details page stays out, so the card links to `projects/<slug>` stay `#`
-  ([D26](../decisions.md)).
-- The card is reused unchanged and moves to `ui/` because two pages share it (as `TagList` in D23); a hidden `h2`
-  keeps the heading order instead of a prop on the card.
-- Content after the grid is the `projects` page's own sections, so the author composes it in Studio from any section
-  type; the page is not tied to one.
-- The order comes from `orderRank` (D26).
-- The filter key is locale-independent, so a shared link works in both locales; the parameter is `filter`, since it
-  covers skills too.
-- Client-side filtering on a static page: no dynamic rendering for one query parameter; the brief unfiltered view on
-  a shared link is accepted.
+- Filter by slug in Sanity, not in the browser: [D31](../decisions.md).
+- Filter options ride on the page query: one request, one tag set, and no extra Sanity call for the options.
+- Several filters combine with AND: a project must have all selected technologies, so an empty result is possible
+  and has its own state.
+- "Reset filters" is a `Link`, not a button: the empty state is a Server Component.
+- The grid is shared by an SCSS mixin, not a component: the two grids have different surroundings but must stay
+  identical.
+- No metadata, hreflang, JSON-LD or animation here: they belong to "Page metadata and SEO" and the animation work.
 
 ## Tasks
 
-1. Docs: `docs-writer` updates the docs listed under Files. Done when the author approves those edits and this spec.
-2. Query, tags, fetcher, TypeGen. Done when both locales return the dataset's projects in Studio order.
-3. Shared card: move as is. Done when home is unchanged.
-4. Page shell: route, metadata, breadcrumbs, heading, full grid. Done when both locales render and the route is
-   static.
-5. Filter, counter, empty state, minimum height, mobile row. Done when the filter criteria pass in the browser.
-6. Sections on the page: render `fetchPage('projects')` sections through `SectionRenderer`. Done when, after the
-   author adds the `projects` page in Studio, its sections render in both locales.
-7. Sync: `docs-writer` updates the specs to the code. Done when the author marks the feature `done`.
+1. Cache Components ([caching.md](caching.md)).
+2. Schema changes (`page.title`, `slug` on technology and skill) and TypeGen.
+3. CTA section ([cta-section.md](cta-section.md)).
+4. Breadcrumbs, Loader and `loading.tsx`, ProjectCardSkeleton, Filter (their specs).
+5. Queries (`$filters` param, eligibility in GROQ, `filters` in `PAGE_QUERY`, the obsolete `PROJECTS_QUERY` comment and
+   `filterLabel` removed), `fetchProjects(locale, filters)`, the page, `ProjectsList`, the shared grid mixin, the
+   restored "All projects" url.
+6. Browser check: filter flow, both locales, throttling, `prefers-reduced-motion`, Lighthouse.
+7. Sync: `docs-writer` marks the spec `done` and updates `roadmap.md`, `content-model.md`, `architecture.md`.
 
 ## Open questions
 
-None.
+- None.
