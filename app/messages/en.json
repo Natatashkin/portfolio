@@ -44,5 +44,8 @@
   "Breadcrumbs": {
     "home": "Home",
     "label": "Breadcrumbs"
+  },
+  "Filter": {
+    "all": "All"
   }
 }

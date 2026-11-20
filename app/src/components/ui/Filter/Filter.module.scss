@@ -1,0 +1,73 @@
+@use 'mixins' as *;
+
+// One row of chips. On a phone it scrolls sideways instead of wrapping; from `md` it wraps.
+.filter {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  // While the row scrolls, `overflow` would clip the focus ring (2px outline + 2px offset): the padding makes room
+  // for it and the negative margin keeps the chips aligned with the content edge.
+  padding: 4px;
+  margin: -4px;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include media-up(md) {
+    flex-wrap: wrap;
+    overflow-x: visible;
+    padding: 0;
+    margin: 0;
+  }
+
+  &__chip {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: var(--space-1) var(--space-4);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: transparent;
+    color: var(--color-text-muted);
+    font: inherit;
+    font-size: var(--font-sm);
+    cursor: pointer;
+    transition:
+      background-color var(--transition-base),
+      border-color var(--transition-base),
+      color var(--transition-base);
+
+    @media (hover: hover) {
+      &:hover {
+        border-color: var(--color-text-muted);
+        color: var(--color-text);
+      }
+    }
+
+    &:focus-visible {
+      @include focus-ring;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      transition: none;
+    }
+
+    // `aria-pressed` carries the state for assistive technology; the class only paints it.
+    &--active {
+      border-color: var(--color-accent-ink);
+      background: var(--color-accent-ink);
+      color: var(--color-on-accent);
+
+      @media (hover: hover) {
+        &:hover {
+          border-color: var(--color-accent-ink);
+          color: var(--color-on-accent);
+        }
+      }
+    }
+  }
+}
